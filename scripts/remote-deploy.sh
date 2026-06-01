@@ -43,7 +43,7 @@ if [ -f docker-compose.yml ]; then
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ docker compose up + espera pg_isready"
   docker compose up -d
   for i in $(seq 1 90); do
-    if docker exec sabhoy-db pg_isready -U "${POSTGRES_USER:-sabhoy}" -d "${POSTGRES_DB:-lelianahoy}" 2>/dev/null; then
+    if docker exec sabhoy-db pg_isready -U "${POSTGRES_USER:-sabhoy}" -d "${POSTGRES_DB:-sabhoy}" 2>/dev/null; then
       break
     fi
     if [ "$i" -ge 90 ]; then
@@ -90,7 +90,7 @@ else
 fi
 
 date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ prisma migrate"
-npx prisma migrate deploy
+npm run prisma:deploy
 
 if [ "$SKIP_BUILD" = 1 ]; then
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ omitir npm run build (SKIP_BUILD=1)"

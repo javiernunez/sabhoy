@@ -113,7 +113,7 @@ npm run prisma:seed
 npm run dev
 ```
 
-En **produccion** (o CI) se usa `npx prisma migrate deploy` (no `db push`).
+En **produccion** (o CI) se usa `npm run prisma:deploy` (Prisma **5** del proyecto; no uses `npx prisma` a pelo, que puede instalar Prisma 7).
 
 Nueva migracion `20250423120000_article_categories_hero` anade categorias y resumen a `Article` (tras pull: `npx prisma migrate deploy` en el server).
 
@@ -138,7 +138,7 @@ Configura en GitHub:
 - `DEPLOY_USER`: usuario SSH con permisos en `/opt/sabhoy.es`.
 - `DEPLOY_SSH_KEY`: clave privada SSH.
 - `DEPLOY_PORT` (opcional): puerto SSH (por defecto `22`).
-- `DEPLOY_SERVICE` (opcional): nombre del servicio systemd sin `.service` (por defecto `lelianahoy`).
+- `DEPLOY_SERVICE` (opcional): nombre del servicio systemd sin `.service` (por defecto `sabhoy`).
 
 ### Deploy automatico (sin entrar al server)
 
@@ -146,40 +146,57 @@ El workflow remoto ejecuta:
 
 1. `cd /opt/sabhoy.es`
 2. `git fetch origin main`, `git clean` (conserva `.env`, `node_modules`, `.next`, `public/media`) y `git checkout -B main origin/main`
-3. Cargar `/opt/sabhoy.es/.env` si existe; el script aplica **por defecto** `DATABASE_URL=postgresql://lelianahoy:lelianahoy@127.0.0.1:5432/lelianahoy` (debe coincidir con tu Postgres).
-4. Si existe `docker-compose.yml`, **`docker compose up -d`** (así el deploy tira de Postgres sin entrar a mano).
+3. Cargar `/opt/sabhoy.es/.env` si existe; el script aplica por defecto `DATABASE_URL` en el puerto **5436** (ver `docker-compose.yml`).
+4. Si existe `docker-compose.yml`, **`docker compose up -d`**.
 5. `npm ci --include=dev`
-6. `npx prisma migrate deploy` (aplica migraciones)
+6. `npm run prisma:deploy` (Prisma 5 del lockfile, no `npx prisma` suelto)
 7. `npm run build`
 8. `systemctl restart <DEPLOY_SERVICE>.service`
 
-`prisma db seed` **no** va en el deploy automático (sobrescribiria/actualizaria datos de ejemplo en cada push). Ejecutalo a mano una vez en el server si hace falta.
+`prisma db seed` **no** va en el deploy automático. Ejecutalo a mano **una vez** tras el primer despliegue.
 
-**La primera vez** en el servidor asegúrate de tener `docker compose` y el stack de BBDD (el paso 4 del workflow ya hace `up -d` en cada despliegue). Crea `/opt/sabhoy.es/.env` (y/o `EnvironmentFile` en `systemd`) con la misma `DATABASE_URL` que apunte a ese Postgres, por ejemplo:
+**La primera vez** en el servidor (`/opt/sabhoy.es`):
 
 ```bash
-DATABASE_URL="postgresql://lelianahoy:lelianahoy@127.0.0.1:5434/lelianahoy"
+cp .env.example .env   # editar: NEXTAUTH_SECRET, ADMIN_EMAILS, contraseñas
+# DATABASE_URL con puerto 5436 (5435 = sermestre en este VPS)
+docker compose up -d
+make db-init           # npm ci + migrate + seeds (o los pasos de abajo)
+make deploy            # build + systemd
+```
+
+Equivalente manual (siempre **después** de `npm ci`):
+
+```bash
+npm ci --include=dev
+npm run prisma:deploy
+npm run prisma:seed
+npm run prisma:seed:evergreen
+```
+
+`.env` de ejemplo en producción:
+
+```bash
+DATABASE_URL="postgresql://sabhoy:sabhoy@127.0.0.1:5436/sabhoy"
 NEXT_PUBLIC_SITE_URL="https://www.sabhoy.es"
 NEXTAUTH_SECRET="$(openssl rand -base64 32)"
 NEXTAUTH_URL="https://www.sabhoy.es"
 ADMIN_EMAILS="tu@correo.com"
 ```
 
-Tras el primer despliegue, puedes cargar datos de ejemplo: `npx prisma db seed` (por SSH una vez, o tarea aparte).
+**No uses** `npx prisma …` sin haber hecho `npm ci`: `npx` puede descargar Prisma 7 y fallará con este schema (Prisma 5).
 
 **Node en el server:** el proyecto se ha probado con Node 20+; en el server con Node 18 veras avisos `EBADENGINE` en `npm ci`. Recomendable: instalar Node 20 LTS (nvm o paquetes oficiales).
 
-Con esto, cada push a `main` despliega automaticamente con los **secrets** configurados y, **una sola vez en el servidor**, la unidad systemd cuyo nombre coincide con `DEPLOY_SERVICE` (por defecto `lelianahoy` → `lelianahoy.service`).
+Con esto, cada push a `main` despliega automaticamente con los **secrets** configurados y, **una sola vez en el servidor**, la unidad systemd `sabhoy.service`.
 
 ### Crear el servicio systemd (una vez)
 
-Con el repositorio ya en `/opt/sabhoy.es` (incluido el fichero `deploy/lelianahoy.service` en el repo):
-
 ```bash
-sudo cp /opt/sabhoy.es/deploy/lelianahoy.service /etc/systemd/system/lelianahoy.service
-# Ajusta User/Group en el .service si el directorio no lo posee root (mismo usuario que el de deploy, recomendable)
+sudo cp /opt/sabhoy.es/deploy/sabhoy.service /etc/systemd/system/sabhoy.service
+# Ajusta User/Group y puerto (3001 por defecto) si hace falta
 sudo systemctl daemon-reload
-sudo systemctl enable lelianahoy.service
+sudo systemctl enable sabhoy.service
 ```
 
-El **primer** `systemctl start` puede fallar hasta que en ese path exista `node_modules` y un build (tras un deploy que ejecute `npm ci` y `npm run build`). A partir de ahí, `systemctl restart lelianahoy.service` en cada deploy deberia funcionar.
+El **primer** `systemctl start` puede fallar hasta que existan `node_modules` y `.next` (tras `make deploy` o `make db-init` + build).

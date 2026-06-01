@@ -37,6 +37,15 @@ db-down: ## Para PostgreSQL
 seed: ## Carga datos de ejemplo
 	npm run prisma:seed
 
+seed-evergreen: ## Carga paginas de informacion util
+	npm run prisma:seed:evergreen
+
+db-init: ## Primera vez en servidor: dependencias + migraciones + seeds
+	npm ci --include=dev
+	npm run prisma:deploy
+	npm run prisma:seed
+	npm run prisma:seed:evergreen
+
 deploy: ## Despliega en servidor (npm ci* + migrate deploy + build + restart)
 	@echo "[deploy] Ejecutando scripts/remote-deploy.sh en $(CURDIR)"
 	@echo "[deploy] Servicio systemd: $${DEPLOY_SERVICE:-sabhoy}"
