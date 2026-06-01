@@ -126,7 +126,7 @@ export function ReportInteractions({ reportId, initialLikeCount, initialCommentC
           type="button"
           onClick={() => void sendLike()}
           disabled={isSendingLike}
-          className="rounded border border-blue-300 bg-white px-3 py-1 text-sm font-medium text-blue-700 hover:bg-blue-50 disabled:opacity-60"
+          className="rounded border border-sab-terracotta/40 bg-white px-3 py-1 text-sm font-medium text-sab-terracotta hover:bg-sab-mist disabled:opacity-60"
         >
           {isSendingLike ? copy.voting : copy.like} ({likeCount})
         </button>
@@ -181,11 +181,11 @@ export function ReportInteractions({ reportId, initialLikeCount, initialCommentC
       {message ? <p className="mt-2 text-sm text-rose-700">{message}</p> : null}
       {authRequired ? (
         <p className="mt-2 text-sm text-slate-700">
-          <Link href="/cuenta/iniciar-sesion" className="font-semibold text-blue-700 hover:underline">
+          <Link href="/cuenta/iniciar-sesion" className="font-semibold text-sab-terracotta hover:underline">
             {isVal ? "Inicia sessió" : "Inicia sesión"}
           </Link>
           {" / "}
-          <Link href="/cuenta/registro" className="font-semibold text-blue-700 hover:underline">
+          <Link href="/cuenta/registro" className="font-semibold text-sab-terracotta hover:underline">
             {isVal ? "Registra't" : "Regístrate"}
           </Link>
         </p>

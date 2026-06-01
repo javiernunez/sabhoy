@@ -82,7 +82,7 @@ export default async function NostrePobleIndexPage() {
                       <li key={p.id}>
                         <Link
                           href={`${pagePath}/${p.slug}`}
-                          className="block rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm transition hover:border-blue-300 hover:text-blue-900"
+                          className="block rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm transition hover:border-sab-terracotta/40 hover:text-sab-forest"
                         >
                           <span className="font-medium">{title}</span>
                           {p.summary || p.summaryVal ? (

@@ -18,7 +18,7 @@ export default function NotFound() {
       <p className="mt-3 text-slate-600">
         {isVal ? "La pàgina que busques no existix o ha canviat d'adreça." : "La página que buscas no existe o ha cambiado de dirección."}
       </p>
-      <Link href="/" className="mt-6 inline-block rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+      <Link href="/" className="mt-6 inline-block rounded bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white">
         {isVal ? "Tornar a inici" : "Volver al inicio"}
       </Link>
     </div>

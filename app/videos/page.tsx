@@ -111,7 +111,7 @@ export default async function VideosPage({ searchParams }: PageProps) {
                   href={video.url}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="mt-2 inline-block text-sm font-semibold text-blue-700 hover:text-blue-800 hover:underline"
+                  className="mt-2 inline-block text-sm font-semibold text-sab-terracotta hover:text-sab-terracotta-dark hover:underline"
                 >
                   {isVal ? "Veure vídeo →" : "Ver video →"}
                 </Link>
@@ -130,7 +130,7 @@ function FilterLink({ href, active, label }: { href: string; active: boolean; la
       href={href}
       className={
         active
-          ? "inline-flex items-center rounded-full border-2 border-blue-600 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-900"
+          ? "inline-flex items-center rounded-full border-2 border-blue-600 bg-sab-mist px-3 py-1.5 text-sm font-semibold text-sab-forest"
           : "inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:border-slate-300"
       }
     >

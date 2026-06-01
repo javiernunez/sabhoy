@@ -146,7 +146,7 @@ export function ReportForm({ locale = "es" }: Readonly<ReportFormProps>) {
       <button
         type="submit"
         disabled={loading}
-        className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+        className="rounded bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white hover:bg-sab-terracotta-dark disabled:opacity-60"
       >
         {submitLabel}
       </button>

@@ -26,7 +26,7 @@ export function RelatedLinksSection({ title, subtitle, items }: Props) {
           <Link
             key={`${item.href}-${item.title}`}
             href={item.href}
-            className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:border-blue-300 hover:shadow"
+            className="overflow-hidden rounded-xl border border-slate-200/80 bg-white shadow-sm transition hover:border-sab-terracotta/40 hover:shadow"
           >
             <div className="h-32 w-full bg-slate-100">
               {item.imageUrl ? (

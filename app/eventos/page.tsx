@@ -101,7 +101,7 @@ function EventCard({
           {eventImage ? (
             <img src={eventImage} alt={eventTitle} className="h-full w-full object-cover" loading="lazy" />
           ) : (
-            <div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-100 to-cyan-100 text-blue-800">
+            <div className="flex h-full items-center justify-center bg-gradient-to-br from-blue-100 to-cyan-100 text-sab-terracotta-dark">
               <span className="px-4 text-center text-sm font-semibold">{isVal ? "Pla a San Antonio de Benagéber" : "Plan en San Antonio de Benagéber"}</span>
             </div>
           )}
@@ -110,7 +110,7 @@ function EventCard({
       <div className="space-y-2 p-4">
         <div className="flex flex-wrap items-center gap-2">
           {eventItem.category === "generico" ? null : (
-            <span className="inline-block rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-900">
+            <span className="inline-block rounded-full bg-sab-mist px-2 py-0.5 text-[11px] font-semibold text-sab-forest">
               {categoryLabel(locale === "val" ? "val" : "es", eventItem.category)}
             </span>
           )}
@@ -120,7 +120,7 @@ function EventCard({
         </div>
         <Link
           href={`/eventos/${eventItem.slug}`}
-          className="line-clamp-2 text-base font-semibold text-slate-900 group-hover:text-blue-800 group-hover:underline"
+          className="line-clamp-2 text-base font-semibold text-slate-900 group-hover:text-sab-terracotta-dark group-hover:underline"
         >
           {eventTitle}
         </Link>
@@ -130,7 +130,7 @@ function EventCard({
             {admin ? <EventAdminControls eventId={eventItem.id} isVal={isVal} /> : null}
             <Link
               href={`/eventos/${eventItem.slug}`}
-              className="text-xs font-semibold text-blue-700 hover:text-blue-800 hover:underline"
+              className="text-xs font-semibold text-sab-terracotta hover:text-sab-terracotta-dark hover:underline"
             >
               {isVal ? "Detall" : "Detalle"} →
             </Link>
@@ -234,7 +234,7 @@ export default async function EventosPage({ searchParams }: Readonly<PageProps>)
             href="/eventos"
             className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
               selectedCategory === null
-                ? "border-blue-300 bg-blue-50 text-blue-900"
+                ? "border-sab-terracotta/40 bg-sab-mist text-sab-forest"
                 : "border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-800"
             }`}
           >
@@ -248,7 +248,7 @@ export default async function EventosPage({ searchParams }: Readonly<PageProps>)
                 href={`/eventos?categoria=${item.category}`}
                 className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
                   selectedCategory === item.category
-                    ? "border-blue-300 bg-blue-50 text-blue-900"
+                    ? "border-sab-terracotta/40 bg-sab-mist text-sab-forest"
                     : "border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-800"
                 }`}
               >
@@ -294,7 +294,7 @@ export default async function EventosPage({ searchParams }: Readonly<PageProps>)
           <CtaLink
             href="/denuncias/nueva"
             trackParams={{ cta_name: "events_send_report", cta_context: "events_page_bottom", destination: "/denuncias/nueva" }}
-            className="rounded-lg bg-blue-700 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-600"
+            className="rounded-lg bg-blue-700 px-3 py-2 text-sm font-semibold text-white hover:bg-sab-terracotta"
           >
             {isVal ? "Proposar incidència" : "Proponer incidencia"}
           </CtaLink>

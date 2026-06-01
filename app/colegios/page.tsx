@@ -75,7 +75,7 @@ export default function ColegiosPage() {
                   href={`/colegios/${school.slug}`}
                   className="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-blue-400 hover:shadow-md"
                 >
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-700">
+                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-sab-terracotta">
                     {school.name}
                   </h3>
                   <p className="mt-1 text-sm text-slate-600 leading-snug line-clamp-2">
@@ -104,13 +104,13 @@ export default function ColegiosPage() {
       <div className="mt-10 flex flex-wrap gap-4 border-t border-slate-200 pt-6">
         <Link
           href="/informacion-util/colegios"
-          className="inline-flex items-center gap-1 text-sm font-medium text-blue-700 transition-colors hover:text-blue-800 hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-medium text-sab-terracotta transition-colors hover:text-sab-terracotta-dark hover:underline"
         >
           ← {isVal ? "Educació i col·legis" : "Educación y colegios"}
         </Link>
         <Link
           href="/informacion-util"
-          className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-blue-700 hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-sab-terracotta hover:underline"
         >
           {isVal ? "Informació útil" : "Información útil"}
         </Link>

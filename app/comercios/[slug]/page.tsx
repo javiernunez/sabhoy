@@ -193,7 +193,7 @@ export default async function ComercioDetailPage({ params }: Params) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <section className="space-y-4">
-        <Link href="/comercios" className="text-sm font-semibold text-blue-700 hover:underline">
+        <Link href="/comercios" className="text-sm font-semibold text-sab-terracotta hover:underline">
           {isVal ? "← Tornar a comerços" : "← Volver a comercios"}
         </Link>
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -215,11 +215,11 @@ export default async function ComercioDetailPage({ params }: Params) {
             <h1 className="mt-1 text-2xl font-bold text-slate-900">{localizedName}</h1>
             <div className="prose-article mt-3 max-w-2xl text-slate-700 [&_.mb-6]:mb-3">{renderMarkdown(localizedDescription)}</div>
             {item.websiteUrl ? (
-              <a href={item.websiteUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-blue-700 hover:underline">
+              <a href={item.websiteUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-sab-terracotta hover:underline">
                 {isVal ? "Web oficial →" : "Web oficial →"}
               </a>
             ) : item.href ? (
-              <a href={item.href} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-blue-700 hover:underline">
+              <a href={item.href} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-sab-terracotta hover:underline">
                 {isVal ? "Enllaç extern →" : "Enlace externo →"}
               </a>
             ) : null}

@@ -43,7 +43,7 @@ export function LoginForm({ locale = "es" }: LoginFormProps) {
       <h1 className="text-3xl font-bold">{isVal ? "Iniciar sessió" : "Iniciar sesion"}</h1>
       <p className="mt-2 text-sm text-slate-600">
         {isVal ? "Accedix amb el teu correu. Si encara no tens compte, " : "Accede con tu correo. Si aun no tienes cuenta, "}
-        <Link href="/cuenta/registro" className="font-medium text-blue-800 underline">
+        <Link href="/cuenta/registro" className="font-medium text-sab-terracotta-dark underline">
           {isVal ? "registra't" : "registrate"}
         </Link>
         .
@@ -75,7 +75,7 @@ export function LoginForm({ locale = "es" }: LoginFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+          className="w-full rounded bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white hover:bg-sab-terracotta-dark disabled:opacity-60"
         >
           {loading ? (isVal ? "Entrant..." : "Entrando...") : isVal ? "Entrar" : "Entrar"}
         </button>

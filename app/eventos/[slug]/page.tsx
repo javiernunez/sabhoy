@@ -59,7 +59,7 @@ export default async function EventDetailPage({ params }: Props) {
   return (
     <article className="container-page max-w-3xl space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link href="/eventos" className="inline-block text-sm font-semibold text-blue-700 hover:underline">
+        <Link href="/eventos" className="inline-block text-sm font-semibold text-sab-terracotta hover:underline">
           {isVal ? "← Tornar a esdeveniments" : "← Volver a eventos"}
         </Link>
         {admin ? (
@@ -86,7 +86,7 @@ export default async function EventDetailPage({ params }: Props) {
       ) : null}
       {eventItem.linkUrl ? (
         <p>
-          <a href={eventItem.linkUrl} target="_blank" rel="noreferrer noopener" className="font-semibold text-blue-700 hover:underline">
+          <a href={eventItem.linkUrl} target="_blank" rel="noreferrer noopener" className="font-semibold text-sab-terracotta hover:underline">
             Ir a la web oficial del evento ↗
           </a>
         </p>

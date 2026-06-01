@@ -64,7 +64,7 @@ export function RegistroForm({ locale = "es" }: RegistroFormProps) {
           : "Necesitas una cuenta para enviar denuncias ciudadanas. Si quieres solo la newsletter, puedes inscribirte desde el pie de la pagina sin registrarte."}
       </p>
       <p className="mt-1 text-sm text-slate-600">
-        <Link href="/cuenta/iniciar-sesion" className="font-medium text-blue-800 underline">
+        <Link href="/cuenta/iniciar-sesion" className="font-medium text-sab-terracotta-dark underline">
           {isVal ? "Ja tinc compte" : "Ya tengo cuenta"}
         </Link>
       </p>
@@ -104,7 +104,7 @@ export function RegistroForm({ locale = "es" }: RegistroFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+          className="w-full rounded bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white hover:bg-sab-terracotta-dark disabled:opacity-60"
         >
           {loading ? (isVal ? "Registrant..." : "Registrando...") : isVal ? "Registrar-se" : "Registrarse"}
         </button>

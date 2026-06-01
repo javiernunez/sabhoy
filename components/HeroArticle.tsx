@@ -62,7 +62,7 @@ function ArticleBlock({
         </time>
       </div>
       <h2 className="text-2xl font-bold leading-tight tracking-tight text-slate-900 md:text-3xl">
-        <Link href={`/noticias/${article.slug}`} className="hover:text-blue-800">
+        <Link href={`/noticias/${article.slug}`} className="hover:text-sab-terracotta-dark">
           {article.title}
         </Link>
       </h2>

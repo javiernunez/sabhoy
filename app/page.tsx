@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLdWebSite } from "@/components/JsonLdWebSite";
 import { CtaLink } from "@/components/CtaLink";
+import { HomeHero } from "@/components/HomeHero";
 import { HomeEventCalendar } from "@/components/HomeEventCalendar";
+import { ui } from "@/lib/ui-classes";
 import { HomeNewsletterCard } from "@/components/HomeNewsletterCard";
 import { NewsCard } from "@/components/NewsCard";
 import { SectionHeader } from "@/components/SectionHeader";
@@ -153,7 +155,8 @@ export default async function HomePage() {
     <div>
       {lcpHref ? <link rel="preload" as="image" href={lcpHref} fetchPriority="high" /> : null}
       <JsonLdWebSite />
-      <div className="container-page max-w-6xl space-y-12 py-8 md:py-10">
+      <div className="container-page space-y-12 py-8 md:py-10">
+        <HomeHero isVal={isVal} />
         <div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
           <div className="min-w-0 space-y-8 lg:col-span-2">
             <section>
@@ -170,11 +173,11 @@ export default async function HomePage() {
               />
               <div>
                 {latestArticles.length === 0 ? (
-                  <p className="text-sm text-slate-600">{isVal ? "Encara no hi ha notícies. Torna prompte." : "Aún no hay noticias. Vuelve pronto."}</p>
+                  <p className={`text-sm ${ui.muted}`}>{isVal ? "Encara no hi ha notícies. Torna prompte." : "Aún no hay noticias. Vuelve pronto."}</p>
                 ) : (
                   <>
                     {lead ? <NewsCard key={lead.id} article={lead} lead /> : null}
-                    <div className="divide-y divide-slate-200/80">
+                    <div className="mt-6 space-y-2 divide-y divide-sab-sand/80">
                       {restArticles.map((a) => (
                         <NewsCard key={a.id} article={a} />
                       ))}
@@ -194,7 +197,7 @@ export default async function HomePage() {
                 trackContext="home_week_events"
               />
                 {thisWeekEvents.length === 0 ? (
-                  <p className="px-1 py-2.5 text-xs text-slate-600">
+                  <p className={`px-1 py-2.5 text-xs ${ui.muted}`}>
                     {isVal
                       ? "Aquesta setmana encara no hi ha esdeveniments llistats fins al diumenge."
                       : "Esta semana aún no hay eventos listados hasta el domingo."}
@@ -214,9 +217,9 @@ export default async function HomePage() {
                       const thumb = uiMediaUrl(eventItem.imageUrl, { displayWidth: 200 });
 
                       return (
-                        <article key={eventItem.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <article key={eventItem.id} className={ui.card}>
                           {thumb ? (
-                            <Link href={`/eventos/${eventItem.slug}`} className="block overflow-hidden rounded-lg border border-slate-200">
+                            <Link href={`/eventos/${eventItem.slug}`} className="block overflow-hidden rounded-xl border border-sab-sand">
                               {/* eslint-disable-next-line @next/next/no-img-element -- URLs externas / media arbitrarias */}
                               <img
                                 src={thumb}
@@ -230,7 +233,7 @@ export default async function HomePage() {
                             </Link>
                           ) : null}
                           <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                            <span className="rounded-full border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-700">
+                            <span className="rounded-md border border-sab-sand bg-sab-mist px-2 py-0.5 text-[11px] font-semibold text-sab-forest">
                               <time dateTime={eventItem.eventDate.toISOString()}>
                                 {new Intl.DateTimeFormat(dateLoc, {
                                   weekday: "short",
@@ -240,23 +243,23 @@ export default async function HomePage() {
                               </time>
                             </span>
                             {eventItem.category === "generico" ? null : (
-                              <span className="rounded-full border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-700">
+                              <span className="rounded-md border border-sab-sand bg-sab-mist px-2 py-0.5 text-[11px] font-semibold text-sab-forest">
                                 {categoryLabel(locale === "val" ? "val" : "es", eventItem.category)}
                               </span>
                             )}
                             {typeof feriaDays === "number" && feriaDays > 1 ? (
-                              <span className="rounded-full border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-700">
+                              <span className="rounded-md border border-sab-sand bg-sab-mist px-2 py-0.5 text-[11px] font-semibold text-sab-forest">
                                 {`${feriaDays} d`}
                               </span>
                             ) : null}
                           </div>
-                          <h3 className="mt-2 line-clamp-2 text-base font-semibold text-slate-900">
-                            <Link href={`/eventos/${eventItem.slug}`} className="hover:underline">
+                          <h3 className="mt-2 line-clamp-2 font-serif text-base font-semibold text-sab-ink">
+                            <Link href={`/eventos/${eventItem.slug}`} className="hover:text-sab-terracotta">
                               {titleText}
                             </Link>
                           </h3>
                           <div className="mt-3 flex items-center justify-between">
-                            <Link href={`/eventos/${eventItem.slug}`} className="text-sm font-semibold text-blue-700 hover:underline">
+                            <Link href={`/eventos/${eventItem.slug}`} className={`text-sm ${ui.link}`}>
                               {isVal ? "Entrar →" : "Ver más →"}
                             </Link>
                           </div>
@@ -269,7 +272,7 @@ export default async function HomePage() {
                 <CtaLink
                   href="/eventos"
                   trackParams={{ cta_name: "home_events_footer", cta_context: "home_week_events", destination: "/eventos" }}
-                  className="inline-block text-sm font-semibold text-blue-700 hover:underline"
+                  className={`inline-block text-sm ${ui.link}`}
                 >
                   {isVal ? "Veure tota l'agenda" : "Ver toda la agenda"}
                 </CtaLink>
@@ -291,14 +294,14 @@ export default async function HomePage() {
               />
               <div className="grid gap-3 sm:grid-cols-2">
                 {latestReports.length === 0 ? (
-                  <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600 sm:col-span-2">
+                  <p className={`${ui.card} text-sm ${ui.muted} sm:col-span-2`}>
                     {isVal ? "Encara no hi ha incidències publicades." : "Aún no hay incidencias publicadas."}
                   </p>
                 ) : (
                   latestReports.map((report) => (
-                    <article key={report.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <article key={report.id} className={ui.card}>
                       {report.imageUrl ? (
-                        <div className="mb-3 overflow-hidden rounded-lg border border-slate-200">
+                        <div className="mb-3 overflow-hidden rounded-xl border border-sab-sand">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={uiMediaUrl(report.imageUrl, { displayWidth: 200 }) ?? report.imageUrl}
@@ -316,20 +319,20 @@ export default async function HomePage() {
                           <Link
                             key={`${report.id}-${tag}`}
                             href={`/denuncias?tag=${encodeURIComponent(tag)}`}
-                            className="rounded-full border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:bg-slate-100"
+                            className="rounded-md border border-sab-sand bg-sab-mist px-2 py-0.5 text-[11px] font-semibold text-sab-forest hover:bg-sab-sand/50"
                           >
                             #{tag}
                           </Link>
                         ))}
                       </div>
-                      <h3 className="mt-2 line-clamp-2 text-base font-semibold text-slate-900">{report.title}</h3>
-                      <p className="mt-1 line-clamp-3 text-sm text-slate-700">{truncateWords(stripMarkdownToPlain(report.content), 24)}</p>
+                      <h3 className="mt-2 line-clamp-2 font-serif text-base font-semibold text-sab-ink">{report.title}</h3>
+                      <p className="mt-1 line-clamp-3 text-sm text-sab-ink/75">{truncateWords(stripMarkdownToPlain(report.content), 24)}</p>
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="text-xs text-slate-500">{report.likeCount} {isVal ? "vots" : "votos"}</span>
+                        <span className={`text-xs ${ui.muted}`}>{report.likeCount} {isVal ? "vots" : "votos"}</span>
                         <CtaLink
                           href="/denuncias"
                           trackParams={{ cta_name: "home_report_card", cta_context: "home_reports", destination: "/denuncias" }}
-                          className="text-sm font-semibold text-blue-700 hover:underline"
+                          className={`text-sm ${ui.link}`}
                         >
                           {isVal ? "Entrar →" : "Ver más →"}
                         </CtaLink>
@@ -354,7 +357,7 @@ export default async function HomePage() {
               }))}
             />
             <HomeNewsletterCard locale={locale} defaultEmail={session?.user?.email} />
-            <div className="rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm">
+            <div className={`${ui.card} !p-3`}>
               <CtaLink
                 href="/elecciones-municipales-sab-2027"
                 trackParams={{
@@ -362,7 +365,7 @@ export default async function HomePage() {
                   cta_context: "home_sidebar",
                   destination: "/elecciones-municipales-sab-2027",
                 }}
-                className="block overflow-hidden rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                className="block overflow-hidden rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-sab-terracotta focus-visible:ring-offset-2"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- recurso estático local */}
                 <img
@@ -380,13 +383,13 @@ export default async function HomePage() {
                 />
               </CtaLink>
             </div>
-            <div className="rounded-2xl border border-dashed border-blue-200 bg-blue-50/50 p-4 text-sm text-blue-900">
-              <p className="font-semibold">{isVal ? "Tens alguna cosa que contar o denunciar?" : "¿Algo que contar o denunciar?"}</p>
-              <p className="mt-1 text-blue-800/90">{isVal ? "Passa per denúncies: ho revisem abans de publicar." : "Pasa por denuncias: lo revisamos antes de publicar."}</p>
+            <div className="rounded-2xl border-2 border-dashed border-sab-terracotta/40 bg-sab-forest/5 p-4 text-sm text-sab-forest">
+              <p className="font-bold">{isVal ? "Tens alguna cosa que contar o denunciar?" : "¿Algo que contar o denunciar?"}</p>
+              <p className="mt-1 text-sab-ink/75">{isVal ? "Passa per denúncies: ho revisem abans de publicar." : "Pasa por denuncias: lo revisamos antes de publicar."}</p>
               <CtaLink
                 href="/denuncias/nueva"
                 trackParams={{ cta_name: "home_send_report", cta_context: "home_reports_box", destination: "/denuncias/nueva" }}
-                className="mt-2 inline-block font-semibold text-blue-800 underline hover:no-underline"
+                className={`mt-2 inline-block ${ui.link}`}
               >
                 {isVal ? "Enviar incidència →" : "Enviar incidencia →"}
               </CtaLink>
@@ -407,12 +410,14 @@ export default async function HomePage() {
               <Link
                 key={item.id}
                 href={`/${item.slug}`}
-                className="group rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm transition hover:border-blue-300 hover:shadow"
+                className={`group block p-4 transition ${ui.cardHover}`}
               >
-                <span className="font-semibold text-slate-900 group-hover:text-blue-800">
+                <span className="font-semibold text-sab-ink group-hover:text-sab-terracotta">
                   {localizedText(locale, item.title, item.titleVal)}
                 </span>
-                <span className="mt-1 block text-xs text-slate-500">{isVal ? "Guia pràctica a San Antonio de Benagéber" : "Guía práctica en L&apos;Eliana"}</span>
+                <span className={`mt-1 block text-xs ${ui.muted}`}>
+                  {isVal ? "Guia pràctica a San Antonio de Benagéber" : "Guía práctica en San Antonio de Benagéber"}
+                </span>
               </Link>
             ))}
           </div>

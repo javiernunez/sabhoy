@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import { Literata, Outfit } from "next/font/google";
 import "./globals.css";
 import { AnalyticsListener } from "@/components/AnalyticsListener";
 import { AnalyticsScripts } from "@/components/AnalyticsScripts";
@@ -10,20 +10,19 @@ import { GOOGLE_SITE_VERIFICATION, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from 
 import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { DEFAULT_SITE_KEYWORDS } from "@/lib/seo";
 
-/** Menos pesos = menos archivos woff2 precargados (CLS/FCP en móvil). */
-const sourceSans = Source_Sans_3({
+const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-sans",
-  weight: ["400", "600"],
+  weight: ["400", "500", "600", "700"],
   preload: true,
 });
 
-const sourceSerif = Source_Serif_4({
+const literata = Literata({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-serif",
-  weight: ["400", "700"],
+  weight: ["400", "600", "700"],
   preload: true,
 });
 
@@ -73,8 +72,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const locale = getLocaleFromCookie();
 
   return (
-    <html lang={locale === "val" ? "ca" : "es"} className={`${sourceSans.variable} ${sourceSerif.variable}`}>
-      <body className={`min-h-screen font-sans antialiased ${sourceSans.className}`}>
+    <html lang={locale === "val" ? "ca" : "es"} className={`${outfit.variable} ${literata.variable}`}>
+      <body className={`min-h-screen font-sans ${outfit.className}`}>
         <AnalyticsScripts />
         <AnalyticsListener />
         <div className="flex min-h-screen flex-col">

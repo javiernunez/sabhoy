@@ -55,7 +55,7 @@ export function CommerceReviewForm({ entryId }: Props) {
   return (
     <form onSubmit={onSubmit} className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <h3 className="text-base font-semibold text-slate-900">Valora este comercio</h3>
-      {notice ? <p className="text-sm text-blue-700">{notice}</p> : null}
+      {notice ? <p className="text-sm text-sab-terracotta">{notice}</p> : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm text-slate-700">
           Puntuación
@@ -86,7 +86,7 @@ export function CommerceReviewForm({ entryId }: Props) {
           label="Comentario (opcional, máx. 500 caracteres de texto al publicar)"
         />
       </div>
-      <button disabled={busy} type="submit" className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+      <button disabled={busy} type="submit" className="rounded bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white">
         {busy ? "Enviando..." : "Enviar valoración"}
       </button>
     </form>

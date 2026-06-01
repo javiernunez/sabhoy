@@ -19,8 +19,8 @@ function linkClass(active: boolean) {
   return [
     "flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm transition",
     active
-      ? "bg-blue-100 font-medium text-blue-900 ring-1 ring-blue-300/80"
-      : "text-slate-700 hover:bg-white hover:text-blue-900",
+      ? "bg-blue-100 font-medium text-sab-forest ring-1 ring-blue-300/80"
+      : "text-slate-700 hover:bg-white hover:text-sab-forest",
   ].join(" ");
 }
 

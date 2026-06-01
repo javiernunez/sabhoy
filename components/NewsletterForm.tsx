@@ -61,9 +61,10 @@ export function NewsletterForm({
 
   const inputClass =
     appearance === "light"
-      ? "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400"
-      : "w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-400";
-  const messageClass = appearance === "light" ? "w-full text-xs text-slate-600 sm:ml-0" : "w-full text-xs text-slate-300 sm:ml-0";
+      ? "w-full rounded-lg border border-sab-sand bg-white px-3 py-2 text-sm text-sab-ink shadow-sm placeholder:text-sab-ink/40"
+      : "w-full rounded-lg border border-white/20 bg-sab-forest-light/50 px-3 py-2 text-sm text-sab-cream placeholder:text-sab-cream/50";
+  const messageClass =
+    appearance === "light" ? "w-full text-xs text-sab-ink/65 sm:ml-0" : "w-full text-xs text-sab-cream/75 sm:ml-0";
 
   return (
     <form onSubmit={onSubmit} className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end">
@@ -84,7 +85,7 @@ export function NewsletterForm({
       <button
         type="submit"
         disabled={loading}
-        className="shrink-0 rounded bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-60"
+        className="sab-btn-primary shrink-0 disabled:opacity-60"
       >
         {loading ? "…" : t("newsletter.subscribe")}
       </button>

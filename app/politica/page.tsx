@@ -217,7 +217,7 @@ export default async function PoliticaPage() {
                     href={video.url}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="mt-2 inline-block text-sm font-semibold text-blue-700 hover:text-blue-800 hover:underline"
+                    className="mt-2 inline-block text-sm font-semibold text-sab-terracotta hover:text-sab-terracotta-dark hover:underline"
                   >
                     {isVal ? "Veure vídeo →" : "Ver vídeo →"}
                   </Link>

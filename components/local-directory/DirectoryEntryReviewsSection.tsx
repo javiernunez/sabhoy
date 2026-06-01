@@ -161,7 +161,7 @@ export function DirectoryEntryReviewsSection({
               maxLength={80}
               value={authorDraft}
               onChange={(e) => setAuthorDraft(e.target.value)}
-              className="mt-1 block w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500/30 focus:border-blue-600 focus:ring-2"
+              className="mt-1 block w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none ring-sab-terracotta/30 focus:border-blue-600 focus:ring-2"
               autoComplete="nickname"
               placeholder={isVal ? "Com vols que et citen" : "Cómo quieres aparecer"}
             />
@@ -174,14 +174,14 @@ export function DirectoryEntryReviewsSection({
               rows={4}
               value={commentDraft}
               onChange={(e) => setCommentDraft(e.target.value)}
-              className="mt-1 block w-full max-w-2xl rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500/30 focus:border-blue-600 focus:ring-2"
+              className="mt-1 block w-full max-w-2xl rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none ring-sab-terracotta/30 focus:border-blue-600 focus:ring-2"
               placeholder={isVal ? "Explica breument la teua experiència." : "Cuenta brevemente tu experiencia."}
             />
           </label>
 
           {error ? <p className="mt-4 rounded-lg bg-red-600/10 px-3 py-2 text-sm text-red-800">{error}</p> : null}
           {successFlash ? (
-            <p className="mt-4 rounded-lg bg-blue-600/10 px-3 py-2 text-sm text-blue-900">
+            <p className="mt-4 rounded-lg bg-sab-terracotta/10 px-3 py-2 text-sm text-sab-forest">
               {isVal ? "Gràcies! La valoració s’ha publicat." : "¡Gracias! Tu valoración se ha publicado."}
             </p>
           ) : null}
@@ -206,7 +206,7 @@ export function DirectoryEntryReviewsSection({
             {isVal
               ? "Si tens compte, pots iniciar sessió per recuperar aquesta pantalla més ràpid (opcional): "
               : "Si tienes cuenta, puedes iniciar sesión para volver a esta página con un clic (opcional): "}
-            <Link href={loginHref} className="font-semibold text-blue-800 underline-offset-2 hover:underline">
+            <Link href={loginHref} className="font-semibold text-sab-terracotta-dark underline-offset-2 hover:underline">
               {isVal ? "Iniciar sessió" : "Iniciar sesión"}
             </Link>
             .

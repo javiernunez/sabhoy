@@ -58,7 +58,7 @@ export default async function AsociacionesPage() {
             <Link
               key={section.slug}
               href={`/asociaciones/${section.slug}`}
-              className="group flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:bg-white hover:text-blue-800 hover:shadow-sm"
+              className="group flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:bg-white hover:text-sab-terracotta-dark hover:shadow-sm"
             >
               <span className="shrink-0" aria-hidden>{section.icon}</span>
               {isVal ? section.labelVal : section.labelEs}
@@ -97,12 +97,12 @@ export default async function AsociacionesPage() {
                 <div className="p-4">
                   <p className="mt-1 text-xs font-medium text-slate-500">{labels.join(" · ")}</p>
                   <h3 className="mt-1 text-base font-semibold text-slate-900">
-                    <Link href={`/asociaciones/${entry.slug}`} className="hover:text-blue-800 hover:underline">
+                    <Link href={`/asociaciones/${entry.slug}`} className="hover:text-sab-terracotta-dark hover:underline">
                       {name}
                     </Link>
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{truncateWords(stripMarkdownToPlain(description), 22)}</p>
-                  <Link href={`/asociaciones/${entry.slug}`} className="mt-2 inline-block text-sm font-semibold text-blue-700 hover:underline">
+                  <Link href={`/asociaciones/${entry.slug}`} className="mt-2 inline-block text-sm font-semibold text-sab-terracotta hover:underline">
                     {isVal ? "Veure fitxa →" : "Ver ficha →"}
                   </Link>
                 </div>

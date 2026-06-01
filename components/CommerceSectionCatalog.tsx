@@ -95,7 +95,7 @@ export async function CommerceSectionCatalog({
               ? "No s'ha trobat cap categoria arrel al directori que encaixe amb esta secció (es comparen paraules clau del nom de la categoria). El llistat pot estar buit en esta instal·lació; la URL segueix sent vàlida."
               : "No hay ninguna categoría raíz en el directorio que encaje con esta sección (se comparan palabras clave del nombre). El listado puede estar vacío en este entorno; la URL sigue siendo válida."}
           </p>
-          <Link href="/comercios" className="mt-3 inline-block font-semibold text-blue-800 hover:underline">
+          <Link href="/comercios" className="mt-3 inline-block font-semibold text-sab-terracotta-dark hover:underline">
             {isVal ? "← Tornar a comerços" : "← Volver a comercios"}
           </Link>
         </div>
@@ -299,7 +299,7 @@ export async function CommerceSectionCatalog({
                   <div className="p-4">
                     <p className="mt-1 text-xs font-medium text-slate-500">{business.categoryLabels.join(" · ")}</p>
                     <h4 className="mt-1 text-base font-semibold text-slate-900">
-                      <Link href={`/comercios/${business.slug}`} className="hover:text-blue-800 hover:underline">
+                      <Link href={`/comercios/${business.slug}`} className="hover:text-sab-terracotta-dark hover:underline">
                         {business.name}
                       </Link>
                     </h4>
@@ -308,7 +308,7 @@ export async function CommerceSectionCatalog({
                     </p>
                     <Link
                       href={`/comercios/${business.slug}`}
-                      className="mt-2 inline-block text-sm font-semibold text-blue-700 hover:underline"
+                      className="mt-2 inline-block text-sm font-semibold text-sab-terracotta hover:underline"
                     >
                       {isVal ? "Veure fitxa →" : "Ver ficha →"}
                     </Link>

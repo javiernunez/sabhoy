@@ -115,11 +115,11 @@ export function ArticleCommentsSection({ slug, locale, initialComments }: Readon
       {authRequired ? (
         <p className="mt-2 text-sm text-slate-700">
           {t.authHint}{" "}
-          <Link href={loginHref} className="font-semibold text-blue-700 hover:underline">
+          <Link href={loginHref} className="font-semibold text-sab-terracotta hover:underline">
             {t.login}
           </Link>
           {" · "}
-          <Link href={registerHref} className="font-semibold text-blue-700 hover:underline">
+          <Link href={registerHref} className="font-semibold text-sab-terracotta hover:underline">
             {t.register}
           </Link>
         </p>

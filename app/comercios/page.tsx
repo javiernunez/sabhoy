@@ -66,9 +66,9 @@ export default async function ComerciosPage() {
               : "Elige una sección y navega por fichas con filtros específicos."
           }
         />
-        <aside className="mt-6 rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-3 text-sm text-blue-900">
+        <aside className="mt-6 rounded-2xl border border-sab-terracotta/30 bg-sab-mist/70 px-4 py-3 text-sm text-sab-forest">
           <p className="font-semibold">{isVal ? "La teva opinió compta" : "Tu opinión cuenta"}</p>
-          <p className="mt-1 text-blue-800/95">
+          <p className="mt-1 text-sab-terracotta-dark/95">
             {isVal
               ? "Obri qualsevol fitxa i envia una valoració d’1 a 5 estrelles amb un comentari opcional. Ajudes veïnes i veïns a triar millor."
               : "Abre cualquier ficha y envía una valoración de 1 a 5 estrellas con un comentario opcional. Ayudas a vecinos y vecinas a elegir mejor."}
@@ -82,7 +82,7 @@ export default async function ComerciosPage() {
             <Link
               key={section.slug}
               href={`/comercios/${section.slug}`}
-              className="group flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:bg-white hover:text-blue-800 hover:shadow-sm"
+              className="group flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:bg-white hover:text-sab-terracotta-dark hover:shadow-sm"
             >
               <span className="shrink-0" aria-hidden>
                 {section.icon}
@@ -135,7 +135,7 @@ export default async function ComerciosPage() {
                 <div className="p-4">
                   <p className="mt-1 text-xs font-medium text-slate-500">{labels.join(" · ")}</p>
                   <h3 className="mt-1 text-base font-semibold text-slate-900">
-                    <Link href={`/comercios/${business.slug}`} className="hover:text-blue-800 hover:underline">
+                    <Link href={`/comercios/${business.slug}`} className="hover:text-sab-terracotta-dark hover:underline">
                       {localizedName}
                     </Link>
                   </h3>
@@ -144,7 +144,7 @@ export default async function ComerciosPage() {
                   </p>
                   <Link
                     href={`/comercios/${business.slug}`}
-                    className="mt-2 inline-block text-sm font-semibold text-blue-700 hover:underline"
+                    className="mt-2 inline-block text-sm font-semibold text-sab-terracotta hover:underline"
                   >
                     {isVal ? "Veure fitxa →" : "Ver ficha →"}
                   </Link>

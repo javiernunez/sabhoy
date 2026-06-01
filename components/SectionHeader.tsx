@@ -1,4 +1,5 @@
 import { CtaLink } from "@/components/CtaLink";
+import { ui } from "@/lib/ui-classes";
 
 type Props = {
   title: string;
@@ -11,13 +12,13 @@ type Props = {
 
 export function SectionHeader({ title, subtitle, href, actionLabel = "Ver todo", icon, trackContext }: Readonly<Props>) {
   return (
-    <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-5 flex flex-col gap-2 border-l-4 border-sab-terracotta pl-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h2 className="flex items-center gap-2 text-lg font-bold tracking-tight text-slate-900 md:text-xl">
-          {icon ? <span aria-hidden>{icon}</span> : null}
+        <h2 className={`${ui.sectionTitle} flex items-center gap-2`}>
+          {icon ? <span className="text-2xl" aria-hidden>{icon}</span> : null}
           <span>{title}</span>
         </h2>
-        {subtitle ? <p className="mt-0.5 text-sm text-slate-600">{subtitle}</p> : null}
+        {subtitle ? <p className={`mt-1 text-sm ${ui.muted}`}>{subtitle}</p> : null}
       </div>
       {href ? (
         <CtaLink
@@ -27,7 +28,7 @@ export function SectionHeader({ title, subtitle, href, actionLabel = "Ver todo",
             cta_context: trackContext ?? title,
             destination: href,
           }}
-          className="shrink-0 text-sm font-semibold text-blue-700 hover:text-blue-800 hover:underline"
+          className={`shrink-0 text-sm font-bold ${ui.link}`}
         >
           {actionLabel} →
         </CtaLink>

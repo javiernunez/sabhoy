@@ -5,26 +5,14 @@ type NavItemIconProps = {
   className?: string;
 };
 
-/** Colores por sección; `currentColor` en el trazo. `group-hover` encaja con el enlace del menú. */
-const ICON_COLOR: Record<NavIconId, string> = {
-  landmark: "text-teal-600 group-hover:text-teal-700",
-  newspaper: "text-rose-600 group-hover:text-rose-700",
-  balance: "text-indigo-600 group-hover:text-indigo-700",
-  play: "text-violet-600 group-hover:text-violet-700",
-  store: "text-amber-600 group-hover:text-amber-700",
-  users: "text-cyan-600 group-hover:text-cyan-700",
-  megaphone: "text-orange-600 group-hover:text-orange-700",
-  calendar: "text-indigo-600 group-hover:text-indigo-700",
-  book: "text-blue-600 group-hover:text-blue-700",
-};
-
 /**
  * Iconos 24×24 (stroke) del menú principal (paths Heroicons outline 1.5).
+ * Heredan `currentColor` del enlace padre.
  */
 export function NavItemIcon({ id, className = "h-3.5 w-3.5" }: Readonly<NavItemIconProps>) {
   return (
     <svg
-      className={`${className} ${ICON_COLOR[id]}`}
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

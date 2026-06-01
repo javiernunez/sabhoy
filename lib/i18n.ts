@@ -9,6 +9,7 @@ type Dictionary = Record<string, string>;
 const es: Dictionary = {
   "language.spanish": "Castellano",
   "language.valencian": "Valenciano",
+  "nav.main": "Navegación principal",
   "nav.home": "Inicio",
   "nav.news": "Noticias",
   "nav.politics": "Política",
@@ -45,6 +46,7 @@ const es: Dictionary = {
 const val: Dictionary = {
   "language.spanish": "Castellà",
   "language.valencian": "Valencià",
+  "nav.main": "Navegació principal",
   "nav.home": "Inici",
   "nav.news": "Notícies",
   "nav.politics": "Política",

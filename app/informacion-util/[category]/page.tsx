@@ -76,11 +76,11 @@ function RelatedPagesGrid({ pages, cat, isVal }: Readonly<{ pages: LocalizedPage
               {cat.icon}
             </span>
             <div>
-              <h3 className="font-semibold text-slate-900 group-hover:text-blue-700">
+              <h3 className="font-semibold text-slate-900 group-hover:text-sab-terracotta">
                 {page.title}
               </h3>
               {page.isHighlighted ? (
-                <span className="mt-1 inline-block rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-700">
+                <span className="mt-1 inline-block rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sab-terracotta">
                   {isVal ? "Destacat" : "Destacado"}
                 </span>
               ) : null}
@@ -132,7 +132,7 @@ export default async function InfoCategoryPage({ params }: Props) {
       <div className="mb-8">
         <Link
           href="/informacion-util"
-          className="mb-3 inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-blue-700"
+          className="mb-3 inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-sab-terracotta"
         >
           ← {backLabel}
         </Link>
@@ -165,7 +165,7 @@ export default async function InfoCategoryPage({ params }: Props) {
       <div className="mt-10 border-t border-slate-200 pt-6">
         <Link
           href="/informacion-util"
-          className="inline-flex items-center gap-1 text-sm font-medium text-blue-700 transition-colors hover:text-blue-800 hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-medium text-sab-terracotta transition-colors hover:text-sab-terracotta-dark hover:underline"
         >
           ← {isVal ? "Tornar a informació útil" : "Volver a información útil"}
         </Link>

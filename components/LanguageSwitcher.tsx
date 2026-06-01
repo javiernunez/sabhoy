@@ -6,21 +6,26 @@ type LanguageSwitcherProps = {
   locale: Locale;
   /** Ruta actual para volver tras cambiar idioma (p. ej. desde cabecera en páginas internas). */
   returnTo?: string;
+  variant?: "default" | "header";
 };
 
-export function LanguageSwitcher({ locale, returnTo = "/" }: LanguageSwitcherProps) {
+export function LanguageSwitcher({ locale, returnTo = "/", variant = "default" }: LanguageSwitcherProps) {
+  const onDark = variant === "header";
+  const shellClass = onDark
+    ? "inline-flex items-center gap-0.5 rounded-lg border border-white/20 bg-white/10 p-0.5 backdrop-blur"
+    : "inline-flex items-center gap-1 rounded-lg border border-sab-sand bg-white p-0.5";
+  const activeClass = onDark ? "bg-sab-terracotta text-white shadow-sm" : "bg-sab-forest text-white shadow-sm";
+  const idleClass = onDark ? "text-sab-cream/85 hover:bg-white/10" : "text-sab-ink/70 hover:bg-sab-mist";
+
   return (
-    <div
-      className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white p-1"
-      aria-label="Selector de idioma"
-    >
+    <div className={shellClass} aria-label="Selector de idioma">
       <form action={setLocaleAction}>
         <input type="hidden" name="locale" value="es" />
         <input type="hidden" name="returnTo" value={returnTo} />
         <button
           type="submit"
-          className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium transition ${
-            locale === "es" ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-slate-100"
+          className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-bold transition ${
+            locale === "es" ? activeClass : idleClass
           }`}
           aria-label="Cambiar a castellano"
           aria-current={locale === "es" ? "true" : undefined}
@@ -32,7 +37,7 @@ export function LanguageSwitcher({ locale, returnTo = "/" }: LanguageSwitcherPro
             height={14}
             className="h-[14px] w-[20px] rounded-sm border border-white/50 object-cover"
           />
-          CAST
+          ES
         </button>
       </form>
       <form action={setLocaleAction}>
@@ -40,8 +45,8 @@ export function LanguageSwitcher({ locale, returnTo = "/" }: LanguageSwitcherPro
         <input type="hidden" name="returnTo" value={returnTo} />
         <button
           type="submit"
-          className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium transition ${
-            locale === "val" ? "bg-blue-600 text-white" : "text-slate-600 hover:bg-slate-100"
+          className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-bold transition ${
+            locale === "val" ? activeClass : idleClass
           }`}
           aria-label="Canviar a valencià"
           aria-current={locale === "val" ? "true" : undefined}
@@ -53,7 +58,7 @@ export function LanguageSwitcher({ locale, returnTo = "/" }: LanguageSwitcherPro
             height={14}
             className="h-[14px] w-[20px] rounded-sm border border-white/50 object-cover"
           />
-          VAL
+          VA
         </button>
       </form>
     </div>

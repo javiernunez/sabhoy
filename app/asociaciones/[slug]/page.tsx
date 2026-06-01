@@ -205,7 +205,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <section className="space-y-4">
-        <Link href="/asociaciones" className="text-sm font-semibold text-blue-700 hover:underline">
+        <Link href="/asociaciones" className="text-sm font-semibold text-sab-terracotta hover:underline">
           {isVal ? "← Tornar a associacions" : "← Volver a asociaciones"}
         </Link>
         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -251,7 +251,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
                         <span className="text-blue-600" aria-hidden>
                           <WebIcon />
                         </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold text-blue-800 underline-offset-2 group-hover:underline">
+                        <span className="min-w-0 flex-1 text-sm font-semibold text-sab-terracotta-dark underline-offset-2 group-hover:underline">
                           Web oficial
                         </span>
                         <span className="shrink-0 text-slate-400" aria-hidden>
@@ -266,7 +266,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
                         <span className="text-blue-600" aria-hidden>
                           <PhoneIcon />
                         </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold text-blue-800 underline-offset-2 group-hover:underline">
+                        <span className="min-w-0 flex-1 text-sm font-semibold text-sab-terracotta-dark underline-offset-2 group-hover:underline">
                           {isVal ? "Telèfon" : "Teléfono"}
                         </span>
                         <span className="truncate text-right text-xs text-slate-500">{item.phone}</span>
@@ -284,7 +284,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
                         <span className="text-sky-600" aria-hidden>
                           <WebIcon />
                         </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold text-blue-800 underline-offset-2 group-hover:underline">
+                        <span className="min-w-0 flex-1 text-sm font-semibold text-sab-terracotta-dark underline-offset-2 group-hover:underline">
                           {secondaryWebLinkLabel}
                         </span>
                         <span className="shrink-0 text-slate-400" aria-hidden>
@@ -304,7 +304,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
                         <span className="text-[#E4405F]" aria-hidden>
                           <InstagramIcon />
                         </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold text-blue-800 underline-offset-2 group-hover:underline">Instagram</span>
+                        <span className="min-w-0 flex-1 text-sm font-semibold text-sab-terracotta-dark underline-offset-2 group-hover:underline">Instagram</span>
                         <span className="shrink-0 text-slate-400" aria-hidden>
                           →
                         </span>
@@ -322,7 +322,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
                         <span className="text-[#1877f2]" aria-hidden>
                           <FacebookIcon />
                         </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold text-blue-800 underline-offset-2 group-hover:underline">Facebook</span>
+                        <span className="min-w-0 flex-1 text-sm font-semibold text-sab-terracotta-dark underline-offset-2 group-hover:underline">Facebook</span>
                         <span className="shrink-0 text-slate-400" aria-hidden>
                           →
                         </span>
@@ -340,7 +340,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
                         <span className="text-[#010101]" aria-hidden>
                           <TikTokIcon />
                         </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold text-blue-800 underline-offset-2 group-hover:underline">TikTok</span>
+                        <span className="min-w-0 flex-1 text-sm font-semibold text-sab-terracotta-dark underline-offset-2 group-hover:underline">TikTok</span>
                         <span className="shrink-0 text-slate-400" aria-hidden>
                           →
                         </span>
@@ -353,7 +353,7 @@ export default async function AsociacionDetailPage({ params }: Params) {
                         <span className="text-[#EA4335]" aria-hidden>
                           <LocationIcon />
                         </span>
-                        <span className="min-w-0 flex-1 text-sm font-semibold text-blue-800 underline-offset-2 group-hover:underline">
+                        <span className="min-w-0 flex-1 text-sm font-semibold text-sab-terracotta-dark underline-offset-2 group-hover:underline">
                           {isVal ? "Adreça a Google Maps" : "Dirección en Google Maps"}
                         </span>
                         <span className="shrink-0 text-slate-400" aria-hidden>

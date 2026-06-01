@@ -64,7 +64,7 @@ function SchoolInfoCard({ school, isVal }: Readonly<{ school: (typeof SCHOOLS)[n
         {school.phone ? (
           <div className="flex items-start gap-3 text-slate-700">
             <span className="mt-0.5 text-lg" aria-hidden>📞</span>
-            <a href={`tel:${school.phone.replace(/\s/g, "")}`} className="font-semibold text-blue-700 hover:underline">
+            <a href={`tel:${school.phone.replace(/\s/g, "")}`} className="font-semibold text-sab-terracotta hover:underline">
               {school.phone}
             </a>
           </div>
@@ -72,7 +72,7 @@ function SchoolInfoCard({ school, isVal }: Readonly<{ school: (typeof SCHOOLS)[n
         {school.website ? (
           <div className="flex items-start gap-3 text-slate-700">
             <span className="mt-0.5 text-lg" aria-hidden>🌐</span>
-            <a href={school.website} target="_blank" rel="noopener noreferrer" className="break-all font-medium text-blue-700 underline decoration-blue-400/80 underline-offset-2 hover:text-blue-900">
+            <a href={school.website} target="_blank" rel="noopener noreferrer" className="break-all font-medium text-sab-terracotta underline decoration-blue-400/80 underline-offset-2 hover:text-sab-forest">
               {school.website.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}
             </a>
           </div>
@@ -121,7 +121,7 @@ export default async function SchoolDetailPage({ params }: Props) {
       <div className="mb-6">
         <Link
           href="/colegios"
-          className="mb-3 inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-blue-700"
+          className="mb-3 inline-flex items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-sab-terracotta"
         >
           ← {isVal ? "Tots els col·legis" : "Todos los colegios"}
         </Link>
@@ -155,7 +155,7 @@ export default async function SchoolDetailPage({ params }: Props) {
                   {isVal ? t.labelVal.charAt(0) : t.label.charAt(0)}
                 </span>
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-900 group-hover:text-blue-700">{s.name}</h3>
+                  <h3 className="text-sm font-semibold text-slate-900 group-hover:text-sab-terracotta">{s.name}</h3>
                   <span className={`text-xs ${t.color}`}>{isVal ? t.labelVal : t.label}</span>
                 </div>
               </Link>
@@ -167,7 +167,7 @@ export default async function SchoolDetailPage({ params }: Props) {
       <div className="mt-10 border-t border-slate-200 pt-6">
         <Link
           href="/informacion-util/colegios"
-          className="inline-flex items-center gap-1 text-sm font-medium text-blue-700 transition-colors hover:text-blue-800 hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-medium text-sab-terracotta transition-colors hover:text-sab-terracotta-dark hover:underline"
         >
           ← {isVal ? "Educació i col·legis" : "Educación y colegios"}
         </Link>

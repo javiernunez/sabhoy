@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CtaLink } from "@/components/CtaLink";
 import { NewsCard } from "@/components/NewsCard";
+import { PageShell } from "@/components/PageShell";
 import { SITE_NAME } from "@/lib/constants";
+import { ui } from "@/lib/ui-classes";
 import { prisma } from "@/lib/prisma";
 import { canonicalFromPathnameSearch, canonicalPath } from "@/lib/seo";
 import { ARTICLE_CATEGORIES, articleCategoryLabel, isArticleCategory } from "@/lib/article-categories";
@@ -60,17 +62,16 @@ export default async function NewsPage({ searchParams }: Readonly<Props>) {
   const [lead, ...rest] = localizedArticles;
 
   return (
-    <div className="container-page max-w-3xl">
-      <header className="border-b border-slate-200 pb-6">
-        <h1 className="font-serif text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Noticias</h1>
-        <p className="mt-2 max-w-2xl font-serif text-base text-slate-600">
-          {isVal
-            ? "Actualitat i successos a San Antonio de Benagéber, Camp de Túria. Filtra per temàtica o recorre la cronologia."
-            : "Actualidad y sucesos en L&apos;Eliana, Camp de Túria. Filtra por temática o recorre la cronología."}
-        </p>
-      </header>
-
-      <div className="mt-6 flex flex-wrap gap-2">
+    <PageShell
+      title={isVal ? "Notícies" : "Noticias"}
+      subtitle={
+        isVal
+          ? "Actualitat i successos a San Antonio de Benagéber, Camp de Túria. Filtra per temàtica o recorre la cronologia."
+          : "Actualidad y sucesos en San Antonio de Benagéber, Camp de Túria. Filtra por temática o recorre la cronología."
+      }
+    >
+      <div className="mx-auto max-w-3xl">
+      <div className="flex flex-wrap gap-2">
         <FilterLink href="/noticias" active={!filterCategory} label={isVal ? "Totes" : "Todas"} />
         {ARTICLE_CATEGORIES.map((c) => (
           <FilterLink
@@ -84,11 +85,11 @@ export default async function NewsPage({ searchParams }: Readonly<Props>) {
 
       <div className="mt-8">
         {articles.length === 0 ? (
-          <p className="text-sm text-slate-600">{isVal ? "No hi ha notícies en esta categoria encara." : "No hay noticias en esta categoría todavía."}</p>
+          <p className={`text-sm ${ui.muted}`}>{isVal ? "No hi ha notícies en esta categoria encara." : "No hay noticias en esta categoría todavía."}</p>
         ) : (
           <>
             {lead ? <NewsCard key={lead.id} article={lead} lead /> : null}
-            <div className="divide-y divide-slate-200">
+            <div className="mt-6 divide-y divide-sab-sand">
               {rest.map((article) => (
                 <NewsCard key={article.id} article={article} />
               ))}
@@ -97,10 +98,10 @@ export default async function NewsPage({ searchParams }: Readonly<Props>) {
         )}
       </div>
 
-      <section className="mt-10 grid gap-3 rounded-2xl border border-blue-200 bg-blue-50/60 p-4 md:grid-cols-2">
+      <section className="mt-10 grid gap-3 rounded-2xl border border-sab-terracotta/30 bg-sab-mist/60 p-4 md:grid-cols-2">
         <div>
-          <p className="text-sm font-semibold text-blue-900">{isVal ? "Has vist alguna incidència al teu barri?" : "¿Has visto alguna incidencia en tu barrio?"}</p>
-          <p className="mt-1 text-sm text-blue-800/90">
+          <p className="text-sm font-semibold text-sab-forest">{isVal ? "Has vist alguna incidència al teu barri?" : "¿Has visto alguna incidencia en tu barrio?"}</p>
+          <p className="mt-1 text-sm text-sab-terracotta-dark/90">
             {isVal ? "Envia-la i la revisem abans de publicar-la." : "Envíala y la revisamos antes de publicarla."}
           </p>
         </div>
@@ -108,20 +109,21 @@ export default async function NewsPage({ searchParams }: Readonly<Props>) {
           <CtaLink
             href="/denuncias/nueva"
             trackParams={{ cta_name: "news_send_report", cta_context: "news_page_bottom", destination: "/denuncias/nueva" }}
-            className="rounded-lg bg-blue-700 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-600"
+            className="sab-btn-primary"
           >
             {isVal ? "Enviar denúncia" : "Enviar incidencia"}
           </CtaLink>
           <CtaLink
             href="/eventos"
             trackParams={{ cta_name: "news_view_events", cta_context: "news_page_bottom", destination: "/eventos" }}
-            className="rounded-lg border border-blue-300 bg-white px-3 py-2 text-sm font-semibold text-blue-800 hover:bg-blue-100"
+            className="sab-btn-ghost"
           >
             {isVal ? "Veure agenda" : "Ver agenda"}
           </CtaLink>
         </div>
       </section>
-    </div>
+      </div>
+    </PageShell>
   );
 }
 
@@ -131,8 +133,8 @@ function FilterLink({ href, active, label }: Readonly<{ href: string; active: bo
       href={href}
       className={
         active
-          ? "inline-flex items-center rounded-full border-2 border-blue-600 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-900"
-          : "inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:border-slate-300"
+          ? "inline-flex items-center rounded-lg border-2 border-sab-forest bg-sab-forest/10 px-3 py-1.5 text-sm font-bold text-sab-forest"
+          : "inline-flex items-center rounded-lg border border-sab-sand bg-white px-3 py-1.5 text-sm font-medium text-sab-ink/80 hover:border-sab-terracotta/40 hover:bg-sab-mist"
       }
     >
       {label}

@@ -54,7 +54,7 @@ export default async function ReportsPage({ searchParams }: Readonly<ReportsPage
           <h1 className="text-3xl font-bold">{isVal ? "Denúncies ciutadanes" : "Denuncias ciudadanas"}</h1>
           <p className="mt-2 text-slate-600">{isVal ? "Incidències publicades després de la seua revisió." : "Incidencias publicadas tras su revisión."}</p>
         </div>
-        <Link href="/denuncias/nueva" className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+        <Link href="/denuncias/nueva" className="rounded bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white">
           {isVal ? "Nova denúncia" : "Nueva denuncia"}
         </Link>
       </div>
@@ -62,7 +62,7 @@ export default async function ReportsPage({ searchParams }: Readonly<ReportsPage
       <div className="mt-4 flex flex-wrap gap-2">
         <Link
           href="/denuncias"
-          className={`rounded-full border px-3 py-1 text-xs font-medium ${activeTag ? "border-slate-300 text-slate-700" : "border-blue-600 bg-blue-600 text-white"}`}
+          className={`rounded-full border px-3 py-1 text-xs font-medium ${activeTag ? "border-slate-300 text-slate-700" : "border-blue-600 bg-sab-terracotta text-white"}`}
         >
           {isVal ? "Totes" : "Todas"}
         </Link>
@@ -72,7 +72,7 @@ export default async function ReportsPage({ searchParams }: Readonly<ReportsPage
             <Link
               key={category}
               href={`/denuncias?tag=${encodeURIComponent(category)}`}
-              className={`rounded-full border px-3 py-1 text-xs font-medium ${isActive ? "border-blue-600 bg-blue-600 text-white" : "border-slate-300 text-slate-700"}`}
+              className={`rounded-full border px-3 py-1 text-xs font-medium ${isActive ? "border-blue-600 bg-sab-terracotta text-white" : "border-slate-300 text-slate-700"}`}
             >
               #{category}
             </Link>

@@ -43,7 +43,7 @@ export function EventDetailMeta({ locale, category, details, eventDate }: Props)
 
     return (
       <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-sab-terracotta-dark">{label}</p>
         <p className="text-sm text-slate-600">
           {new Intl.DateTimeFormat(isVal ? "ca-ES" : "es-ES", {
             weekday: "long",
@@ -94,7 +94,7 @@ export function EventDetailMeta({ locale, category, details, eventDate }: Props)
 
     return (
       <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">{label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-sab-terracotta-dark">{label}</p>
         <p className="text-sm font-medium text-slate-700">{rangeSentence}</p>
         {span != null && span > 1 ? (
           <p className="text-sm text-slate-600">

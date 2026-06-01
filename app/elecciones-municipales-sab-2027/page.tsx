@@ -221,7 +221,7 @@ export default async function EleccionesMunicipales2027Page() {
           </h2>
           <Link
             href="/noticias?categoria=ELECCIONES_2027"
-            className="text-sm font-semibold text-blue-800 underline decoration-blue-300 underline-offset-2 hover:no-underline"
+            className="text-sm font-semibold text-sab-terracotta-dark underline decoration-blue-300 underline-offset-2 hover:no-underline"
           >
             {t.sectionNewsSeeAll}
           </Link>
@@ -293,15 +293,15 @@ function MoreContext({ isVal, heading }: { readonly isVal: boolean; readonly hea
         {isVal ? (
           <>
             Pots seguir la política local al nostre apartat de{" "}
-            <Link href="/politica" className="font-semibold text-blue-800 underline hover:no-underline">
+            <Link href="/politica" className="font-semibold text-sab-terracotta-dark underline hover:no-underline">
               Política
             </Link>
             , les notícies d&apos;este especial a{" "}
-            <Link href="/noticias?categoria=ELECCIONES_2027" className="font-semibold text-blue-800 underline hover:no-underline">
+            <Link href="/noticias?categoria=ELECCIONES_2027" className="font-semibold text-sab-terracotta-dark underline hover:no-underline">
               Eleccions 2027
             </Link>{" "}
             i la política local general al{" "}
-            <Link href="/noticias?categoria=POLITICA_LOCAL" className="font-semibold text-blue-800 underline hover:no-underline">
+            <Link href="/noticias?categoria=POLITICA_LOCAL" className="font-semibold text-sab-terracotta-dark underline hover:no-underline">
               butlletí
             </Link>
             .
@@ -309,15 +309,15 @@ function MoreContext({ isVal, heading }: { readonly isVal: boolean; readonly hea
         ) : (
           <>
             Puedes seguir la política local en nuestra sección de{" "}
-            <Link href="/politica" className="font-semibold text-blue-800 underline hover:no-underline">
+            <Link href="/politica" className="font-semibold text-sab-terracotta-dark underline hover:no-underline">
               Política
             </Link>
             , las noticias de este especial en{" "}
-            <Link href="/noticias?categoria=ELECCIONES_2027" className="font-semibold text-blue-800 underline hover:no-underline">
+            <Link href="/noticias?categoria=ELECCIONES_2027" className="font-semibold text-sab-terracotta-dark underline hover:no-underline">
               Elecciones 2027
             </Link>{" "}
             y el resto de política local en el{" "}
-            <Link href="/noticias?categoria=POLITICA_LOCAL" className="font-semibold text-blue-800 underline hover:no-underline">
+            <Link href="/noticias?categoria=POLITICA_LOCAL" className="font-semibold text-sab-terracotta-dark underline hover:no-underline">
               boletín
             </Link>
             .

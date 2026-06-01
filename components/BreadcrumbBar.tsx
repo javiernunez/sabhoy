@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { getTranslator, type Locale } from "@/lib/i18n";
+import { ui } from "@/lib/ui-classes";
 
 type Props = { locale: Locale };
 
@@ -65,26 +66,23 @@ export function BreadcrumbBar({ locale }: Props) {
   }
 
   return (
-    <div className="border-b border-slate-200/90 bg-slate-50/60">
-      <div className="container-page max-w-6xl py-2.5">
+    <div className="border-b border-sab-sand/80 bg-sab-mist/50">
+      <div className="container-page py-2.5">
         <nav aria-label="Breadcrumb">
-          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-600">
+          <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-sab-ink/65">
             {items.map((item, i) => {
               const last = i === items.length - 1;
               return (
                 <li key={item.path} className="inline-flex min-w-0 max-w-full items-center gap-x-2">
                   {i > 0 ? (
-                    <span aria-hidden className="shrink-0 text-slate-300">
+                    <span aria-hidden className="shrink-0 text-sab-sand">
                       /
                     </span>
                   ) : null}
                   {last ? (
-                    <span className="min-w-0 truncate font-medium text-slate-900">{item.name}</span>
+                    <span className="min-w-0 truncate font-semibold text-sab-forest">{item.name}</span>
                   ) : (
-                    <Link
-                      href={item.path}
-                      className="min-w-0 truncate text-blue-800 underline decoration-blue-800/30 underline-offset-2 hover:decoration-blue-800"
-                    >
+                    <Link href={item.path} className={`min-w-0 truncate ${ui.link}`}>
                       {item.name}
                     </Link>
                   )}

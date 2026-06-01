@@ -127,8 +127,8 @@ export default async function UsefulInfoPage() {
                 className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow"
               >
                 <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-xs">⭐</span>
-                  <h3 className="font-semibold text-slate-900 group-hover:text-blue-700 line-clamp-2 text-sm">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-sab-mist text-xs">⭐</span>
+                  <h3 className="font-semibold text-slate-900 group-hover:text-sab-terracotta line-clamp-2 text-sm">
                     {page.title}
                   </h3>
                 </div>
@@ -156,11 +156,11 @@ export default async function UsefulInfoPage() {
                 href={`/${page.slug}`}
                 className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow"
               >
-                <h3 className="font-semibold text-slate-900 group-hover:text-blue-700 text-sm">
+                <h3 className="font-semibold text-slate-900 group-hover:text-sab-terracotta text-sm">
                   {page.title}
                 </h3>
                 {page.isHighlighted ? (
-                  <span className="mt-1 inline-block rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-700">
+                  <span className="mt-1 inline-block rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sab-terracotta">
                     {isVal ? "Destacat" : "Destacado"}
                   </span>
                 ) : null}

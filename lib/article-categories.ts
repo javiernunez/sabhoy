@@ -19,12 +19,12 @@ export const articleCategoryLabel: Record<ArticleCategory, string> = {
 };
 
 export const articleCategoryStyle: Record<ArticleCategory, string> = {
-  GENERAL: "bg-slate-100 text-slate-800 border-slate-200",
-  POLITICA_LOCAL: "bg-amber-50 text-amber-900 border-amber-200",
-  SUCESOS: "bg-rose-50 text-rose-900 border-rose-200",
-  CULTURA: "bg-violet-50 text-violet-900 border-violet-200",
-  DEPORTE: "bg-sky-50 text-sky-900 border-sky-200",
-  ELECCIONES_2027: "bg-blue-50 text-blue-900 border-blue-300",
+  GENERAL: "bg-sab-mist text-sab-ink border-sab-sand",
+  POLITICA_LOCAL: "bg-amber-50 text-amber-950 border-amber-200",
+  SUCESOS: "bg-rose-50 text-rose-950 border-rose-200",
+  CULTURA: "bg-violet-50 text-violet-950 border-violet-200",
+  DEPORTE: "bg-emerald-50 text-emerald-950 border-emerald-200",
+  ELECCIONES_2027: "bg-sab-forest/10 text-sab-forest border-sab-forest/30",
 };
 
 export function isArticleCategory(value: string | undefined): value is ArticleCategory {

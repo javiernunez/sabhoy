@@ -30,7 +30,7 @@ export function LazyYouTubeEmbed({ embedUrl, title }: Props) {
     <button
       type="button"
       onClick={() => setActive(true)}
-      className="relative mt-3 flex w-full items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-900 pt-[56.25%] text-white transition hover:border-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      className="relative mt-3 flex w-full items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-slate-900 pt-[56.25%] text-white transition hover:border-sab-terracotta/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-sab-terracotta"
       aria-label={title}
     >
       <span className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-slate-900/90 px-4">

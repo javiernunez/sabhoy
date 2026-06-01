@@ -7,13 +7,13 @@ const EventCalendarWidgetLazy = dynamic(
   {
     loading: () => (
       <section
-        className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm"
+        className="sab-card p-4"
         aria-hidden
       >
-        <div className="h-4 w-40 animate-pulse rounded bg-slate-200" />
+        <div className="h-4 w-40 animate-pulse rounded bg-sab-sand" />
         <div className="mt-4 grid grid-cols-7 gap-1">
           {Array.from({ length: 35 }).map((_, i) => (
-            <div key={i} className="h-10 animate-pulse rounded bg-slate-100" />
+            <div key={i} className="h-10 animate-pulse rounded bg-sab-mist" />
           ))}
         </div>
       </section>

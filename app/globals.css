@@ -4,18 +4,25 @@
 
 :root {
   color-scheme: light;
+  --sab-ink: #1a1612;
+  --sab-forest: #1b4332;
+  --sab-terracotta: #c4683a;
+  --sab-cream: #faf6f0;
 }
 
 body {
-  @apply bg-slate-50 text-slate-900;
+  @apply bg-sab-cream text-sab-ink antialiased;
+  background-image:
+    radial-gradient(ellipse 120% 80% at 100% -20%, rgba(196, 104, 58, 0.07), transparent 50%),
+    radial-gradient(ellipse 80% 60% at 0% 100%, rgba(27, 67, 50, 0.06), transparent 45%);
 }
 
 .prose-article {
-  @apply text-lg text-slate-800;
+  @apply text-lg text-sab-ink/90;
 }
 
 .prose-article :where(a[href]) {
-  @apply break-words font-medium text-blue-700 underline decoration-blue-400/80 underline-offset-[3px] transition-colors hover:text-blue-900 hover:decoration-blue-600;
+  @apply break-words font-semibold text-sab-terracotta underline decoration-sab-terracotta/50 underline-offset-[3px] transition-colors hover:text-sab-forest hover:decoration-sab-forest/60;
 }
 
 .prose-article :where(a[href] strong) {
@@ -27,24 +34,49 @@ body {
 }
 
 .container-page {
-  @apply mx-auto w-full max-w-6xl px-4 py-6 md:px-6;
+  @apply mx-auto w-full max-w-7xl px-4 py-6 md:px-8;
+}
+
+@layer components {
+  .sab-link {
+    @apply font-semibold text-sab-terracotta underline decoration-sab-terracotta/40 underline-offset-[3px] transition hover:text-sab-forest hover:decoration-sab-forest/50;
+  }
+
+  .sab-btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-sab-terracotta-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sab-terracotta;
+  }
+
+  .sab-card {
+    @apply rounded-2xl border border-sab-sand/90 bg-white shadow-[0_2px_12px_rgba(26,22,18,0.06)];
+  }
+
+  .sab-nav-link {
+    @apply flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-sab-ink/80 transition hover:bg-white hover:text-sab-forest;
+  }
+
+  .sab-nav-link-active {
+    @apply bg-sab-terracotta text-white shadow-sm hover:bg-sab-terracotta-dark hover:text-white;
+  }
+
+  .sab-section-kicker {
+    @apply text-[11px] font-bold uppercase tracking-[0.2em] text-sab-terracotta;
+  }
 }
 
 /*
- * MDXEditor: @tailwind base (Preflight) sets h1–h6 to font-size/weight inherit,
- * so WYSIWYG headings looked like body text. Scope resets to the admin editor only.
+ * MDXEditor: @tailwind base (Preflight) resets headings inside the admin editor.
  */
 .mdxeditor.mdxeditor-admin :where(h1) {
-  @apply text-2xl font-bold text-slate-900 mt-4 mb-2 first:mt-0;
+  @apply text-2xl font-bold text-sab-ink mt-4 mb-2 first:mt-0;
 }
 .mdxeditor.mdxeditor-admin :where(h2) {
-  @apply text-xl font-semibold text-slate-900 mt-3 mb-2 first:mt-0;
+  @apply text-xl font-semibold text-sab-ink mt-3 mb-2 first:mt-0;
 }
 .mdxeditor.mdxeditor-admin :where(h3) {
-  @apply text-lg font-semibold text-slate-800 mt-2 mb-1 first:mt-0;
+  @apply text-lg font-semibold text-sab-ink/90 mt-2 mb-1 first:mt-0;
 }
 .mdxeditor.mdxeditor-admin :where(h4) {
-  @apply text-base font-semibold text-slate-800 mt-2 mb-1 first:mt-0;
+  @apply text-base font-semibold text-sab-ink/90 mt-2 mb-1 first:mt-0;
 }
 .mdxeditor.mdxeditor-admin :where(ul) {
   @apply my-2 list-disc pl-6;
@@ -53,8 +85,8 @@ body {
   @apply my-2 list-decimal pl-6;
 }
 .mdxeditor.mdxeditor-admin :where(blockquote) {
-  @apply my-2 border-l-4 border-slate-200 pl-3 text-slate-700 italic;
+  @apply my-2 border-l-4 border-sab-sand pl-3 text-sab-ink/75 italic;
 }
 .mdxeditor.mdxeditor-admin :where(hr) {
-  @apply my-4 border-0 border-t border-slate-200;
+  @apply my-4 border-0 border-t border-sab-sand;
 }

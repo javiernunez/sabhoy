@@ -108,7 +108,7 @@ export default async function NostrePobleDetailPage({ params }: Props) {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <p className="text-sm font-medium text-blue-800">{sectionLabel}</p>
+      <p className="text-sm font-medium text-sab-terracotta-dark">{sectionLabel}</p>
       <h1 className="mt-2 text-3xl font-bold text-slate-900">{localizedTitle}</h1>
       <SharePlatformsRow url={pageUrl} title={localizedTitle} isVal={isVal} className="mt-2" />
       {page.summary || page.summaryVal ? (
