@@ -1,0 +1,295 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ArticleCategory {
+  GENERAL
+  POLITICA_LOCAL
+  SUCESOS
+  CULTURA
+  DEPORTE
+  ELECCIONES_2027
+}
+
+enum DirectoryKind {
+  COMMERCE
+  SPORT
+  ASSOCIATION
+  POLITICS
+}
+
+/// Categoría temática de vídeos (listados y filtros en la web pública)
+enum VideoCategory {
+  GENERAL
+  POLITICA
+}
+
+/// Contenidos de "El Nostre Poble": patrimoni, tradicions, història, alcaldes, etc. (una pàgina per slug)
+enum PoblePageCategory {
+  MONUMENTS
+  TRADITIONS
+  HISTORY
+  MAYORS
+  OTHER
+}
+
+/// Tipo de evento para campos específicos y vista pública (teatro: hora y compañía; feria: último día y duración)
+enum EventCategory {
+  generico
+  teatro
+  feria
+}
+
+model Article {
+  id          Int             @id @default(autoincrement())
+  title       String
+  titleVal    String?
+  slug        String          @unique
+  content     String
+  contentVal  String?
+  summary     String?
+  summaryVal  String?
+  imageUrl    String?
+  category    ArticleCategory @default(GENERAL)
+  status      String          @default("published")
+  /// Prioridad en portada: mayor número = más arriba (misma lógica que orden manual).
+  portadaRank Int             @default(0)
+  isHero      Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  comments    ArticleComment[]
+
+  @@index([status, portadaRank])
+  @@index([status, createdAt])
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  emailVerified DateTime?
+  name          String?
+  image         String?
+  passwordHash  String
+  role          UserRole @default(USER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  reports       Report[]
+  reportComments ReportComment[]
+  reportLikes   ReportLike[]
+  articleComments ArticleComment[]
+  newsletter    NewsletterSubscription?
+}
+
+model ArticleComment {
+  id        Int      @id @default(autoincrement())
+  articleId Int
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  author    String?
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([articleId, createdAt])
+}
+
+model Report {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  content   String
+  categories String[]
+  status    String   @default("pending")
+  imageUrl  String?
+  likeCount Int      @default(0)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  comments  ReportComment[]
+  likes     ReportLike[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ReportComment {
+  id        Int      @id @default(autoincrement())
+  reportId  Int
+  report    Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  author    String?
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([reportId, createdAt])
+}
+
+model ReportLike {
+  id        Int      @id @default(autoincrement())
+  reportId  Int
+  report    Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([reportId, userId])
+  @@index([reportId, createdAt])
+}
+
+model EvergreenPage {
+  id          Int      @id @default(autoincrement())
+  title       String
+  titleVal    String?
+  slug        String   @unique
+  content     String
+  contentVal  String?
+  isHighlighted Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model LocalDirectoryEntry {
+  id          Int           @id @default(autoincrement())
+  kind        DirectoryKind
+  name        String
+  nameVal     String?
+  slug        String        @unique
+  category    String
+  categoryVal String?
+  description String
+  descriptionVal String?
+  imageUrl    String?
+  websiteUrl  String?
+  address     String?
+  phone       String?
+  facebookUrl String?
+  instagramUrl String?
+  tiktokUrl   String?
+  icon        String?
+  href        String?
+  isActive    Boolean       @default(true)
+  sortOrder   Int           @default(0)
+  ratingAverage Float       @default(0)
+  ratingCount   Int         @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  reviews     LocalDirectoryReview[]
+  categoryLinks LocalDirectoryEntryCategory[]
+
+  @@index([kind, isActive, sortOrder])
+}
+
+model LocalDirectoryCategory {
+  id        Int      @id @default(autoincrement())
+  kind      DirectoryKind
+  name      String
+  nameVal   String?
+  slug      String
+  parentId  Int?
+  parent    LocalDirectoryCategory? @relation("LocalDirectoryCategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children  LocalDirectoryCategory[] @relation("LocalDirectoryCategoryTree")
+  entries   LocalDirectoryEntryCategory[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([kind, slug])
+  @@unique([kind, parentId, name])
+  @@index([kind, parentId, name])
+}
+
+model LocalDirectoryEntryCategory {
+  entryId    Int
+  categoryId Int
+  entry      LocalDirectoryEntry    @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  category   LocalDirectoryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([entryId, categoryId])
+  @@index([categoryId])
+}
+
+model LocalDirectoryReview {
+  id        Int      @id @default(autoincrement())
+  entryId   Int
+  entry     LocalDirectoryEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  score     Int
+  comment   String?
+  author    String?
+  createdAt DateTime @default(now())
+
+  @@index([entryId, createdAt])
+}
+
+model Video {
+  id          Int      @id @default(autoincrement())
+  url         String
+  description String
+  descriptionVal String?
+  category    VideoCategory @default(GENERAL)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([createdAt])
+  @@index([category, createdAt])
+}
+
+model NostrePoblePage {
+  id          Int               @id @default(autoincrement())
+  category    PoblePageCategory
+  slug        String            @unique
+  title       String
+  titleVal    String?
+  summary     String?
+  summaryVal  String?
+  content     String
+  contentVal  String?
+  imageUrl    String?
+  isPublished Boolean           @default(true)
+  sortOrder   Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([category, isPublished, sortOrder])
+}
+
+model Event {
+  id             Int           @id @default(autoincrement())
+  slug           String        @unique
+  category       EventCategory @default(generico)
+  details        Json?
+  title          String
+  titleVal       String?
+  description    String
+  descriptionVal String?
+  eventDate      DateTime
+  imageUrl       String?
+  linkUrl        String?
+  externalId     String?       @unique
+  source         String?
+  sourceUrl      String?
+  status         String        @default("active")
+  lastSeenAt     DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([eventDate, createdAt])
+  @@index([status, eventDate])
+  @@index([category])
+}

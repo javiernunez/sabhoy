@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900;
+}
+
+.prose-article {
+  @apply text-lg text-slate-800;
+}
+
+.prose-article :where(a[href]) {
+  @apply break-words font-medium text-blue-700 underline decoration-blue-400/80 underline-offset-[3px] transition-colors hover:text-blue-900 hover:decoration-blue-600;
+}
+
+.prose-article :where(a[href] strong) {
+  @apply font-semibold text-inherit;
+}
+
+.prose-article p {
+  @apply mb-5 last:mb-0;
+}
+
+.container-page {
+  @apply mx-auto w-full max-w-6xl px-4 py-6 md:px-6;
+}
+
+/*
+ * MDXEditor: @tailwind base (Preflight) sets h1–h6 to font-size/weight inherit,
+ * so WYSIWYG headings looked like body text. Scope resets to the admin editor only.
+ */
+.mdxeditor.mdxeditor-admin :where(h1) {
+  @apply text-2xl font-bold text-slate-900 mt-4 mb-2 first:mt-0;
+}
+.mdxeditor.mdxeditor-admin :where(h2) {
+  @apply text-xl font-semibold text-slate-900 mt-3 mb-2 first:mt-0;
+}
+.mdxeditor.mdxeditor-admin :where(h3) {
+  @apply text-lg font-semibold text-slate-800 mt-2 mb-1 first:mt-0;
+}
+.mdxeditor.mdxeditor-admin :where(h4) {
+  @apply text-base font-semibold text-slate-800 mt-2 mb-1 first:mt-0;
+}
+.mdxeditor.mdxeditor-admin :where(ul) {
+  @apply my-2 list-disc pl-6;
+}
+.mdxeditor.mdxeditor-admin :where(ol) {
+  @apply my-2 list-decimal pl-6;
+}
+.mdxeditor.mdxeditor-admin :where(blockquote) {
+  @apply my-2 border-l-4 border-slate-200 pl-3 text-slate-700 italic;
+}
+.mdxeditor.mdxeditor-admin :where(hr) {
+  @apply my-4 border-0 border-t border-slate-200;
+}

@@ -1,0 +1,58 @@
+{
+  "name": "sabhoy-es",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test:regression": "node --test tests/regressions/*.test.cjs",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:seed": "prisma db seed",
+    "prisma:seed:evergreen": "tsx prisma/seed-evergreen-pages.ts",
+    "comercios:export": "tsx scripts/enrich-comercios.ts --export scripts/data/comercios-enrichment.json",
+    "comercios:export:missing": "tsx scripts/enrich-comercios.ts --export scripts/data/comercios-enrichment.missing.json --only-missing",
+    "comercios:apply": "tsx scripts/enrich-comercios.ts --apply scripts/data/comercios-enrichment.json",
+    "comercios:categories:sync": "tsx scripts/sync-commerce-categories.ts",
+    "associations:categories:reorganize-sports": "tsx scripts/reorganize-association-sports-categories.ts",
+    "media:variants:backfill": "tsx scripts/backfill-image-variants.ts",
+    "deploy": "bash scripts/deploy.sh"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1036.0",
+    "@mdxeditor/editor": "^3.55.0",
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^3.0.3",
+    "next": "^14.2.8",
+    "next-auth": "^4.24.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanitize-html": "^2.17.3",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/sanitize-html": "^2.16.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.8",
+    "postcss": "^8.4.49",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.15",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

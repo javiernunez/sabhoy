@@ -1,0 +1,19 @@
+[Unit]
+Description=sabhoy.es (Next.js)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/sabhoy.es
+Environment=NODE_ENV=production
+EnvironmentFile=-/opt/sabhoy.es/.env
+# next start (puerto 3001; Nginx u otro proxy delante para 80/443)
+ExecStart=/usr/bin/npm run start -- -H 127.0.0.1 -p 3001
+Restart=on-failure
+RestartSec=10
+# User=tu-usuario-deploy
+# Group=tu-usuario-deploy
+
+[Install]
+WantedBy=multi-user.target

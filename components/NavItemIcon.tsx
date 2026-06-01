@@ -1,0 +1,105 @@
+import type { NavIconId } from "@/lib/constants";
+
+type NavItemIconProps = {
+  id: NavIconId;
+  className?: string;
+};
+
+/** Colores por sección; `currentColor` en el trazo. `group-hover` encaja con el enlace del menú. */
+const ICON_COLOR: Record<NavIconId, string> = {
+  landmark: "text-teal-600 group-hover:text-teal-700",
+  newspaper: "text-rose-600 group-hover:text-rose-700",
+  balance: "text-indigo-600 group-hover:text-indigo-700",
+  play: "text-violet-600 group-hover:text-violet-700",
+  store: "text-amber-600 group-hover:text-amber-700",
+  users: "text-cyan-600 group-hover:text-cyan-700",
+  megaphone: "text-orange-600 group-hover:text-orange-700",
+  calendar: "text-indigo-600 group-hover:text-indigo-700",
+  book: "text-blue-600 group-hover:text-blue-700",
+};
+
+/**
+ * Iconos 24×24 (stroke) del menú principal (paths Heroicons outline 1.5).
+ */
+export function NavItemIcon({ id, className = "h-3.5 w-3.5" }: Readonly<NavItemIconProps>) {
+  return (
+    <svg
+      className={`${className} ${ICON_COLOR[id]}`}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      aria-hidden
+    >
+      {id === "landmark" && (
+        <>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+          />
+        </>
+      )}
+      {id === "newspaper" && (
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z"
+        />
+      )}
+      {id === "balance" && (
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.5H5.25m13.5 0c1.035 0 1.875.84 1.875 1.875V9.75c0 1.035-.84 1.875-1.875 1.875H5.25A1.875 1.875 0 0 1 3.375 9.75V6.375c0-1.035.84-1.875 1.875-1.875"
+        />
+      )}
+      {id === "play" && (
+        <>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
+          />
+        </>
+      )}
+      {id === "store" && (
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"
+        />
+      )}
+      {id === "users" && (
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M18 18.72a9.094 9.094 0 0 0 3.742-.477 3 3 0 0 0-4.682-2.72m.94 3.197a5.976 5.976 0 0 1-1.94 0m0 0a5.969 5.969 0 0 1-3.919-2.431m3.92 2.431a5.969 5.969 0 0 0 3.918-2.431M12 6.75a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm-7.5 8.25a3 3 0 0 1 4.682 2.72A9.094 9.094 0 0 1 5.25 18.72"
+        />
+      )}
+      {id === "megaphone" && (
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46"
+        />
+      )}
+      {id === "calendar" && (
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+        />
+      )}
+      {id === "book" && (
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
+        />
+      )}
+    </svg>
+  );
+}

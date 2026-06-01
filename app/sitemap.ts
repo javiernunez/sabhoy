@@ -1,0 +1,136 @@
+import type { MetadataRoute } from "next";
+import { prisma } from "@/lib/prisma";
+import { SITE_URL } from "@/lib/constants";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+const base = SITE_URL.replace(/\/$/, "");
+
+function isDbUnavailable(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error ?? "");
+  return (
+    message.includes("Can't reach database server") ||
+    message.includes("PrismaClientInitializationError") ||
+    message.includes("ECONNREFUSED")
+  );
+}
+
+async function safeFindMany<T>(query: () => Promise<T>, fallbackLabel: string, fallbackValue: T): Promise<T> {
+  try {
+    return await query();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error ?? "");
+    // CI/build sin DB: no romper build por sitemap; devolver solo rutas estáticas.
+    if (isDbUnavailable(error)) {
+      console.warn(`sitemap: skipping ${fallbackLabel} because DB is unavailable`);
+      return fallbackValue;
+    }
+    // Compatibilidad con despliegues donde aún no existe alguna tabla nueva.
+    if (message.includes(fallbackLabel)) return fallbackValue;
+    throw error;
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [articles, evergreenPages, commerces, associations, poblePages] = await Promise.all([
+    safeFindMany(
+      () => prisma.article.findMany({ where: { status: "published" }, select: { slug: true, updatedAt: true } }),
+      "Article",
+      []
+    ),
+    safeFindMany(
+      () => prisma.evergreenPage.findMany({ select: { slug: true, updatedAt: true } }),
+      "EvergreenPage",
+      []
+    ),
+    safeFindMany(
+      () =>
+        prisma.localDirectoryEntry.findMany({
+          where: { kind: "COMMERCE", isActive: true },
+          select: { slug: true, updatedAt: true },
+        }),
+      "LocalDirectoryEntry",
+      []
+    ),
+    safeFindMany(
+      () =>
+        prisma.localDirectoryEntry.findMany({
+          where: { kind: "ASSOCIATION", isActive: true },
+          select: { slug: true, updatedAt: true },
+        }),
+      "LocalDirectoryEntry",
+      []
+    ),
+    safeFindMany(
+      () =>
+        prisma.nostrePoblePage.findMany({
+          where: { isPublished: true },
+          select: { slug: true, updatedAt: true },
+        }),
+      "NostrePoblePage",
+      []
+    ),
+  ]);
+
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${base}/`, changeFrequency: "daily", priority: 1 },
+    { url: `${base}/noticias`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${base}/denuncias`, changeFrequency: "weekly", priority: 0.75 },
+    { url: `${base}/eventos`, changeFrequency: "weekly", priority: 0.65 },
+    { url: `${base}/informacion-util`, changeFrequency: "weekly", priority: 0.78 },
+    { url: `${base}/el-nostre-poble`, changeFrequency: "weekly", priority: 0.76 },
+    { url: `${base}/comercios`, changeFrequency: "weekly", priority: 0.72 },
+    { url: `${base}/comercios/restaurantes`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/comercios/tiendas`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/comercios/gimnasios`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/asociaciones`, changeFrequency: "weekly", priority: 0.72 },
+    { url: `${base}/asociaciones/casales`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/asociaciones/clubes-deportivos`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/asociaciones/ampas`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/asociaciones/vecinales`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/asociaciones/ongs`, changeFrequency: "weekly", priority: 0.68 },
+    { url: `${base}/politica`, changeFrequency: "daily", priority: 0.78 },
+    { url: `${base}/elecciones-municipales-sab-2027`, changeFrequency: "weekly", priority: 0.82 },
+    { url: `${base}/videos`, changeFrequency: "weekly", priority: 0.72 },
+  ];
+
+  const newsRoutes: MetadataRoute.Sitemap = articles.map((article) => ({
+    url: `${base}/noticias/${article.slug}`,
+    lastModified: article.updatedAt,
+    changeFrequency: "weekly",
+    priority: 0.72,
+  }));
+
+  const evergreenRoutes: MetadataRoute.Sitemap = evergreenPages
+    .filter((page) => page.slug !== "elecciones-municipales-sab-2027")
+    .map((page) => ({
+      url: `${base}/${page.slug}`,
+      lastModified: page.updatedAt,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    }));
+
+  const commerceRoutes: MetadataRoute.Sitemap = commerces.map((commerce) => ({
+    url: `${base}/comercios/${commerce.slug}`,
+    lastModified: commerce.updatedAt,
+    changeFrequency: "weekly",
+    priority: 0.68,
+  }));
+
+  const associationRoutes: MetadataRoute.Sitemap = associations.map((association) => ({
+    url: `${base}/asociaciones/${association.slug}`,
+    lastModified: association.updatedAt,
+    changeFrequency: "weekly",
+    priority: 0.68,
+  }));
+
+  const pobleRoutes: MetadataRoute.Sitemap = poblePages.map((p) => ({
+    url: `${base}/el-nostre-poble/${p.slug}`,
+    lastModified: p.updatedAt,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...newsRoutes, ...evergreenRoutes, ...commerceRoutes, ...associationRoutes, ...pobleRoutes];
+}

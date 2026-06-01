@@ -1,0 +1,110 @@
+name: Deploy Main
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build and deploy to server
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      # Prisma solo para generate / cliente; migrate deploy sigue en el VPS
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
+      # next build: middleware exige NEXTAUTH_SECRET en producción (import estático)
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL || 'https://www.sabhoy.es' }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST || vars.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER || vars.DEPLOY_USER }}
+      DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || vars.DEPLOY_PORT || '22' }}
+      DEPLOY_SERVICE: ${{ secrets.DEPLOY_SERVICE || vars.DEPLOY_SERVICE || 'lelianahoy' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund
+      - name: Regression guards (dynamic route + sitemap fallback)
+        run: npm run test:regression
+      - name: Build Next.js
+        run: npm run build
+      - name: Pack deploy bundle (artefacto para el VPS)
+        run: |
+          tar -czf deploy.tgz .next node_modules public package.json package-lock.json prisma
+          chmod 644 deploy.tgz
+      - name: Validate deploy configuration
+        run: |
+          set -euo pipefail
+          test -n "${DEPLOY_HOST}" || (echo "Missing DEPLOY_HOST (secret or variable)." && exit 1)
+          test -n "${DEPLOY_USER}" || (echo "Missing DEPLOY_USER (secret or variable)." && exit 1)
+          test -n "${{ secrets.DEPLOY_SSH_KEY }}" || (echo "Missing DEPLOY_SSH_KEY secret." && exit 1)
+          echo "Deploy configuration looks good."
+      - name: Prepare bundle staging on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ env.DEPLOY_PORT }}
+          timeout: 30s
+          command_timeout: 2m
+          script: |
+            set -euxo pipefail
+            STAGE=/var/tmp/lelianahoy-ci
+            rm -rf "$STAGE"
+            rm -f /tmp/deploy.tgz /opt/sabhoy.es/deploy.tgz 2>/dev/null || true
+            mkdir -p "$STAGE"
+            chmod 700 "$STAGE"
+      - name: Copy bundle to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ env.DEPLOY_PORT }}
+          source: "deploy.tgz"
+          target: "/var/tmp/lelianahoy-ci"
+          tar_tmp_path: "/var/tmp/lelianahoy-ci"
+          overwrite: true
+          command_timeout: 30m
+      - name: Git sync, extract artefacto, migrate, restart
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ env.DEPLOY_PORT }}
+          timeout: 30s
+          command_timeout: 20m
+          script_stop: true
+          script: |
+            set -euxo pipefail
+            export DEPLOY_PATH="/opt/sabhoy.es"
+            export SERVICE_NAME="${{ env.DEPLOY_SERVICE }}"
+            export SKIP_NPM_CI=1
+            export SKIP_BUILD=1
+            BUNDLE="/var/tmp/lelianahoy-ci/deploy.tgz"
+            cd "$DEPLOY_PATH"
+            date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ fetch/checkout"
+            git fetch origin main
+            # Ficheros untracked (p. ej. subidos a mano) que ya existen en origin/main bloquean checkout
+            git clean -fd \
+              -e .env \
+              -e node_modules/ \
+              -e .next/ \
+              -e public/media/ \
+              -e .deploy-npm-lock-stamp
+            git checkout -B main origin/main
+            test -f "$BUNDLE" || (echo "ERROR: bundle no encontrado (esperado $BUNDLE)" >&2; ls -la "$DEPLOY_PATH"; exit 1)
+            tar -xzf "$BUNDLE" -C "$DEPLOY_PATH"
+            rm -f "$BUNDLE"
+            exec bash ./scripts/remote-deploy.sh

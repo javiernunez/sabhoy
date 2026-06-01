@@ -1,0 +1,25 @@
+# PostgreSQL para sabhoy.es (Next en el host; DATABASE_URL en .env debe coincidir con el puerto de abajo)
+# Uso: docker compose up -d
+# Puerto host: 5435 por defecto (5434 suele estar en uso por lelianahoy.es u otros servicios)
+
+services:
+  db:
+    image: postgres:16
+    container_name: sabhoy-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sabhoy}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sabhoy}
+      POSTGRES_DB: ${POSTGRES_DB:-sabhoy}
+    ports:
+      - "127.0.0.1:5435:5432"
+    volumes:
+      - sabhoy_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sabhoy -d sabhoy"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sabhoy_pgdata:

@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: lelianahoy
+          POSTGRES_PASSWORD: lelianahoy
+          POSTGRES_DB: lelianahoy
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U sabhoy -d sabhoy"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://lelianahoy:lelianahoy@127.0.0.1:5432/lelianahoy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma migrate + generate
+        run: npx prisma migrate deploy && npm run prisma:generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: postgresql://lelianahoy:lelianahoy@127.0.0.1:5432/lelianahoy
+          NEXTAUTH_SECRET: "ci-build-secret-min-32-chars-xxxxxxxx"
+          NEXTAUTH_URL: "https://www.sabhoy.es"
+          NEXT_PUBLIC_SITE_URL: "https://www.sabhoy.es"
