@@ -23,7 +23,8 @@
     "comercios:categories:sync": "tsx scripts/sync-commerce-categories.ts",
     "associations:categories:reorganize-sports": "tsx scripts/reorganize-association-sports-categories.ts",
     "media:variants:backfill": "tsx scripts/backfill-image-variants.ts",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "brand:assets": "node scripts/generate-brand-assets.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

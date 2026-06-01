@@ -15,21 +15,21 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-sab-sand/80 bg-sab-cream/95 shadow-sm backdrop-blur-md">
-      <div className="border-b-4 border-sab-terracotta bg-sab-forest">
+      <div className="border-b-4 border-sab-terracotta bg-white">
         <div className="container-page flex flex-wrap items-center justify-between gap-3 py-3 md:py-3.5">
           <Link href="/" aria-label={SITE_NAME} className="flex items-center gap-3">
             <Image
               src="/branding/logo-sabhoy.png"
               alt={SITE_NAME}
-              width={721}
-              height={198}
+              width={356}
+              height={100}
               priority
-              className="h-8 w-auto max-w-[min(100%,18rem)] brightness-0 invert md:h-9"
+              className="h-8 w-auto max-w-[min(100%,20rem)] md:h-9"
             />
           </Link>
           <div className="flex items-center gap-2">
-            <LanguageSwitcher locale={locale} variant="header" />
-            <UserNav locale={locale} variant="header" />
+            <LanguageSwitcher locale={locale} />
+            <UserNav locale={locale} />
           </div>
         </div>
       </div>
