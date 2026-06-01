@@ -29,13 +29,13 @@ test -f .env && . ./.env || true
 set +a
 
 # Defaults solo si faltan en .env
-export DATABASE_URL="${DATABASE_URL:-postgresql://sabhoy:sabhoy@127.0.0.1:5435/sabhoy}"
+export DATABASE_URL="${DATABASE_URL:-postgresql://sabhoy:sabhoy@127.0.0.1:5436/sabhoy}"
 export NEXT_PUBLIC_SITE_URL="${NEXT_PUBLIC_SITE_URL:-https://www.sabhoy.es}"
 # NextAuth: NEXTAUTH_URL y NEXTAUTH_SECRET en .env (ve .env.example)
 
-# Mismo mapeo que docker-compose: host 127.0.0.1:5435 -> contenedor 5432
-if [ -f docker-compose.yml ] && echo "$DATABASE_URL" | grep -q ':5434/'; then
-  echo "ERROR: DATABASE_URL apunta a :5434 pero este repo publica Postgres en 127.0.0.1:5435 (ver docker-compose.yml y .env.example)." >&2
+# Mismo mapeo que docker-compose: host 127.0.0.1:5436 -> contenedor 5432
+if [ -f docker-compose.yml ] && echo "$DATABASE_URL" | grep -qE ':(5434|5435)/'; then
+  echo "ERROR: DATABASE_URL usa puerto 5434/5435 (lelianahoy/sermestre). sabhoy.es usa 127.0.0.1:5436 (ver docker-compose.yml y .env)." >&2
   exit 1
 fi
 

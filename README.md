@@ -14,7 +14,7 @@ Portal hiperlocal **SAB Hoy** para San Antonio de Benagéber (Camp de Túria, Va
 
 En **produccion** la `DATABASE_URL` apunta a tu Postgres (a menudo `127.0.0.1:5432` o el puerto que use Docker alli).
 
-En **local**, el `docker-compose.yml` mapea el contenedor a **`127.0.0.1:5435`** (evita chocar con lelianahoy.es u otros Postgres en 5432–5434).
+En **local/producción**, el `docker-compose.yml` mapea el contenedor a **`127.0.0.1:5436`** (en el VPS: 5432 turnodejuego, 5434 lelianahoy, 5435 sermestre).
 
 ```bash
 cp .env.example .env
@@ -26,7 +26,7 @@ npm run dev
 
 `make db-down` para parar el contenedor. El volumen `sabhoy_pgdata` persiste los datos.
 
-Si el puerto del host aun asi lo tienes pillado, cambia en `docker-compose.yml` el mapeo (p. ej. `127.0.0.1:5435:5432`) y el mismo puerto en `DATABASE_URL` del `.env`.
+Si el puerto del host aun asi lo tienes pillado, cambia en `docker-compose.yml` el mapeo (p. ej. `127.0.0.1:5437:5432`) y el mismo puerto en `DATABASE_URL` del `.env`.
 
 ## Diseno (fase 1)
 
