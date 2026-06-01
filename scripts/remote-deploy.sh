@@ -57,9 +57,58 @@ fi
 # Por defecto hacemos build con la app arriba para evitar 502 prolongados.
 # En máquinas con recursos muy limitados se puede forzar parada previa con
 # STOP_BEFORE_BUILD=1.
-if [ "$STOP_BEFORE_BUILD" = 1 ] && systemctl is-active --quiet "${SERVICE_NAME}.service" 2>/dev/null; then
-  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl stop (STOP_BEFORE_BUILD=1)"
-  sudo systemctl stop "${SERVICE_NAME}.service"
+systemctl_unit() {
+  local cmd="$1"
+  local unit="${SERVICE_NAME}.service"
+  if systemctl "$cmd" "$unit" 2>/dev/null; then
+    return 0
+  fi
+  if command -v sudo >/dev/null 2>&1 && sudo -n systemctl "$cmd" "$unit" 2>/dev/null; then
+    return 0
+  fi
+  return 1
+}
+
+default_app_port() {
+  case "${SERVICE_NAME}" in
+    lelianahoy) echo 3000 ;;
+    sabhoy) echo 3001 ;;
+    beterahoy) echo 3002 ;;
+    *) echo 3000 ;;
+  esac
+}
+
+DEPLOY_APP_PORT="${DEPLOY_APP_PORT:-$(default_app_port)}"
+
+restart_app_service() {
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ restart ${SERVICE_NAME} (puerto ${DEPLOY_APP_PORT})"
+  if systemctl_unit reload-or-restart; then
+    systemctl_unit is-active && return 0
+    echo "WARN: systemctl reload-or-restart ok pero is-active falló" >&2
+    return 0
+  fi
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl sin permisos; reinicio directo npm (puerto ${DEPLOY_APP_PORT})"
+  if command -v fuser >/dev/null 2>&1; then
+    fuser -k "${DEPLOY_APP_PORT}/tcp" 2>/dev/null || true
+  else
+    pkill -f "next start.*-p ${DEPLOY_APP_PORT}" 2>/dev/null || true
+  fi
+  sleep 2
+  nohup npm run start -- -H 127.0.0.1 -p "${DEPLOY_APP_PORT}" >> "${DEPLOY_PATH}/deploy-restart.log" 2>&1 &
+  sleep 3
+  if ss -tln 2>/dev/null | grep -q ":${DEPLOY_APP_PORT} "; then
+    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ app listening on ${DEPLOY_APP_PORT}"
+    return 0
+  fi
+  echo "ERROR: no se pudo reiniciar en el puerto ${DEPLOY_APP_PORT}. Configura sudoers para systemctl o revisa deploy-restart.log" >&2
+  exit 1
+}
+
+if [ "$STOP_BEFORE_BUILD" = 1 ]; then
+  if systemctl is-active --quiet "${SERVICE_NAME}.service" 2>/dev/null || sudo -n systemctl is-active --quiet "${SERVICE_NAME}.service" 2>/dev/null; then
+    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl stop (STOP_BEFORE_BUILD=1)"
+    systemctl_unit stop || true
+  fi
 fi
 
 run_npm_ci() {
@@ -103,7 +152,5 @@ else
   nice -n 10 npm run build
 fi
 
-date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl reload-or-restart"
-sudo systemctl reload-or-restart "${SERVICE_NAME}.service"
-sudo systemctl is-active "${SERVICE_NAME}.service"
+restart_app_service
 date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ done"

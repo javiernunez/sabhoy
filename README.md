@@ -175,6 +175,24 @@ Configura en GitHub:
 - `DEPLOY_PORT` (opcional): puerto SSH (por defecto `22`).
 - `DEPLOY_SERVICE` (opcional): nombre del servicio systemd sin `.service` (por defecto `sabhoy`).
 
+### Reinicio sin contraseña sudo (recomendado en el VPS)
+
+Si el deploy de GitHub falla con `sudo: a password is required`, el script intentará reiniciar con `npm run start` en el puerto **3001**. Para usar **systemd** (mejor), crea el servicio y permite `sudo` sin contraseña para el usuario de deploy:
+
+```bash
+sudo cp /opt/sabhoy.es/deploy/sabhoy.service /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable sabhoy.service
+sudo visudo -f /etc/sudoers.d/sabhoy-deploy
+```
+
+Añade (sustituye `deployuser` por `DEPLOY_USER`):
+
+```
+deployuser ALL=(ALL) NOPASSWD: /bin/systemctl reload-or-restart sabhoy.service, /bin/systemctl is-active sabhoy.service, /bin/systemctl stop sabhoy.service
+```
+
+Sin esto, el CI sigue funcionando vía reinicio por puerto; asegúrate de que **no** haya otro proceso en el 3001.
+
 ### Deploy automatico (sin entrar al server)
 
 El workflow remoto ejecuta:
