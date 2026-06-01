@@ -21,10 +21,11 @@ export async function Header() {
             <Image
               src="/branding/logo-sabhoy.png"
               alt={SITE_NAME}
-              width={356}
-              height={100}
+              width={427}
+              height={120}
               priority
-              className="h-8 w-auto max-w-[min(100%,20rem)] md:h-9"
+              unoptimized
+              className="h-9 w-auto max-w-[min(100%,22rem)] md:h-10"
             />
           </Link>
           <div className="flex items-center gap-2">

@@ -26,6 +26,18 @@ npm run dev
 
 `make db-down` para parar el contenedor. El volumen `sabhoy_pgdata` persiste los datos.
 
+## Logo y favicon
+
+El logo de cabecera y los favicons se generan desde `assets/logo-source.png`:
+
+```bash
+npm run brand:assets
+```
+
+Eso actualiza `public/branding/logo-sabhoy.png`, `public/icons/*`, `public/favicon.ico` y `app/icon.png`. Tras cambiar el logo, commitea esos ficheros y haz push a `main` (el deploy incluye `public/` en el bundle).
+
+En el **servidor**, si hace falta regenerar a mano: `cd /opt/sabhoy.es && npm run brand:assets` (requiere `assets/logo-source.png` y `npm ci`).
+
 Si el puerto del host aun asi lo tienes pillado, cambia en `docker-compose.yml` el mapeo (p. ej. `127.0.0.1:5437:5432`) y el mismo puerto en `DATABASE_URL` del `.env`.
 
 ## Diseno (fase 1)
@@ -129,6 +141,29 @@ El seed crea:
 
 - `.github/workflows/ci.yml`: instala, genera Prisma, lint y build.
 - `.github/workflows/deploy-main.yml`: despliegue por SSH al hacer push en `main`, en `/opt/sabhoy.es`.
+
+### Git en el servidor (fetch desde GitHub)
+
+El deploy hace `git fetch origin main` en `/opt/sabhoy.es`. El usuario SSH (`DEPLOY_USER`) necesita:
+
+1. **Host de GitHub en `known_hosts`** (el workflow lo añade en cada deploy; también puedes hacerlo una vez a mano):
+   ```bash
+   ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
+   ```
+2. **Clave de solo lectura (deploy key)** si el repo es privado:
+   ```bash
+   ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_github -N "" -C "sabhoy-vps"
+   cat ~/.ssh/id_ed25519_github.pub
+   ```
+   Añade la pública en GitHub → **Settings** → **Deploy keys** (read-only). Luego `~/.ssh/config`:
+   ```
+   Host github.com
+     HostName github.com
+     User git
+     IdentityFile ~/.ssh/id_ed25519_github
+     IdentitiesOnly yes
+   ```
+   Comprueba: `ssh -T git@github.com` y `cd /opt/sabhoy.es && git fetch origin main`.
 
 ### Secrets necesarios para deploy
 

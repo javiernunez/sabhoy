@@ -95,6 +95,13 @@ jobs:
             BUNDLE="/var/tmp/sabhoy-ci/deploy.tgz"
             cd "$DEPLOY_PATH"
             date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ fetch/checkout"
+            # GitHub por SSH: known_hosts (evita "Host key verification failed")
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            touch ~/.ssh/known_hosts
+            chmod 600 ~/.ssh/known_hosts
+            ssh-keyscan -t ed25519,rsa github.com >> ~/.ssh/known_hosts 2>/dev/null || true
+            export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=yes -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
             git fetch origin main
             # Ficheros untracked (p. ej. subidos a mano) que ya existen en origin/main bloquean checkout
             git clean -fd \

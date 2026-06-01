@@ -10,9 +10,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 
-const source =
-  process.argv[2] ??
-  "/home/javi/.cursor/projects/var-www-sabhoy-es/assets/logo-09c9be39-8edd-41ab-b178-eb6852a79c32.png";
+const defaultSource = path.join(root, "assets", "logo-source.png");
+const source = process.argv[2] ?? defaultSource;
 
 const brandingDir = path.join(root, "public", "branding");
 const iconsDir = path.join(root, "public", "icons");
@@ -36,7 +35,7 @@ const FAVICON_SIZES = [16, 32, 48, 64, 96, 128, 180, 192, 256, 512];
 async function writeLogo() {
   const trimmed = await sharp(source).trim({ threshold: 12 }).png({ compressionLevel: 9 }).toBuffer();
   const meta = await sharp(trimmed).metadata();
-  const logoHeight = 100;
+  const logoHeight = 120;
   const logoWidth = Math.round((meta.width / meta.height) * logoHeight);
 
   await sharp(trimmed)
