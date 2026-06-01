@@ -31,7 +31,6 @@ import { stripMarkdownToPlain } from "@/lib/strip-markdown";
 export const revalidate = 120;
 
 export const metadata: Metadata = {
-  title: "Inicio",
   description: `${SITE_NAME}: ${SITE_DESCRIPTION}`,
   alternates: { canonical: canonicalPath("/") },
   openGraph: {
