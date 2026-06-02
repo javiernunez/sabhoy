@@ -26,5 +26,5 @@ tar -xzf "$BUNDLE" -C "$DEPLOY_PATH"
 rm -f "$BUNDLE"
 
 if sudo -n true 2>/dev/null; then
-  sudo -n chown -R "$(whoami):$(id -gn)" "${DEPLOY_PATH}/.next" 2>/dev/null || true
+  sudo -n chown -R "$(whoami):$(id -gn)" "${DEPLOY_PATH}" 2>/dev/null || true
 fi

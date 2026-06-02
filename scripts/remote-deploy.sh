@@ -104,6 +104,19 @@ restart_app_service() {
   exit 1
 }
 
+verify_app_http() {
+  if curl -sf -o /dev/null --max-time 15 "http://127.0.0.1:${DEPLOY_APP_PORT}/"; then
+    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ HTTP OK en 127.0.0.1:${DEPLOY_APP_PORT}"
+    return 0
+  fi
+  echo "ERROR: el puerto ${DEPLOY_APP_PORT} no responde HTTP (Caddy devolverá 502)." >&2
+  tail -n 40 "${DEPLOY_PATH}/deploy-restart.log" 2>/dev/null || true
+  journalctl -u "${SERVICE_NAME}.service" -n 40 --no-pager 2>/dev/null \
+    || sudo -n journalctl -u "${SERVICE_NAME}.service" -n 40 --no-pager 2>/dev/null \
+    || true
+  exit 1
+}
+
 if [ "$STOP_BEFORE_BUILD" = 1 ]; then
   if systemctl is-active --quiet "${SERVICE_NAME}.service" 2>/dev/null || sudo -n systemctl is-active --quiet "${SERVICE_NAME}.service" 2>/dev/null; then
     date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl stop (STOP_BEFORE_BUILD=1)"
@@ -153,4 +166,5 @@ else
 fi
 
 restart_app_service
+verify_app_http
 date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ done"
