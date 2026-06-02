@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { getNextAuthSecret } from "@/lib/env-auth";
+import { redirectToPath } from "@/lib/public-url";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -28,9 +29,9 @@ export async function middleware(request: NextRequest) {
       return res;
     }
     if (token?.role !== "ADMIN") {
-      const u = new URL("/cuenta/iniciar-sesion", request.url);
-      u.searchParams.set("callbackUrl", path);
-      return NextResponse.redirect(u);
+      return NextResponse.redirect(
+        redirectToPath(request, "/cuenta/iniciar-sesion", { callbackUrl: path }),
+      );
     }
   }
 
