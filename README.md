@@ -177,7 +177,7 @@ Configura en GitHub:
 
 ### Reinicio sin contraseña sudo (recomendado en el VPS)
 
-Si el deploy de GitHub falla con `sudo: a password is required`, el script intentará reiniciar con `npm run start` en el puerto **3001**. Para usar **systemd** (mejor), crea el servicio y permite `sudo` sin contraseña para el usuario de deploy:
+Si el deploy de GitHub falla con `sudo: a password is required`, el script intentará reiniciar con `npm run start` en el puerto **3003**. Para usar **systemd** (mejor), crea el servicio y permite `sudo` sin contraseña para el usuario de deploy:
 
 ```bash
 sudo cp /opt/sabhoy.es/deploy/sabhoy.service /etc/systemd/system/
@@ -191,7 +191,44 @@ Añade (sustituye `deployuser` por `DEPLOY_USER`):
 deployuser ALL=(ALL) NOPASSWD: /bin/systemctl reload-or-restart sabhoy.service, /bin/systemctl is-active sabhoy.service, /bin/systemctl stop sabhoy.service
 ```
 
-Sin esto, el CI sigue funcionando vía reinicio por puerto; asegúrate de que **no** haya otro proceso en el 3001.
+Sin esto, el CI sigue funcionando vía reinicio por puerto; asegúrate de que **no** haya otro proceso en el **3003** (el **3001** lo usa sermestre.es en el mismo VPS).
+
+### Caddy (reverse proxy)
+
+Snippet en `deploy/Caddyfile.snippet`. Tras editar `/etc/caddy/Caddyfile`:
+
+```bash
+sudo caddy validate --config /etc/caddy/Caddyfile
+sudo systemctl reload caddy
+```
+
+### Puertos HTTP en el VPS (referencia)
+
+| Puerto | Sitio |
+|--------|--------|
+| 3000 | lelianahoy.es |
+| 3001 | sermestre.es |
+| 3002 | beterahoy.es |
+| **3003** | **sabhoy.es** |
+
+Caddy debe hacer `reverse_proxy` de `www.sabhoy.es` a **`127.0.0.1:3003`**, no al 3001.
+
+### Si redirige a `https://www.sabhoy.es:3001/es` (timeout)
+
+Síntomas: `307` a URL con **`:3001`** y **`/es`** o **`/va`**, cookie `NEXT_LOCALE`, título «Ser Mestre».
+
+**Causa:** Caddy de `www.sabhoy.es` apunta al **3001** (sermestre), no al **3003** (sabhoy).
+
+**Comprobar:**
+
+```bash
+ss -tlnp | grep -E ':300[0-3]'
+systemctl is-active sabhoy sermestre
+curl -sI -H 'Host: www.sabhoy.es' http://127.0.0.1:3003/ | head -5
+curl -s http://127.0.0.1:3003/ | grep -o '<title>[^<]*'
+```
+
+**Arreglo:** Caddy → `3003`, `systemctl restart sabhoy`, `.env` con URLs sin puerto, redesplegar `main`.
 
 ### Deploy automatico (sin entrar al server)
 
@@ -247,7 +284,7 @@ Con esto, cada push a `main` despliega automaticamente con los **secrets** confi
 
 ```bash
 sudo cp /opt/sabhoy.es/deploy/sabhoy.service /etc/systemd/system/sabhoy.service
-# Ajusta User/Group y puerto (3001 por defecto) si hace falta
+# Ajusta User/Group si hace falta (puerto 3003 por defecto)
 sudo systemctl daemon-reload
 sudo systemctl enable sabhoy.service
 ```

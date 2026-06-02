@@ -72,7 +72,7 @@ systemctl_unit() {
 default_app_port() {
   case "${SERVICE_NAME}" in
     lelianahoy) echo 3000 ;;
-    sabhoy) echo 3001 ;;
+    sabhoy) echo 3003 ;;
     beterahoy) echo 3002 ;;
     *) echo 3000 ;;
   esac

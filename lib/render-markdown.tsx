@@ -194,8 +194,78 @@ function renderHeadingNode(key: string, level: number, text: string): ReactNode 
   return <h4 key={key} className="mt-6 text-lg font-semibold text-slate-900">{text}</h4>;
 }
 
+const MD_TABLE_CLASS = "my-6 w-full border-collapse";
+const MD_TH_CLASS = "border border-sab-sand bg-sab-mist p-2 text-left font-semibold text-sab-ink";
+const MD_TD_CLASS = "border border-sab-sand p-2 align-top";
+
+function parseMarkdownTableRow(line: string): string[] {
+  const trimmed = line.trim();
+  if (!trimmed.includes("|")) return [];
+  return trimmed
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+}
+
+function isMarkdownTableSeparatorLine(line: string): boolean {
+  const cells = parseMarkdownTableRow(line);
+  return cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+}
+
+function parseMarkdownTable(block: string): { header: string[]; rows: string[][] } | null {
+  const lines = block
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (lines.length < 2) return null;
+  if (!lines.every((line) => line.includes("|"))) return null;
+
+  const header = parseMarkdownTableRow(lines[0]);
+  if (header.length < 2) return null;
+  if (!isMarkdownTableSeparatorLine(lines[1])) return null;
+
+  const rows: string[][] = [];
+  for (let i = 2; i < lines.length; i++) {
+    const cells = parseMarkdownTableRow(lines[i]);
+    if (cells.length === 0) return null;
+    rows.push(cells);
+  }
+
+  return { header, rows };
+}
+
+function renderMarkdownTable(table: { header: string[]; rows: string[][] }, key: string): ReactNode {
+  return (
+    <div key={`table-${key}`} className="mb-6 overflow-x-auto">
+      <table className={MD_TABLE_CLASS}>
+        <thead>
+          <tr>
+            {table.header.map((cell, colIndex) => (
+              <th key={`${key}-th-${colIndex}`} className={MD_TH_CLASS}>
+                {renderInlineMarkdown(cell, `${key}-th-${colIndex}`)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {table.rows.map((row, rowIndex) => (
+            <tr key={`${key}-tr-${rowIndex}`}>
+              {row.map((cell, colIndex) => (
+                <td key={`${key}-td-${rowIndex}-${colIndex}`} className={MD_TD_CLASS}>
+                  {renderInlineMarkdown(cell, `${key}-td-${rowIndex}-${colIndex}`)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 /**
- * Párrafos, citas, encabezados #–###, imágenes MD/HTML y bloques HTML (saneados) a partir de Markdown sencillo.
+ * Párrafos, citas, encabezados #–###, tablas GFM, imágenes MD/HTML y bloques HTML (saneados) a partir de Markdown sencillo.
  * Usado en noticias y, con la misma fuente, en fichas de comercio.
  *
  * Los encabezados en una sola línea delante de un párrafo (solo un salto, típico del WYSIWYG) se
@@ -266,6 +336,12 @@ export function renderMarkdown(content: string, keyPrefix = ""): ReactNode[] {
     const htmlImageOnly = parseHtmlImgTag(block);
     if (htmlImageOnly) {
       out.push(renderArticleImage(htmlImageOnly.src, htmlImageOnly.alt, `img-html-${bKey}`));
+      continue;
+    }
+
+    const markdownTable = parseMarkdownTable(block);
+    if (markdownTable) {
+      out.push(renderMarkdownTable(markdownTable, bKey));
       continue;
     }
 

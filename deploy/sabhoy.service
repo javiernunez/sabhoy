@@ -8,8 +8,8 @@ Type=simple
 WorkingDirectory=/opt/sabhoy.es
 Environment=NODE_ENV=production
 EnvironmentFile=-/opt/sabhoy.es/.env
-# next start (puerto 3001; Nginx u otro proxy delante para 80/443)
-ExecStart=/usr/bin/npm run start -- -H 127.0.0.1 -p 3001
+# next start (puerto 3003; 3001 = sermestre, 3000 = lelianahoy, 3002 = beterahoy)
+ExecStart=/usr/bin/npm run start -- -H 127.0.0.1 -p 3003
 Restart=on-failure
 RestartSec=10
 # User=tu-usuario-deploy

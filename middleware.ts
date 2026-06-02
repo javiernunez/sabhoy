@@ -7,14 +7,22 @@ import { redirectToPath } from "@/lib/public-url";
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   if (path === "/comercios/casales-falleros" || path.startsWith("/comercios/casales-falleros/")) {
-    const target = request.nextUrl.clone();
-    target.pathname = path.replace(/^\/comercios\/casales-falleros/, "/asociaciones/casales");
-    return NextResponse.redirect(target, 301);
+    return NextResponse.redirect(
+      redirectToPath(
+        request,
+        path.replace(/^\/comercios\/casales-falleros/, "/asociaciones/casales"),
+      ),
+      301,
+    );
   }
   if (path === "/deportes" || path.startsWith("/deportes/")) {
-    const target = request.nextUrl.clone();
-    target.pathname = path.replace(/^\/deportes/, "/asociaciones/clubes-deportivos");
-    return NextResponse.redirect(target, 301);
+    return NextResponse.redirect(
+      redirectToPath(
+        request,
+        path.replace(/^\/deportes/, "/asociaciones/clubes-deportivos"),
+      ),
+      301,
+    );
   }
   if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_SECRET) {
     return new NextResponse("Falta NEXTAUTH_SECRET en el servidor", { status: 500 });

@@ -1,0 +1,30 @@
+# Snippet para el Caddyfile del VPS (mismo patrón que lelianahoy / beterahoy).
+# Copiar al bloque correspondiente en /etc/caddy/Caddyfile y recargar Caddy.
+#
+#   sudo caddy validate --config /etc/caddy/Caddyfile
+#   sudo systemctl reload caddy
+#   sudo journalctl -u caddy -n 50 --no-pager
+#
+# La app sabhoy.es escucha en 127.0.0.1:3003 (sabhoy.service).
+# Puertos en este VPS: 3000 lelianahoy | 3001 sermestre | 3002 beterahoy | 3003 sabhoy
+
+www.sabhoy.es, sabhoy.es {
+	encode gzip zstd
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	@static path /_next/static/*
+	header @static Cache-Control "public, max-age=31536000, immutable"
+
+	reverse_proxy 127.0.0.1:3003 {
+		header_up Host {host}
+		header_up X-Forwarded-Host {host}
+		header_up X-Forwarded-Proto https
+		header_up X-Forwarded-Port 443
+	}
+}

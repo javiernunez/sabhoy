@@ -4,6 +4,18 @@ function stripPublicHostPort(host: string) {
   return host.replace(/:\d+$/, "");
 }
 
+/** No expone puertos internos del upstream en Location de producción. */
+function applyPublicSiteUrl(url: URL, siteUrl: string) {
+  const parsed = new URL(siteUrl);
+  url.protocol = parsed.protocol;
+  url.hostname = parsed.hostname;
+  const isDefaultPort =
+    !parsed.port ||
+    (parsed.protocol === "https:" && parsed.port === "443") ||
+    (parsed.protocol === "http:" && parsed.port === "80");
+  url.port = isDefaultPort ? "" : parsed.port;
+}
+
 /** Ajusta hostname/proto públicos cuando Next recibe la petición vía reverse proxy (Caddy/Nginx). */
 export function applyForwardedOrigin(request: NextRequest, url: URL) {
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
@@ -13,10 +25,7 @@ export function applyForwardedOrigin(request: NextRequest, url: URL) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (siteUrl) {
     try {
-      const parsed = new URL(siteUrl);
-      url.protocol = parsed.protocol;
-      url.hostname = parsed.hostname;
-      url.port = parsed.port;
+      applyPublicSiteUrl(url, siteUrl);
       return;
     } catch {
       /* fallback abajo */
