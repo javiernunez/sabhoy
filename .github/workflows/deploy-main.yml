@@ -108,7 +108,7 @@ jobs:
             cd "$DEPLOY_PATH"
             date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ extract bundle (sin git en el VPS)"
             test -f "$BUNDLE" || (echo "ERROR: bundle no encontrado (esperado $BUNDLE)" >&2; ls -la "$DEPLOY_PATH"; exit 1)
-            if [ -x "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" ]; then
+            if [ -f "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" ]; then
               bash "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" "$DEPLOY_PATH" "$BUNDLE" "${{ env.DEPLOY_SERVICE }}"
             else
               _unit="${{ env.DEPLOY_SERVICE }}.service"
