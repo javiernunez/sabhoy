@@ -142,29 +142,6 @@ El seed crea:
 - `.github/workflows/ci.yml`: instala, genera Prisma, lint y build.
 - `.github/workflows/deploy-main.yml`: despliegue por SSH al hacer push en `main`, en `/opt/sabhoy.es`.
 
-### Git en el servidor (fetch desde GitHub)
-
-El deploy hace `git fetch origin main` en `/opt/sabhoy.es`. El usuario SSH (`DEPLOY_USER`) necesita:
-
-1. **Host de GitHub en `known_hosts`** (el workflow lo añade en cada deploy; también puedes hacerlo una vez a mano):
-   ```bash
-   ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
-   ```
-2. **Clave de solo lectura (deploy key)** si el repo es privado:
-   ```bash
-   ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_github -N "" -C "sabhoy-vps"
-   cat ~/.ssh/id_ed25519_github.pub
-   ```
-   Añade la pública en GitHub → **Settings** → **Deploy keys** (read-only). Luego `~/.ssh/config`:
-   ```
-   Host github.com
-     HostName github.com
-     User git
-     IdentityFile ~/.ssh/id_ed25519_github
-     IdentitiesOnly yes
-   ```
-   Comprueba: `ssh -T git@github.com` y `cd /opt/sabhoy.es && git fetch origin main`.
-
 ### Secrets necesarios para deploy
 
 Configura en GitHub:
@@ -234,14 +211,9 @@ curl -s http://127.0.0.1:3003/ | grep -o '<title>[^<]*'
 
 El workflow remoto ejecuta:
 
-1. `cd /opt/sabhoy.es`
-2. `git fetch origin main`, `git clean` (conserva `.env`, `node_modules`, `.next`, `public/media`) y `git checkout -B main origin/main`
-3. Cargar `/opt/sabhoy.es/.env` si existe; el script aplica por defecto `DATABASE_URL` en el puerto **5436** (ver `docker-compose.yml`).
-4. Si existe `docker-compose.yml`, **`docker compose up -d`**.
-5. `npm ci --include=dev`
-6. `npm run prisma:deploy` (Prisma 5 del lockfile, no `npx prisma` suelto)
-7. `npm run build`
-8. `systemctl restart <DEPLOY_SERVICE>.service`
+1. Build en GitHub Actions y subida de `deploy.tgz` a `/opt/sabhoy.es/.ci-stage/`.
+2. En el VPS: extraer el bundle — **sin `git fetch` en el servidor**.
+3. `scripts/remote-deploy.sh`: `.env`, Postgres (puerto **5436**), `prisma migrate deploy`, reinicio systemd (puerto **3003**).
 
 `prisma db seed` **no** va en el deploy automático. Ejecutalo a mano **una vez** tras el primer despliegue.
 

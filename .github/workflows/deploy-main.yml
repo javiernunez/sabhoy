@@ -39,7 +39,9 @@ jobs:
         run: npm run build
       - name: Pack deploy bundle (artefacto para el VPS)
         run: |
-          tar -czf deploy.tgz .next node_modules public package.json package-lock.json prisma
+          tar -czf deploy.tgz \
+            .next node_modules public package.json package-lock.json prisma \
+            scripts deploy docker-compose.yml
           chmod 644 deploy.tgz
       - name: Validate deploy configuration
         run: |
@@ -95,24 +97,7 @@ jobs:
             export SKIP_BUILD=1
             BUNDLE="${DEPLOY_PATH}/.ci-stage/deploy.tgz"
             cd "$DEPLOY_PATH"
-            date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ fetch/checkout"
-            # GitHub por SSH: known_hosts (evita "Host key verification failed")
-            mkdir -p ~/.ssh
-            chmod 700 ~/.ssh
-            touch ~/.ssh/known_hosts
-            chmod 600 ~/.ssh/known_hosts
-            ssh-keyscan -t ed25519,rsa github.com >> ~/.ssh/known_hosts 2>/dev/null || true
-            export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=yes -o UserKnownHostsFile=${HOME}/.ssh/known_hosts"
-            git fetch origin main
-            # Ficheros untracked (p. ej. subidos a mano) que ya existen en origin/main bloquean checkout
-            git clean -fd \
-              -e .env \
-              -e .ci-stage/ \
-              -e node_modules/ \
-              -e .next/ \
-              -e public/media/ \
-              -e .deploy-npm-lock-stamp
-            git checkout -B main origin/main
+            date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ extract bundle (sin git en el VPS)"
             test -f "$BUNDLE" || (echo "ERROR: bundle no encontrado (esperado $BUNDLE)" >&2; ls -la "$DEPLOY_PATH"; exit 1)
             tar -xzf "$BUNDLE" -C "$DEPLOY_PATH"
             rm -f "$BUNDLE"

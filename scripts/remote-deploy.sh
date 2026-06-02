@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy en el servidor: git ya debe haber dejado este repo en la revisión deseada.
+# Deploy en el servidor: el artefacto de CI (deploy.tgz) debe haber extraído scripts/, prisma/, .next, etc.
 #
 # Variables opcionales:
 # - DEPLOY_PATH
