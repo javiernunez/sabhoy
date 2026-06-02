@@ -39,11 +39,18 @@ if [ -f docker-compose.yml ] && echo "$DATABASE_URL" | grep -qE ':(5434|5435)/';
   exit 1
 fi
 
+DB_CONTAINER="sabhoy-db"
+
 if [ -f docker-compose.yml ]; then
-  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ docker compose up + espera pg_isready"
-  docker compose up -d
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ postgres (${DB_CONTAINER}) + espera pg_isready"
+  if docker container inspect "$DB_CONTAINER" >/dev/null 2>&1; then
+    date -u "+[deploy] ${DB_CONTAINER} ya existe; arrancar si estaba parado"
+    docker start "$DB_CONTAINER" >/dev/null 2>&1 || true
+  else
+    docker compose up -d
+  fi
   for i in $(seq 1 90); do
-    if docker exec sabhoy-db pg_isready -U "${POSTGRES_USER:-sabhoy}" -d "${POSTGRES_DB:-sabhoy}" 2>/dev/null; then
+    if docker exec "$DB_CONTAINER" pg_isready -U "${POSTGRES_USER:-sabhoy}" -d "${POSTGRES_DB:-sabhoy}" 2>/dev/null; then
       break
     fi
     if [ "$i" -ge 90 ]; then
@@ -69,16 +76,8 @@ systemctl_unit() {
   return 1
 }
 
-default_app_port() {
-  case "${SERVICE_NAME}" in
-    lelianahoy) echo 3000 ;;
-    sabhoy) echo 3003 ;;
-    beterahoy) echo 3002 ;;
-    *) echo 3000 ;;
-  esac
-}
-
-DEPLOY_APP_PORT="${DEPLOY_APP_PORT:-$(default_app_port)}"
+# VPS: 3000 lelianahoy | 3001 sermestre | 3002 beterahoy | 3003 sabhoy
+DEPLOY_APP_PORT="${DEPLOY_APP_PORT:-3003}"
 
 restart_app_service() {
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ restart ${SERVICE_NAME} (puerto ${DEPLOY_APP_PORT})"

@@ -1,5 +1,6 @@
 # deploy (servidor: huella del último package-lock atendido por npm ci)
 .deploy-npm-lock-stamp
+.ci-stage/
 
 # dependencies
 /node_modules

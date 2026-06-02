@@ -59,9 +59,10 @@ jobs:
           command_timeout: 2m
           script: |
             set -euxo pipefail
-            STAGE=/var/tmp/sabhoy-ci
+            DEPLOY_PATH="/opt/sabhoy.es"
+            STAGE="${DEPLOY_PATH}/.ci-stage"
             rm -rf "$STAGE"
-            rm -f /tmp/deploy.tgz /opt/sabhoy.es/deploy.tgz 2>/dev/null || true
+            rm -f /tmp/deploy.tgz "${DEPLOY_PATH}/deploy.tgz" 2>/dev/null || true
             mkdir -p "$STAGE"
             chmod 700 "$STAGE"
       - name: Copy bundle to server
@@ -72,8 +73,8 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ env.DEPLOY_PORT }}
           source: "deploy.tgz"
-          target: "/var/tmp/sabhoy-ci"
-          tar_tmp_path: "/var/tmp/sabhoy-ci"
+          target: "/opt/sabhoy.es/.ci-stage"
+          tar_tmp_path: "/opt/sabhoy.es/.ci-stage"
           overwrite: true
           command_timeout: 30m
       - name: Git sync, extract artefacto, migrate, restart
@@ -92,7 +93,7 @@ jobs:
             export SERVICE_NAME="${{ env.DEPLOY_SERVICE }}"
             export SKIP_NPM_CI=1
             export SKIP_BUILD=1
-            BUNDLE="/var/tmp/sabhoy-ci/deploy.tgz"
+            BUNDLE="${DEPLOY_PATH}/.ci-stage/deploy.tgz"
             cd "$DEPLOY_PATH"
             date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ fetch/checkout"
             # GitHub por SSH: known_hosts (evita "Host key verification failed")
@@ -106,6 +107,7 @@ jobs:
             # Ficheros untracked (p. ej. subidos a mano) que ya existen en origin/main bloquean checkout
             git clean -fd \
               -e .env \
+              -e .ci-stage/ \
               -e node_modules/ \
               -e .next/ \
               -e public/media/ \
