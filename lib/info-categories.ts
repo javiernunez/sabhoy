@@ -23,9 +23,9 @@ export const INFO_CATEGORIES: InfoCategory[] = [
     description: "Colegios e institutos en San Antonio de Benagéber. Información para familias.",
     descriptionVal: "Col·legis i instituts a Sant Antoni de Benaixeve. Informació per a famílies.",
     icon: "🎒",
-    color: "text-amber-700",
-    colorLight: "bg-amber-50",
-    colorBorder: "border-amber-200 hover:border-amber-400",
+    color: "text-sky-700",
+    colorLight: "bg-sky-50",
+    colorBorder: "border-sky-200 hover:border-sky-400",
     match: /(educaci[oó]n|colegio|instituto|escuela|familia|infantil|juventud|beca|actividades.*ni[nñ]os)/i,
   },
   {

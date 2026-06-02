@@ -16,7 +16,7 @@ export type School = {
 export const SCHOOL_TYPES: Record<SchoolType, { label: string; labelVal: string; color: string; colorLight: string }> = {
   publico: { label: "Público", labelVal: "Públic", color: "text-blue-700", colorLight: "bg-blue-50" },
   concertado: { label: "Concertado", labelVal: "Concertat", color: "text-purple-700", colorLight: "bg-purple-50" },
-  privado: { label: "Privado", labelVal: "Privat", color: "text-amber-700", colorLight: "bg-amber-50" },
+  privado: { label: "Privado", labelVal: "Privat", color: "text-indigo-700", colorLight: "bg-indigo-50" },
 };
 
 export const SCHOOLS: School[] = [

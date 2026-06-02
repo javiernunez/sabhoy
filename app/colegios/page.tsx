@@ -46,11 +46,11 @@ export default function ColegiosPage() {
         ]}
       />
 
-      <div className="mb-10 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 p-6 text-white shadow-lg md:p-10">
+      <div className="mb-10 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-6 text-white shadow-lg md:p-10">
         <h1 className="text-2xl font-bold md:text-3xl">
           {isVal ? "Col·legis a San Antonio de Benagéber" : "Colegios en San Antonio de Benagéber"}
         </h1>
-        <p className="mt-2 max-w-2xl text-amber-100 md:text-lg">
+        <p className="mt-2 max-w-2xl text-blue-100 md:text-lg">
           {isVal
             ? "Tots els centres educatius del municipi: públics, concertats i privats."
             : "Todos los centros educativos del municipio: públicos, concertados y privados."}

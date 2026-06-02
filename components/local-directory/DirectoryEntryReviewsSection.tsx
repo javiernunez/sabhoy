@@ -26,7 +26,7 @@ type Props = Readonly<{
 
 function StarRow({ score }: Readonly<{ score: number }>) {
   return (
-    <span className="text-base leading-none text-amber-500" aria-hidden>
+    <span className="text-base leading-none text-yellow-400" aria-hidden>
       {"★".repeat(score)}
       <span className="text-slate-300">{"★".repeat(5 - score)}</span>
     </span>
@@ -139,8 +139,8 @@ export function DirectoryEntryReviewsSection({
                   type="button"
                   aria-pressed={scoreDraft === n}
                   onClick={() => setScoreDraft(n)}
-                  className={`rounded-md px-2 py-1 text-xl transition hover:bg-amber-50 ${
-                    n <= scoreDraft ? "text-amber-500" : "text-slate-200"
+                  className={`rounded-md px-2 py-1 text-xl transition hover:bg-yellow-50 ${
+                    n <= scoreDraft ? "text-yellow-400" : "text-slate-200"
                   }`}
                 >
                   ★

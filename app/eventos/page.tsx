@@ -258,7 +258,7 @@ export default async function EventosPage({ searchParams }: Readonly<PageProps>)
         </div>
       </section>
       {events.length === 0 ? (
-        <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50/80 px-4 py-3 text-sm text-amber-900">
+        <p className="mt-4 rounded-2xl border border-blue-200 bg-sab-mist/80 px-4 py-3 text-sm text-sab-forest">
           {isVal ? "Ara mateix no hi ha esdeveniments pròxims. Torna prompte." : "Ahora mismo no hay eventos próximos. Vuelve pronto."}
         </p>
       ) : (

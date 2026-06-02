@@ -188,7 +188,7 @@ export function AdminEventoForm({ eventItem }: Props) {
           ) : null}
 
           {category === "feria" ? (
-            <div className="space-y-2 rounded-lg border border-amber-100 bg-amber-50/40 p-3">
+            <div className="space-y-2 rounded-lg border border-blue-100 bg-sab-mist/60 p-3">
               <p className="text-sm font-semibold text-slate-800">Feria o festival</p>
               <label className="block text-sm text-slate-600">
                 <span>Último día (inclusive)</span>
