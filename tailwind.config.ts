@@ -10,15 +10,15 @@ const config: Config = {
     extend: {
       colors: {
         sab: {
-          ink: "#1a1612",
-          forest: "#1b4332",
-          "forest-light": "#2d6a4f",
-          terracotta: "#c4683a",
-          "terracotta-dark": "#9e4f2a",
-          cream: "#faf6f0",
-          mist: "#f3ede4",
-          sand: "#e3d5c4",
-          gold: "#d4a24e",
+          ink: "#0f172a",
+          forest: "#1e40af",
+          "forest-light": "#2563eb",
+          terracotta: "#2563eb",
+          "terracotta-dark": "#1d4ed8",
+          cream: "#f8fafc",
+          mist: "#f0f9ff",
+          sand: "#e2e8f0",
+          gold: "#93c5fd",
         },
       },
       fontFamily: {
@@ -29,8 +29,8 @@ const config: Config = {
         "4xl": "2rem",
       },
       boxShadow: {
-        sab: "0 4px 24px rgba(27, 67, 50, 0.08)",
-        "sab-lg": "0 12px 40px rgba(26, 22, 18, 0.1)",
+        sab: "0 4px 24px rgba(37, 99, 235, 0.08)",
+        "sab-lg": "0 12px 40px rgba(15, 23, 42, 0.1)",
       },
     },
   },

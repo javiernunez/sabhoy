@@ -9,24 +9,24 @@ type Props = {
 export function HomeHero({ isVal }: Props) {
   return (
     <section
-      className="relative overflow-hidden rounded-3xl border border-sab-forest/20 bg-gradient-to-br from-sab-forest via-[#234d3a] to-sab-forest-light px-6 py-10 text-sab-cream shadow-sab-lg md:px-10 md:py-12"
+      className="relative overflow-hidden rounded-3xl border border-blue-200/60 bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600 px-6 py-10 text-white shadow-sab-lg md:px-10 md:py-12"
       aria-labelledby="home-hero-title"
     >
       <div
-        className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-sab-terracotta/20 blur-3xl"
+        className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-sky-400/25 blur-3xl"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -bottom-20 left-1/4 h-48 w-48 rounded-full bg-sab-gold/15 blur-3xl"
+        className="pointer-events-none absolute -bottom-20 left-1/4 h-48 w-48 rounded-full bg-blue-300/20 blur-3xl"
         aria-hidden
       />
 
-      <p className="sab-section-kicker !text-sab-gold/90">{isVal ? "Camp de Túria · València" : "Camp de Túria · Valencia"}</p>
+      <p className="sab-section-kicker !text-sky-200">{isVal ? "Camp de Túria · València" : "Camp de Túria · Valencia"}</p>
       <h1 id="home-hero-title" className="mt-2 max-w-2xl font-serif text-3xl font-bold leading-tight md:text-4xl lg:text-[2.75rem]">
         {isVal ? "El teu portal a " : "Tu portal en "}
-        <span className="text-sab-gold">San Antonio de Benagéber</span>
+        <span className="text-sky-200">San Antonio de Benagéber</span>
       </h1>
-      <p className="mt-4 max-w-xl text-base leading-relaxed text-sab-cream/85 md:text-lg">
+      <p className="mt-4 max-w-xl text-base leading-relaxed text-blue-50/90 md:text-lg">
         {isVal
           ? "Notícies, agenda, comerços i informació pràctica del teu municipi al Camp de Túria."
           : "Noticias, agenda, comercios e información práctica de tu municipio en el Camp de Túria."}
@@ -62,7 +62,7 @@ export function HomeHero({ isVal }: Props) {
         ))}
       </ul>
 
-      <p className="mt-6 text-xs text-sab-cream/50">
+      <p className="mt-6 text-xs text-blue-100/60">
         {SITE_NAME} · {isVal ? "Informació local de SAB" : "Información local de SAB"}
       </p>
     </section>

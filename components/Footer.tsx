@@ -12,57 +12,57 @@ export async function Footer() {
   const t = getTranslator(locale);
 
   return (
-    <footer className="mt-auto border-t-4 border-sab-terracotta bg-sab-forest text-sab-cream">
+    <footer className="mt-auto border-t-4 border-blue-600 bg-slate-950 text-slate-200">
       <div className="container-page grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <p className="font-serif text-lg font-bold text-white">{SITE_NAME}</p>
-          <p className="mt-2 text-sm leading-relaxed text-sab-cream/80">{t("footer.description")}</p>
+          <p className="mt-2 text-sm leading-relaxed text-slate-300">{t("footer.description")}</p>
         </div>
         <div>
-          <p className="sab-section-kicker !text-sab-gold/90">{t("footer.links")}</p>
+          <p className="sab-section-kicker !text-sky-300">{t("footer.links")}</p>
           <ul className="mt-3 space-y-1.5 text-sm">
             <li>
-              <Link href="/noticias" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/noticias" className="text-slate-200 transition hover:text-blue-300">
                 {getNavLabelByHref("/noticias", t)}
               </Link>
             </li>
             <li>
-              <Link href="/videos" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/videos" className="text-slate-200 transition hover:text-blue-300">
                 {getNavLabelByHref("/videos", t)}
               </Link>
             </li>
             <li>
-              <Link href="/eventos" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/eventos" className="text-slate-200 transition hover:text-blue-300">
                 {getNavLabelByHref("/eventos", t)}
               </Link>
             </li>
             <li>
-              <Link href="/denuncias" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/denuncias" className="text-slate-200 transition hover:text-blue-300">
                 {getNavLabelByHref("/denuncias", t)}
               </Link>
             </li>
             <li>
-              <Link href="/denuncias/nueva" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/denuncias/nueva" className="text-slate-200 transition hover:text-blue-300">
                 {t("footer.ctaReport")}
               </Link>
             </li>
             <li>
-              <Link href="/comercios" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/comercios" className="text-slate-200 transition hover:text-blue-300">
                 {t("footer.ctaCommerce")}
               </Link>
             </li>
             <li>
-              <Link href="/el-nostre-poble" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/el-nostre-poble" className="text-slate-200 transition hover:text-blue-300">
                 {getNavLabelByHref("/el-nostre-poble", t)}
               </Link>
             </li>
             <li>
-              <Link href="/informacion-util" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/informacion-util" className="text-slate-200 transition hover:text-blue-300">
                 {getNavLabelByHref("/informacion-util", t)}
               </Link>
             </li>
             <li>
-              <Link href="/quienes-somos" className="text-sab-cream/90 transition hover:text-white">
+              <Link href="/quienes-somos" className="text-slate-200 transition hover:text-blue-300">
                 {t("footer.about")}
               </Link>
             </li>
@@ -71,7 +71,7 @@ export async function Footer() {
                 href={SITE_INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sab-cream/90 transition hover:text-white"
+                className="inline-flex items-center gap-2 text-slate-200 transition hover:text-blue-300"
                 aria-label={t("footer.instagramAria")}
               >
                 <InstagramGlyph className="h-4 w-4 shrink-0 opacity-90" />
@@ -82,14 +82,14 @@ export async function Footer() {
         </div>
         <NewsletterSection locale={locale} variant="footer" defaultEmail={session?.user?.email} />
         <div>
-          <p className="sab-section-kicker !text-sab-gold/90">{t("footer.local")}</p>
-          <p className="mt-3 text-sm leading-relaxed text-sab-cream/85">
+          <p className="sab-section-kicker !text-sky-300">{t("footer.local")}</p>
+          <p className="mt-3 text-sm leading-relaxed text-slate-300">
             San Antonio de Benagéber · Camp de Túria · Comunitat Valenciana
           </p>
         </div>
       </div>
       <div className="border-t border-white/10">
-        <div className="container-page py-4 text-center text-xs text-sab-cream/55">
+        <div className="container-page py-4 text-center text-xs text-slate-400">
           © {new Date().getFullYear()} {SITE_NAME}
         </div>
       </div>

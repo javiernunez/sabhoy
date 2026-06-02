@@ -382,7 +382,7 @@ export default async function HomePage() {
                 />
               </CtaLink>
             </div>
-            <div className="rounded-2xl border-2 border-dashed border-sab-terracotta/40 bg-sab-forest/5 p-4 text-sm text-sab-forest">
+            <div className="rounded-2xl border-2 border-dashed border-blue-300/60 bg-blue-50/80 p-4 text-sm text-blue-900">
               <p className="font-bold">{isVal ? "Tens alguna cosa que contar o denunciar?" : "¿Algo que contar o denunciar?"}</p>
               <p className="mt-1 text-sab-ink/75">{isVal ? "Passa per denúncies: ho revisem abans de publicar." : "Pasa por denuncias: lo revisamos antes de publicar."}</p>
               <CtaLink

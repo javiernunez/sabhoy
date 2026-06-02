@@ -87,7 +87,7 @@ export async function AssociationSectionCatalog({
           title={isVal ? sectionConfig.labelVal : sectionConfig.labelEs}
           subtitle={isVal ? "Subsecció d'associacions amb filtres propis." : "Subsección de asociaciones con filtros propios."}
         />
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
           <p>
             {isVal
               ? "No s'ha trobat cap categoria arrel al directori que encaixe amb esta secció. El llistat pot estar buit; la URL segueix sent vàlida."

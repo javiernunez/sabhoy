@@ -14,29 +14,30 @@ export async function Header() {
   const pathname = headers().get("x-pathname") || "/";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-sab-sand/80 bg-sab-cream/95 shadow-sm backdrop-blur-md">
-      <div className="border-b-4 border-sab-terracotta bg-white">
-        <div className="container-page flex flex-wrap items-center justify-between gap-3 py-3 md:py-3.5">
-          <Link href="/" aria-label={SITE_NAME} className="flex items-center gap-3">
-            <Image
-              src="/branding/logo-sabhoy.png"
-              alt={SITE_NAME}
-              width={427}
-              height={120}
-              priority
-              unoptimized
-              className="h-9 w-auto max-w-[min(100%,22rem)] md:h-10"
-            />
-          </Link>
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher locale={locale} />
-            <UserNav locale={locale} />
-          </div>
+    <header className="sticky top-0 z-40 border-b border-sky-200/80 bg-gradient-to-b from-sky-100 via-sky-50/60 to-white/95 shadow-sm backdrop-blur-md supports-[backdrop-filter]:from-sky-100/85 supports-[backdrop-filter]:to-white/85">
+      <div className="container-page flex flex-wrap items-center justify-between gap-2 !py-2 md:!py-2.5">
+        <Link href="/" aria-label={SITE_NAME} className="block shrink-0">
+          <Image
+            src="/branding/logo-sabhoy.png"
+            alt={SITE_NAME}
+            width={427}
+            height={120}
+            priority
+            unoptimized
+            className="h-11 w-auto max-w-[min(100%,24rem)] md:h-12"
+          />
+        </Link>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher locale={locale} />
+          <UserNav locale={locale} />
         </div>
       </div>
 
-      <nav className="container-page overflow-x-auto !py-0" aria-label={t("nav.main")}>
-        <ul className="flex min-w-max items-center gap-1 py-2">
+      <nav
+        className="container-page overflow-x-auto !py-0 border-t border-slate-200/70 bg-gradient-to-b from-white to-slate-50/70"
+        aria-label={t("nav.main")}
+      >
+        <ul className="flex min-w-max items-center gap-1 py-1.5">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
