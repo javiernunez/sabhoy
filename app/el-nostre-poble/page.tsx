@@ -75,14 +75,14 @@ export default async function NostrePobleIndexPage() {
               <section key={cat} className="scroll-mt-6" id={cat.toLowerCase()}>
                 <h2 className="text-xl font-semibold text-slate-900">{pobleCategoryLabel(cat, isVal)}</h2>
                 <p className="mt-1 text-sm text-slate-500">{pobleCategorySeoText(cat, isVal)}</p>
-                <ul className="mt-4 space-y-2">
+                <ul className="mt-4 divide-y divide-slate-200/80 rounded-xl border border-slate-200/80 bg-white">
                   {list.map((p) => {
                     const title = localizedText(locale, p.title, p.titleVal);
                     return (
                       <li key={p.id}>
                         <Link
                           href={`${pagePath}/${p.slug}`}
-                          className="block rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm transition hover:border-sab-terracotta/40 hover:text-sab-forest"
+                          className="block px-4 py-3 text-slate-800 transition hover:bg-sab-mist/35 hover:text-sab-forest"
                         >
                           <span className="font-medium">{title}</span>
                           {p.summary || p.summaryVal ? (

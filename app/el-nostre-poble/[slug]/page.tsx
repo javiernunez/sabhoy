@@ -13,7 +13,6 @@ import { CSS_ARTICLE_HERO_WIDTH } from "@/lib/image-variants";
 import { absoluteMediaUrl, uiMediaUrl } from "@/lib/media-url";
 import { prisma } from "@/lib/prisma";
 import { renderMarkdown } from "@/lib/render-markdown";
-import { splitContentSections } from "@/lib/split-content-sections";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
 import { canonicalPath, truncateMetaDescription } from "@/lib/seo";
 
@@ -90,7 +89,6 @@ export default async function NostrePobleDetailPage({ params }: Props) {
     select: { slug: true, title: true, titleVal: true },
   });
 
-  const sections = splitContentSections(localizedContent);
   const mainImage = page.imageUrl ? uiMediaUrl(page.imageUrl, { displayWidth: CSS_ARTICLE_HERO_WIDTH }) : null;
   const isRemoteImage = mainImage && /^https?:\/\//i.test(mainImage);
 
@@ -132,26 +130,8 @@ export default async function NostrePobleDetailPage({ params }: Props) {
           )}
         </div>
       ) : null}
-      <div className="prose-poble mt-8 space-y-4 rounded-2xl bg-white p-6 shadow-sm">
-        {sections.map((section, index) => {
-          const lines = section.split("\n");
-          const first = lines[0] || "";
-          if (first.startsWith("## ")) {
-            const h2 = first.replace("## ", "");
-            const body = lines.slice(1).join("\n").trim();
-            return (
-              <section key={index}>
-                <h2 className="text-xl font-semibold text-slate-900">{h2}</h2>
-                {body ? <div className="mt-2 text-slate-800 [&_p]:mb-4 [&_p]:last:mb-0">{renderMarkdown(body)}</div> : null}
-              </section>
-            );
-          }
-          return (
-            <section key={index} className="text-slate-800">
-              {renderMarkdown(section)}
-            </section>
-          );
-        })}
+      <div className="prose-article mt-8 max-w-none border-t border-slate-200/70 pt-6 text-slate-800">
+        {renderMarkdown(localizedContent)}
       </div>
       {related.length > 0 ? (
         <RelatedLinksSection
