@@ -108,6 +108,7 @@ jobs:
             cd "$DEPLOY_PATH"
             date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ extract bundle (sin git en el VPS)"
             test -f "$BUNDLE" || (echo "ERROR: bundle no encontrado (esperado $BUNDLE)" >&2; ls -la "$DEPLOY_PATH"; exit 1)
+            rm -rf "${DEPLOY_PATH}/.next"
             tar -xzf "$BUNDLE" -C "$DEPLOY_PATH"
             rm -f "$BUNDLE"
             exec bash ./scripts/remote-deploy.sh

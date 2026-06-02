@@ -82,9 +82,10 @@ DEPLOY_APP_PORT="${DEPLOY_APP_PORT:-3003}"
 restart_app_service() {
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ restart ${SERVICE_NAME} (puerto ${DEPLOY_APP_PORT})"
   if systemctl_unit reload-or-restart; then
-    systemctl_unit is-active && return 0
-    echo "WARN: systemctl reload-or-restart ok pero is-active falló" >&2
-    return 0
+    if systemctl_unit is-active; then
+      return 0
+    fi
+    echo "WARN: systemctl reload-or-restart ok pero is-active falló; reinicio forzado en puerto ${DEPLOY_APP_PORT}" >&2
   fi
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl sin permisos; reinicio directo npm (puerto ${DEPLOY_APP_PORT})"
   if command -v fuser >/dev/null 2>&1; then
