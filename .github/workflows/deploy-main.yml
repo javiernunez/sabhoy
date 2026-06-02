@@ -108,9 +108,9 @@ jobs:
             cd "$DEPLOY_PATH"
             date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ extract bundle (sin git en el VPS)"
             test -f "$BUNDLE" || (echo "ERROR: bundle no encontrado (esperado $BUNDLE)" >&2; ls -la "$DEPLOY_PATH"; exit 1)
-            if [ -f "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" ]; then
-              bash "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" "$DEPLOY_PATH" "$BUNDLE" "${{ env.DEPLOY_SERVICE }}"
-            else
+            # No usar "if [ -f script ]": appleboy/DRONE aborta si el test falla aunque haya else.
+            stat "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" >/dev/null 2>&1 && \
+              bash "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" "$DEPLOY_PATH" "$BUNDLE" "${{ env.DEPLOY_SERVICE }}" || {
               _unit="${{ env.DEPLOY_SERVICE }}.service"
               systemctl stop "$_unit" 2>/dev/null || sudo -n systemctl stop "$_unit" 2>/dev/null || true
               sleep 2
@@ -127,5 +127,5 @@ jobs:
               if sudo -n true 2>/dev/null; then
                 sudo -n chown -R "$(whoami):$(id -gn)" "${DEPLOY_PATH}/.next" 2>/dev/null || true
               fi
-            fi
+            }
             exec bash ./scripts/remote-deploy.sh
