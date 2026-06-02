@@ -15,8 +15,8 @@ export function LanguageSwitcher({ locale, returnTo = "/", variant = "default" }
     ? "inline-flex items-center gap-0.5 rounded-lg border border-white/20 bg-white/10 p-0.5 backdrop-blur"
     : "inline-flex items-center gap-1 rounded-lg border border-sab-sand bg-white p-0.5";
   const activeClass = onDark
-    ? "bg-gradient-to-r from-sab-forest to-sab-rose text-white shadow-sm"
-    : "bg-gradient-to-r from-sab-forest to-sab-rose text-white shadow-sm";
+    ? "bg-sab-forest text-white shadow-sm"
+    : "bg-sab-forest text-white shadow-sm";
   const idleClass = onDark ? "text-sab-cream/85 hover:bg-white/10" : "text-sab-ink/70 hover:bg-sab-mist";
 
   return (

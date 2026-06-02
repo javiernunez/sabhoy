@@ -38,10 +38,10 @@ export async function Header() {
       </div>
 
       <nav
-        className="container-page overflow-x-auto !py-0 border-t border-sab-sand/70 bg-gradient-to-r from-sab-mist/50 via-white to-sab-rose-light/40"
+        className="container-page !py-0 border-t border-sab-sand/70 bg-sab-mist/35"
         aria-label={t("nav.main")}
       >
-        <ul className="flex min-w-max items-center gap-1.5 py-2 md:py-2.5">
+        <ul className="flex flex-wrap items-center gap-1.5 py-2 md:gap-2 md:py-2.5">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             const iconColor = active ? "text-white" : NAV_ICON_COLORS[item.icon];
