@@ -144,13 +144,27 @@ El seed crea:
 
 ### Secrets necesarios para deploy
 
-Configura en GitHub:
+Configura en **este repo** (`github.com/javiernunez/sabhoy` → Settings → Secrets and variables → Actions). Los secrets de `lelianahoy.es` o `beterahoy` **no se comparten**; hay que crearlos otra vez en `sabhoy`.
 
-- `DEPLOY_HOST`: IP o dominio del servidor.
-- `DEPLOY_USER`: usuario SSH con permisos en `/opt/sabhoy.es`.
-- `DEPLOY_SSH_KEY`: clave privada SSH.
-- `DEPLOY_PORT` (opcional): puerto SSH (por defecto `22`).
-- `DEPLOY_SERVICE` (opcional): nombre del servicio systemd sin `.service` (por defecto `sabhoy`).
+| Secret / variable | Valor |
+|-------------------|--------|
+| `DEPLOY_HOST` | IP del VPS (misma que lelianahoy/betera) |
+| `DEPLOY_USER` | Usuario SSH (p. ej. `deploy`) |
+| `DEPLOY_SSH_KEY` | Clave **privada** completa (la misma que funciona en los otros repos) |
+| `DEPLOY_PORT` | `22` (opcional) |
+| `NEXTAUTH_SECRET` | Igual que en producción |
+
+**Si falla** `ssh: unable to authenticate`: el secret existe pero la clave no está en `~/.ssh/authorized_keys` de `DEPLOY_USER` en el VPS, o pegaste la clave pública por error.
+
+Comprobar desde tu PC (sustituye clave y usuario):
+
+```bash
+ssh -i ~/.ssh/tu_clave_deploy deploy@TU_IP 'echo ok'
+```
+
+En el servidor, la pública correspondiente debe estar en `/home/deploy/.ssh/authorized_keys` (o en `/root/.ssh/` si `DEPLOY_USER=root`).
+
+Opcional: en GitHub → **Settings → Secrets → Actions** → **New repository secret** y copia los mismos valores que en `lelianahoy.es` (mismo host, mismo usuario, misma clave privada).
 
 ### Reinicio sin contraseña sudo (recomendado en el VPS)
 
