@@ -12,8 +12,9 @@ EnvironmentFile=-/opt/sabhoy.es/.env
 ExecStart=/usr/bin/npm run start -- -H 127.0.0.1 -p 3003
 Restart=on-failure
 RestartSec=10
-# User=tu-usuario-deploy
-# Group=tu-usuario-deploy
+# Mismo usuario que el deploy SSH (evita .next/cache de root que deploy no puede borrar)
+User=deploy
+Group=deploy
 
 [Install]
 WantedBy=multi-user.target

@@ -108,7 +108,24 @@ jobs:
             cd "$DEPLOY_PATH"
             date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ extract bundle (sin git en el VPS)"
             test -f "$BUNDLE" || (echo "ERROR: bundle no encontrado (esperado $BUNDLE)" >&2; ls -la "$DEPLOY_PATH"; exit 1)
-            rm -rf "${DEPLOY_PATH}/.next"
-            tar -xzf "$BUNDLE" -C "$DEPLOY_PATH"
-            rm -f "$BUNDLE"
+            if [ -x "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" ]; then
+              bash "${DEPLOY_PATH}/scripts/ci-extract-bundle.sh" "$DEPLOY_PATH" "$BUNDLE" "${{ env.DEPLOY_SERVICE }}"
+            else
+              _unit="${{ env.DEPLOY_SERVICE }}.service"
+              systemctl stop "$_unit" 2>/dev/null || sudo -n systemctl stop "$_unit" 2>/dev/null || true
+              sleep 2
+              if sudo -n true 2>/dev/null; then
+                sudo -n rm -rf "${DEPLOY_PATH}/.next"
+              else
+                rm -rf "${DEPLOY_PATH}/.next" || {
+                  echo "ERROR: no se pudo borrar ${DEPLOY_PATH}/.next. En el VPS: sudo chown -R deploy:deploy ${DEPLOY_PATH}" >&2
+                  exit 1
+                }
+              fi
+              tar -xzf "$BUNDLE" -C "$DEPLOY_PATH"
+              rm -f "$BUNDLE"
+              if sudo -n true 2>/dev/null; then
+                sudo -n chown -R "$(whoami):$(id -gn)" "${DEPLOY_PATH}/.next" 2>/dev/null || true
+              fi
+            fi
             exec bash ./scripts/remote-deploy.sh

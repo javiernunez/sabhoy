@@ -270,9 +270,12 @@ Con esto, cada push a `main` despliega automaticamente con los **secrets** confi
 
 ```bash
 sudo cp /opt/sabhoy.es/deploy/sabhoy.service /etc/systemd/system/sabhoy.service
-# Ajusta User/Group si hace falta (puerto 3003 por defecto)
+# El servicio debe correr como User=deploy (mismo que el deploy SSH), no como root
+sudo chown -R deploy:deploy /opt/sabhoy.es
 sudo systemctl daemon-reload
 sudo systemctl enable sabhoy.service
 ```
+
+Si el deploy falla al borrar `.next` (`Permission denied`), en el VPS como root: `sudo chown -R deploy:deploy /opt/sabhoy.es` y vuelve a lanzar el workflow.
 
 El **primer** `systemctl start` puede fallar hasta que existan `node_modules` y `.next` (tras `make deploy` o `make db-init` + build).

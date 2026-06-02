@@ -1,0 +1,9 @@
+# Permisos NOPASSWD para el usuario de deploy (sustituye "deploy").
+#   sudo visudo -f /etc/sudoers.d/turiahoy-deploy
+#
+# Evita fallos al borrar .next creado por root y al parar/reiniciar systemd.
+
+deploy ALL=(ALL) NOPASSWD: /bin/systemctl stop beterahoy.service, /bin/systemctl start beterahoy.service, /bin/systemctl reload-or-restart beterahoy.service, /bin/systemctl is-active beterahoy.service
+deploy ALL=(ALL) NOPASSWD: /bin/systemctl stop lelianahoy.service, /bin/systemctl start lelianahoy.service, /bin/systemctl reload-or-restart lelianahoy.service, /bin/systemctl is-active lelianahoy.service
+deploy ALL=(ALL) NOPASSWD: /bin/systemctl stop sabhoy.service, /bin/systemctl start sabhoy.service, /bin/systemctl reload-or-restart sabhoy.service, /bin/systemctl is-active sabhoy.service
+deploy ALL=(ALL) NOPASSWD: /usr/bin/rm
