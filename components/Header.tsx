@@ -15,7 +15,7 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-sky-200/80 bg-gradient-to-b from-sky-100 via-sky-50/60 to-white/95 shadow-sm backdrop-blur-md supports-[backdrop-filter]:from-sky-100/85 supports-[backdrop-filter]:to-white/85">
-      <div className="container-page flex flex-wrap items-center justify-between gap-2 !py-2 md:!py-2.5">
+      <div className="container-page flex flex-wrap items-center justify-between gap-3 !py-3 md:!py-4">
         <Link href="/" aria-label={SITE_NAME} className="block shrink-0">
           <Image
             src="/branding/logo-sabhoy.png"
@@ -24,7 +24,7 @@ export async function Header() {
             height={120}
             priority
             unoptimized
-            className="h-11 w-auto max-w-[min(100%,24rem)] md:h-12"
+            className="h-12 w-auto max-w-[min(100%,26rem)] md:h-14"
           />
         </Link>
         <div className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export async function Header() {
         className="container-page overflow-x-auto !py-0 border-t border-slate-200/70 bg-gradient-to-b from-white to-slate-50/70"
         aria-label={t("nav.main")}
       >
-        <ul className="flex min-w-max items-center gap-1 py-1.5">
+        <ul className="flex min-w-max items-center gap-1.5 py-2 md:py-2.5">
           {NAV_ITEMS.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
@@ -47,7 +47,7 @@ export async function Header() {
                   className={`sab-nav-link ${active ? "sab-nav-link-active" : ""}`}
                   aria-current={active ? "page" : undefined}
                 >
-                  <NavItemIcon id={item.icon} className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  <NavItemIcon id={item.icon} className="h-4 w-4 md:h-[1.125rem] md:w-[1.125rem]" />
                   {getNavLabelByHref(item.href, t)}
                 </Link>
               </li>

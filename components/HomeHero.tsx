@@ -22,11 +22,11 @@ export function HomeHero({ isVal }: Props) {
       />
 
       <p className="sab-section-kicker !text-sky-200">{isVal ? "Camp de Túria · València" : "Camp de Túria · Valencia"}</p>
-      <h1 id="home-hero-title" className="mt-2 max-w-2xl font-serif text-3xl font-bold leading-tight md:text-4xl lg:text-[2.75rem]">
+      <h1 id="home-hero-title" className="mt-2 max-w-2xl font-serif text-3xl font-bold leading-tight md:text-4xl lg:text-5xl">
         {isVal ? "El teu portal a " : "Tu portal en "}
         <span className="text-sky-200">San Antonio de Benagéber</span>
       </h1>
-      <p className="mt-4 max-w-xl text-base leading-relaxed text-blue-50/90 md:text-lg">
+      <p className="mt-4 max-w-xl text-lg leading-relaxed text-blue-50/90 md:text-xl">
         {isVal
           ? "Notícies, agenda, comerços i informació pràctica del teu municipi al Camp de Túria."
           : "Noticias, agenda, comercios e información práctica de tu municipio en el Camp de Túria."}
@@ -36,14 +36,14 @@ export function HomeHero({ isVal }: Props) {
         <CtaLink
           href="/denuncias/nueva"
           trackParams={{ cta_name: "home_hero_report", cta_context: "home_hero", destination: "/denuncias/nueva" }}
-          className="rounded-xl bg-sab-terracotta px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-sab-terracotta-dark"
+          className="rounded-xl bg-sab-terracotta px-5 py-3 text-base font-bold text-white shadow-md transition hover:bg-sab-terracotta-dark"
         >
           {isVal ? "Enviar incidència" : "Enviar incidencia"}
         </CtaLink>
         <CtaLink
           href="/noticias"
           trackParams={{ cta_name: "home_hero_news", cta_context: "home_hero", destination: "/noticias" }}
-          className="rounded-xl border border-sab-cream/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+          className="rounded-xl border border-sab-cream/30 bg-white/10 px-5 py-3 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20"
         >
           {isVal ? "Últimes notícies" : "Últimas noticias"}
         </CtaLink>

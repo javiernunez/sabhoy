@@ -10,15 +10,25 @@
   --sab-cream: #f8fafc;
 }
 
+html {
+  font-size: 17px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 18px;
+  }
+}
+
 body {
-  @apply bg-sab-cream text-sab-ink antialiased;
+  @apply bg-sab-cream text-sab-ink antialiased leading-relaxed;
   background-image:
     radial-gradient(ellipse 120% 80% at 100% -20%, rgba(37, 99, 235, 0.08), transparent 50%),
     radial-gradient(ellipse 80% 60% at 0% 100%, rgba(14, 165, 233, 0.06), transparent 45%);
 }
 
 .prose-article {
-  @apply text-lg text-sab-ink/90;
+  @apply text-xl text-sab-ink/90 leading-relaxed;
 }
 
 .prose-article :where(a[href]) {
@@ -43,7 +53,7 @@ body {
   }
 
   .sab-btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-sab-terracotta px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-sab-terracotta-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sab-terracotta;
+    @apply inline-flex items-center justify-center rounded-lg bg-sab-terracotta px-4 py-2.5 text-base font-semibold text-white shadow-sm transition hover:bg-sab-terracotta-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sab-terracotta;
   }
 
   .sab-card {
@@ -51,7 +61,7 @@ body {
   }
 
   .sab-nav-link {
-    @apply flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-sab-ink/80 transition hover:bg-white hover:text-sab-forest;
+    @apply flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2.5 text-base font-medium text-sab-ink/80 transition hover:bg-white hover:text-sab-forest;
   }
 
   .sab-nav-link-active {
@@ -59,7 +69,7 @@ body {
   }
 
   .sab-section-kicker {
-    @apply text-[11px] font-bold uppercase tracking-[0.2em] text-sab-terracotta;
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-sab-terracotta;
   }
 }
 

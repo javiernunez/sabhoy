@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Literata, Outfit } from "next/font/google";
+import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { AnalyticsListener } from "@/components/AnalyticsListener";
 import { AnalyticsScripts } from "@/components/AnalyticsScripts";
@@ -10,7 +10,7 @@ import { GOOGLE_SITE_VERIFICATION, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from 
 import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { DEFAULT_SITE_KEYWORDS } from "@/lib/seo";
 
-const outfit = Outfit({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-sans",
@@ -18,11 +18,11 @@ const outfit = Outfit({
   preload: true,
 });
 
-const literata = Literata({
+const instrumentSerif = Instrument_Serif({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-serif",
-  weight: ["400", "600", "700"],
+  weight: "400",
   preload: true,
 });
 
@@ -72,8 +72,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const locale = getLocaleFromCookie();
 
   return (
-    <html lang={locale === "val" ? "ca" : "es"} className={`${outfit.variable} ${literata.variable}`}>
-      <body className={`min-h-screen font-sans ${outfit.className}`}>
+    <html lang={locale === "val" ? "ca" : "es"} className={`${plusJakarta.variable} ${instrumentSerif.variable}`}>
+      <body className={`min-h-screen font-sans ${plusJakarta.className}`}>
         <AnalyticsScripts />
         <AnalyticsListener />
         <div className="flex min-h-screen flex-col">
