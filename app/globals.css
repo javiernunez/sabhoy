@@ -7,6 +7,7 @@
   --sab-ink: #0f172a;
   --sab-forest: #1e40af;
   --sab-terracotta: #2563eb;
+  --sab-rose: #e11d8f;
   --sab-cream: #f8fafc;
 }
 
@@ -23,8 +24,9 @@ html {
 body {
   @apply bg-sab-cream text-sab-ink antialiased leading-relaxed;
   background-image:
-    radial-gradient(ellipse 120% 80% at 100% -20%, rgba(37, 99, 235, 0.08), transparent 50%),
-    radial-gradient(ellipse 80% 60% at 0% 100%, rgba(14, 165, 233, 0.06), transparent 45%);
+    radial-gradient(ellipse 120% 80% at 100% -20%, rgba(37, 99, 235, 0.07), transparent 50%),
+    radial-gradient(ellipse 70% 55% at 0% 0%, rgba(225, 29, 143, 0.06), transparent 45%),
+    radial-gradient(ellipse 80% 60% at 0% 100%, rgba(14, 165, 233, 0.05), transparent 45%);
 }
 
 .prose-article {
@@ -49,11 +51,11 @@ body {
 
 @layer components {
   .sab-link {
-    @apply font-semibold text-sab-terracotta underline decoration-sab-terracotta/40 underline-offset-[3px] transition hover:text-sab-forest hover:decoration-sab-forest/50;
+    @apply font-semibold text-sab-forest underline decoration-sab-terracotta/40 underline-offset-[3px] transition hover:text-sab-rose hover:decoration-sab-rose/50;
   }
 
   .sab-btn-primary {
-    @apply inline-flex items-center justify-center rounded-lg bg-sab-terracotta px-4 py-2.5 text-base font-semibold text-white shadow-sm transition hover:bg-sab-terracotta-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sab-terracotta;
+    @apply inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-sab-forest to-sab-rose px-4 py-2.5 text-base font-semibold text-white shadow-sm transition hover:from-sab-terracotta-dark hover:to-sab-rose-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sab-terracotta;
   }
 
   .sab-card {
@@ -65,11 +67,11 @@ body {
   }
 
   .sab-nav-link-active {
-    @apply bg-sab-terracotta text-white shadow-sm hover:bg-sab-terracotta-dark hover:text-white;
+    @apply bg-gradient-to-r from-sab-forest to-sab-rose text-white shadow-sm hover:from-sab-terracotta-dark hover:to-sab-rose-dark hover:text-white;
   }
 
   .sab-section-kicker {
-    @apply text-xs font-bold uppercase tracking-[0.18em] text-sab-terracotta;
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-sab-rose;
   }
 }
 

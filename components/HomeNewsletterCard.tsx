@@ -19,7 +19,7 @@ type Props = {
 export function HomeNewsletterCard({ locale, defaultEmail }: Props) {
   const t = getTranslator(locale);
   return (
-    <div className={`${ui.card} border-blue-100 bg-gradient-to-br from-white to-sab-mist/80 p-4`}>
+    <div className={`${ui.card} border-sab-rose-light bg-gradient-to-br from-white via-sab-mist/50 to-sab-rose-light/50 p-4`}>
       <p className="sab-section-kicker">{t("footer.newsletter")}</p>
       <p className={`mt-1 text-sm ${ui.muted}`}>{t("footer.newsletterDescription")}</p>
       <NewsletterForm locale={locale} appearance="light" source="sidebar_card" defaultEmail={defaultEmail} />

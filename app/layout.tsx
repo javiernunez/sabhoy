@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { DM_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
 import { AnalyticsListener } from "@/components/AnalyticsListener";
 import { AnalyticsScripts } from "@/components/AnalyticsScripts";
@@ -10,7 +10,7 @@ import { GOOGLE_SITE_VERIFICATION, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from 
 import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { DEFAULT_SITE_KEYWORDS } from "@/lib/seo";
 
-const plusJakarta = Plus_Jakarta_Sans({
+const dmSans = DM_Sans({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-sans",
@@ -18,11 +18,11 @@ const plusJakarta = Plus_Jakarta_Sans({
   preload: true,
 });
 
-const instrumentSerif = Instrument_Serif({
+const newsreader = Newsreader({
   subsets: ["latin", "latin-ext"],
   display: "swap",
   variable: "--font-serif",
-  weight: "400",
+  weight: ["400", "600", "700"],
   preload: true,
 });
 
@@ -72,8 +72,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   const locale = getLocaleFromCookie();
 
   return (
-    <html lang={locale === "val" ? "ca" : "es"} className={`${plusJakarta.variable} ${instrumentSerif.variable}`}>
-      <body className={`min-h-screen font-sans ${plusJakarta.className}`}>
+    <html lang={locale === "val" ? "ca" : "es"} className={`${dmSans.variable} ${newsreader.variable}`}>
+      <body className={`min-h-screen font-sans ${dmSans.className}`}>
         <AnalyticsScripts />
         <AnalyticsListener />
         <div className="flex min-h-screen flex-col">

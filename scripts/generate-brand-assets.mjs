@@ -11,29 +11,98 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 
 const defaultSource = path.join(root, "assets", "logo-source.png");
+const fallbackSource = path.join(root, "public", "branding", "logo-sabhoy.png");
 const source = process.argv[2] ?? defaultSource;
 
 const brandingDir = path.join(root, "public", "branding");
 const iconsDir = path.join(root, "public", "icons");
 
-/** Rosetón simplificado del logo (escala bien a 16–32 px). */
-const FAVICON_SVG = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="sabhoy">
-  <rect width="32" height="32" rx="7" fill="#0b4f84"/>
-  <circle cx="16" cy="16" r="11.5" fill="#d1e3f3"/>
-  <circle cx="16" cy="16" r="9.5" fill="none" stroke="#4a86c5" stroke-width="1.2"/>
-  <g fill="#0b4f84" stroke="#0b4f84" stroke-width="0.4">
-    <ellipse cx="16" cy="16" rx="3.2" ry="8.5"/>
-    <ellipse cx="16" cy="16" rx="8.5" ry="3.2"/>
-    <ellipse cx="16" cy="16" rx="6.2" ry="6.2" transform="rotate(45 16 16)"/>
-    <circle cx="16" cy="16" r="2.1" fill="#4a86c5" stroke="none"/>
-  </g>
-</svg>`;
+/**
+ * Recorte de la torre (parte alta, perfil) — similar en espíritu al favicon de lelianahoy:
+ * icono pequeño, fondo transparente, detalle legible a 16–32 px.
+ */
+const TOWER_CROP = {
+  leftRatio: 0.07,
+  widthRatio: 0.16,
+  heightRatio: 0.42,
+};
+
+const WHITE_ALPHA_THRESHOLD = 248;
+const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };
 
 const FAVICON_SIZES = [16, 32, 48, 64, 96, 128, 180, 192, 256, 512];
 
-async function writeLogo() {
-  const trimmed = await sharp(source).trim({ threshold: 12 }).png({ compressionLevel: 9 }).toBuffer();
+async function resolveSourcePath() {
+  const { access } = await import("node:fs/promises");
+  try {
+    await access(source);
+    return source;
+  } catch {
+    await access(fallbackSource);
+    return fallbackSource;
+  }
+}
+
+/** Convierte blancos del logo en transparencia (fondo del PNG de origen). */
+async function removeNearWhite(inputBuffer, threshold = WHITE_ALPHA_THRESHOLD) {
+  const { data, info } = await sharp(inputBuffer).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const pixels = new Uint8Array(data);
+  for (let i = 0; i < pixels.length; i += 4) {
+    const r = pixels[i];
+    const g = pixels[i + 1];
+    const b = pixels[i + 2];
+    if (r >= threshold && g >= threshold && b >= threshold) {
+      pixels[i + 3] = 0;
+    }
+  }
+  return sharp(pixels, {
+    raw: { width: info.width, height: info.height, channels: 4 },
+  })
+    .png()
+    .toBuffer();
+}
+
+/** Torre superior del logo, fondo transparente, ampliada para favicon. */
+async function buildTowerFaviconMaster(logoPath) {
+  const trimmed = await sharp(logoPath).trim({ threshold: 12 }).toBuffer();
+  const meta = await sharp(trimmed).metadata();
+  const left = Math.round(meta.width * TOWER_CROP.leftRatio);
+  const cropW = Math.min(meta.width - left, Math.round(meta.width * TOWER_CROP.widthRatio));
+  const cropH = Math.round(meta.height * TOWER_CROP.heightRatio);
+
+  let tower = await sharp(trimmed)
+    .extract({ left, top: 0, width: cropW, height: cropH })
+    .png()
+    .toBuffer();
+
+  tower = await removeNearWhite(tower);
+
+  return sharp(tower)
+    .sharpen({ sigma: 1, m1: 0.5, m2: 0.35 })
+    .resize(500, 500, { fit: "inside", background: TRANSPARENT, kernel: sharp.kernel.lanczos3 })
+    .extend({
+      top: 6,
+      bottom: 6,
+      left: 6,
+      right: 6,
+      background: TRANSPARENT,
+    })
+    .png()
+    .toBuffer();
+}
+
+function resizeFavicon(master, size) {
+  const pipeline = sharp(master).resize(size, size, {
+    fit: size <= 48 ? "cover" : "inside",
+    position: "centre",
+    background: TRANSPARENT,
+    kernel: sharp.kernel.lanczos3,
+  });
+  return pipeline.png({ compressionLevel: 9 });
+}
+
+async function writeLogo(logoPath) {
+  const trimmed = await sharp(logoPath).trim({ threshold: 12 }).png({ compressionLevel: 9 }).toBuffer();
   const meta = await sharp(trimmed).metadata();
   const logoHeight = 120;
   const logoWidth = Math.round((meta.width / meta.height) * logoHeight);
@@ -46,30 +115,26 @@ async function writeLogo() {
   return { logoWidth, logoHeight };
 }
 
-async function writeFavicons() {
-  const svgBuffer = Buffer.from(FAVICON_SVG);
-
-  await writeFile(path.join(brandingDir, "favicon.svg"), FAVICON_SVG);
+async function writeFavicons(logoPath) {
+  const master = await buildTowerFaviconMaster(logoPath);
 
   const pngBySize = {};
   for (const size of FAVICON_SIZES) {
     const out = path.join(iconsDir, `favicon-${size}x${size}.png`);
-    await sharp(svgBuffer, { density: 384 })
-      .resize(size, size)
-      .png({ compressionLevel: 9 })
-      .toFile(out);
+    await resizeFavicon(master, size).toFile(out);
     pngBySize[size] = out;
   }
 
-  // Next.js metadata (app/)
-  await sharp(svgBuffer, { density: 384 }).resize(512, 512).png().toFile(path.join(root, "app", "icon.png"));
-  await sharp(svgBuffer, { density: 384 }).resize(180, 180).png().toFile(path.join(root, "app", "apple-icon.png"));
+  await sharp(master).toFile(path.join(brandingDir, "favicon-tower-512.png"));
+
+  await sharp(master).toFile(path.join(root, "app", "icon.png"));
+  await sharp(master).resize(180, 180).png().toFile(path.join(root, "app", "apple-icon.png"));
 
   const icoSizes = [16, 32, 48];
   const icoImages = await Promise.all(
     icoSizes.map(async (size) => ({
       size,
-      buffer: await sharp(svgBuffer).resize(size, size).png().toBuffer(),
+      buffer: await resizeFavicon(master, size).toBuffer(),
     })),
   );
 
@@ -135,10 +200,11 @@ async function main() {
   await mkdir(brandingDir, { recursive: true });
   await mkdir(iconsDir, { recursive: true });
 
-  const { logoWidth, logoHeight } = await writeLogo();
-  await writeFavicons();
+  const resolvedSource = await resolveSourcePath();
+  const { logoWidth, logoHeight } = await writeLogo(resolvedSource);
+  await writeFavicons(resolvedSource);
 
-  console.log(JSON.stringify({ ok: true, logoWidth, logoHeight, source }, null, 2));
+  console.log(JSON.stringify({ ok: true, logoWidth, logoHeight, source: resolvedSource }, null, 2));
 }
 
 main().catch((err) => {

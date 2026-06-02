@@ -30,7 +30,7 @@ export function NewsletterSection({ locale, variant = "footer", defaultEmail }: 
 
   return (
     <div>
-      <p className="sab-section-kicker !text-sky-300">{t("footer.newsletter")}</p>
+      <p className="sab-section-kicker !text-pink-300">{t("footer.newsletter")}</p>
       <p className="mt-2 text-sm text-slate-300">{t("footer.newsletterDescription")}</p>
       <NewsletterForm locale={locale} appearance="dark" source="footer" defaultEmail={defaultEmail} />
     </div>

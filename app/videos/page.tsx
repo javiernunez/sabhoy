@@ -92,9 +92,6 @@ export default async function VideosPage({ searchParams }: PageProps) {
                     year: "numeric",
                   }).format(video.createdAt)}
                 </p>
-                <div className="prose-article mt-1 max-w-2xl text-sm text-slate-700">
-                  {renderMarkdown(localizedText(locale, video.description, video.descriptionVal) || "")}
-                </div>
                 {embedUrl ? (
                   <div className="relative mt-3 w-full overflow-hidden rounded-xl pt-[56.25%]">
                     <iframe
@@ -107,6 +104,9 @@ export default async function VideosPage({ searchParams }: PageProps) {
                     />
                   </div>
                 ) : null}
+                <div className="prose-article mt-3 max-w-2xl text-sm text-slate-700">
+                  {renderMarkdown(localizedText(locale, video.description, video.descriptionVal) || "")}
+                </div>
                 <Link
                   href={video.url}
                   target="_blank"

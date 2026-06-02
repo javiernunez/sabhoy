@@ -12,7 +12,7 @@ type Props = {
 
 export function SectionHeader({ title, subtitle, href, actionLabel = "Ver todo", icon, trackContext }: Readonly<Props>) {
   return (
-    <div className="mb-5 flex flex-col gap-2 border-l-4 border-sab-terracotta pl-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-5 flex flex-col gap-2 border-l-4 border-sab-rose pl-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <h2 className={`${ui.sectionTitle} flex items-center gap-2`}>
           {icon ? <span className="text-2xl" aria-hidden>{icon}</span> : null}

@@ -12,6 +12,19 @@ export const NAV_ITEMS = [
 
 export type NavIconId = (typeof NAV_ITEMS)[number]["icon"];
 
+/** Color de icono en nav (inactivo); activo hereda blanco del enlace. */
+export const NAV_ICON_COLORS: Record<NavIconId, string> = {
+  newspaper: "text-blue-600",
+  balance: "text-violet-600",
+  play: "text-rose-500",
+  landmark: "text-amber-600",
+  store: "text-emerald-600",
+  users: "text-pink-500",
+  megaphone: "text-orange-500",
+  calendar: "text-sky-600",
+  book: "text-indigo-600",
+};
+
 export const QUICK_ACCESS = [
   { href: "/telefonos-importantes", label: "Telefonos" },
   { href: "/farmacias-de-guardia", label: "Farmacias" },

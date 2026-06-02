@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLdWebSite } from "@/components/JsonLdWebSite";
 import { CtaLink } from "@/components/CtaLink";
-import { HomeHero } from "@/components/HomeHero";
 import { HomeEventCalendar } from "@/components/HomeEventCalendar";
 import { ui } from "@/lib/ui-classes";
 import { HomeNewsletterCard } from "@/components/HomeNewsletterCard";
@@ -154,8 +153,7 @@ export default async function HomePage() {
     <div>
       {lcpHref ? <link rel="preload" as="image" href={lcpHref} fetchPriority="high" /> : null}
       <JsonLdWebSite />
-      <div className="container-page space-y-12 py-8 md:py-10">
-        <HomeHero isVal={isVal} />
+      <div className="container-page space-y-10 py-6 md:py-8">
         <div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
           <div className="min-w-0 space-y-8 lg:col-span-2">
             <section>
