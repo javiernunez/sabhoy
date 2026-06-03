@@ -27,8 +27,8 @@ import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { localizedText } from "@/lib/localized";
 import { uiMediaUrl } from "@/lib/media-url";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
-/** Cache HTML en CDN/origen; datos frescos cada 2 min (noticias locales). */
-export const revalidate = 120;
+/** Siempre datos de la BD de producción (evita HTML cacheado en el build de CI). */
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   description: `${SITE_NAME}: ${SITE_DESCRIPTION}`,

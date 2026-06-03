@@ -23,6 +23,8 @@ STAMP_FILE=".deploy-npm-lock-stamp"
 
 cd "$DEPLOY_PATH"
 
+rm -rf .next/cache
+
 # Cargar .env (build de Next/Prisma, docker compose, etc.)
 set -a
 test -f .env && . ./.env || true
@@ -190,6 +192,11 @@ fi
 
 date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ prisma migrate"
 npm run prisma:deploy
+
+if [ -f scripts/backfill-video-slugs.ts ]; then
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ backfill video slugs"
+  npx tsx scripts/backfill-video-slugs.ts || echo "WARN: backfill-video-slugs falló (revisar logs)" >&2
+fi
 
 if [ "$SKIP_BUILD" = 1 ]; then
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ omitir npm run build (SKIP_BUILD=1)"

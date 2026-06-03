@@ -18,6 +18,8 @@ import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { localizedText } from "@/lib/localized";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: { slug: string };
 };
