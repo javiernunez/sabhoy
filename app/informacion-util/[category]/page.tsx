@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLdBreadcrumbList } from "@/components/JsonLdBreadcrumb";
 import { SharePlatformsRow } from "@/components/SharePlatformsRow";
+import { SchoolsDirectoryGrid } from "@/components/SchoolsDirectoryGrid";
 import type { InfoCategory } from "@/lib/info-categories";
 import { getCategoryBySlug, getCategoryForPage, INFO_CATEGORIES } from "@/lib/info-categories";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
@@ -10,6 +11,7 @@ import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { localizedText } from "@/lib/localized";
 import { prisma } from "@/lib/prisma";
 import { renderMarkdown } from "@/lib/render-markdown";
+import { hrefForEvergreenSlug, isSchoolEvergreenSlug } from "@/lib/schools";
 import { canonicalPath, metaFromEvergreenContent, truncateMetaDescription } from "@/lib/seo";
 
 type Props = Readonly<{
@@ -69,7 +71,7 @@ function RelatedPagesGrid({ pages, cat, isVal }: Readonly<{ pages: LocalizedPage
         {pages.map((page) => (
           <Link
             key={page.id}
-            href={`/${page.slug}`}
+            href={hrefForEvergreenSlug(page.slug)}
             className="group flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow"
           >
             <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm ${cat.colorLight}`}>
@@ -106,6 +108,7 @@ export default async function InfoCategoryPage({ params }: Props) {
 
   const relatedPages: LocalizedPage[] = allPages
     .filter((p) => p.slug !== cat.evergreenSlug && getCategoryForPage(p)?.slug === cat.slug)
+    .filter((p) => cat.slug !== "colegios" || !isSchoolEvergreenSlug(p.slug))
     .map((p) => ({
       id: p.id,
       slug: p.slug,
@@ -159,6 +162,12 @@ export default async function InfoCategoryPage({ params }: Props) {
             : "El contenido de esta sección se está preparando. Vuelve pronto."}
         </div>
       )}
+
+      {cat.slug === "colegios" ? (
+        <div className="mt-10">
+          <SchoolsDirectoryGrid isVal={isVal} />
+        </div>
+      ) : null}
 
       <RelatedPagesGrid pages={relatedPages} cat={cat} isVal={isVal} />
 

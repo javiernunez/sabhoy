@@ -16,6 +16,15 @@ function escapeHtmlTextNode(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function isInternalHref(href: string): boolean {
+  const h = href.trim();
+  return h.startsWith("/") || h.startsWith("#");
+}
+
+function externalLinkAttrs(href: string): string {
+  return isInternalHref(href) ? "" : ' target="_blank" rel="noreferrer noopener"';
+}
+
 /** Bloque que empieza por etiqueta HTML (p. ej. `<p>`, `<div>`, `<iframe>`). */
 function isHtmlLeadingBlock(block: string): boolean {
   return /^<[a-zA-Z]/.test(block.trim());
@@ -70,7 +79,7 @@ function expandInlineMarkdownToHtmlForHybrid(block: string): string {
   s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text: string, href: string) => {
     const hrefEsc = escapeHtmlAttributeValue(href.trim());
     const inner = inlineMarkdownLinkInnerToHtml(text);
-    return `<a href="${hrefEsc}" target="_blank" rel="noreferrer noopener">${inner}</a>`;
+    return `<a href="${hrefEsc}"${externalLinkAttrs(href)}>${inner}</a>`;
   });
   s = s.replace(/\*\*([^*]+)\*\*/g, (_, inner: string) => `<strong>${escapeHtmlTextNode(inner)}</strong>`);
   return s;
@@ -155,13 +164,14 @@ function renderInlineMarkdown(text: string, keyBase: string): ReactNode[] {
     if (match[1] !== undefined && match[2] !== undefined) {
       nodes.push(renderArticleImage(match[2], match[1] || "Imagen", `${keyBase}-img-${match.index}`));
     } else if (match[3] !== undefined && match[4] !== undefined) {
+      const href = match[4];
+      const external = !isInternalHref(href);
       nodes.push(
         <a
           key={`${keyBase}-link-${match.index}`}
-          href={match[4]}
+          href={href}
           className="break-words font-medium text-blue-700 underline decoration-blue-400/80 underline-offset-[3px] transition-colors hover:text-blue-900 hover:decoration-blue-600 [&_strong]:text-inherit [&_strong]:font-semibold"
-          target="_blank"
-          rel="noreferrer noopener"
+          {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
         >
           {renderInlineMarkdownWithoutLinks(match[3], `${keyBase}-inl-${match.index}`)}
         </a>,

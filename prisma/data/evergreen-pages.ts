@@ -185,22 +185,33 @@ Derivació habitual a València i Llíria. [Transport públic](/transporte-publi
     isHighlighted: true,
     content: `# Educación en San Antonio de Benagéber
 
-## Centros públicos
+Más del **35 %** de la población tiene menos de 16 años; la oferta educativa es un eje central del municipio residencial del Camp de Túria. Consulta la ficha de cada centro en el directorio inferior.
 
-- **CEIP San Antonio** — infantil y primaria (casco urbano)
-- **CEIP Montesano** — infantil y primaria (urbanización Montesano)
-- **IES San Antonio de Benagéber** — ESO, Bachillerato y FPB bilingüe (C. San Vicente Ferrer, 1-2). Tel. [961 206 325](tel:961206325)
+## Escolarización y matrícula
 
-## Concertado
+El proceso de **admisión para centros públicos y concertados** lo gestiona la Conselleria de Educación de la Generalitat Valenciana. El plazo suele abrirse entre **marzo y abril** de cada año.
 
-- **IES Fundación San Vicente Ferrer** (C. Vereda)
+- 🌐 Portal de admisión: [ceice.gva.es/es/web/admision-alumnado](https://ceice.gva.es/es/web/admision-alumnado)
+- 📞 Información educación GVA: **012**
 
-Más del **35 %** de la población tiene menos de 16 años; la oferta educativa es un eje central del municipio residencial del Camp de Túria.
+Para centros privados o concertados, contacta directamente con cada centro.
 
-Consulta la ficha detallada en [/colegios](/colegios).`,
+## Más información
+
+- [Actividades para niños](/actividades-ninos)
+- [Información útil](/informacion-util)`,
     contentVal: `# Educació a Sant Antoni de Benaixeve
 
-CEIP Sant Antoni, CEIP Montesano, IES Sant Antoni de Benaixeve (bilingüe) i IES Fundació Sant Vicent Ferrer.`,
+Més del **35 %** de la població té menys de 16 anys. Consulta la fitxa de cada centre al directori inferior.
+
+## Escolarització
+
+Portal d'admissió GVA: [ceice.gva.es/es/web/admision-alumnado](https://ceice.gva.es/es/web/admision-alumnado)
+
+## Més informació
+
+- [Activitats per a xiquets](/actividades-ninos)
+- [Informació útil](/informacion-util)`,
   },
   {
     slug: "transporte-publico-sab",
@@ -391,8 +402,8 @@ Consulta l'ajuntament i el programa «Viu els teus Parcs».`,
     slug: "colegio-ies-san-antonio",
     title: "IES San Antonio de Benagéber",
     titleVal: "IES Sant Antoni de Benaixeve",
-    content: `Instituto bilingüe en C. San Vicente Ferrer. Tel. 961 206 325. [Portal educativo GVA](https://portal.edu.gva.es/iessanantoniodebenageber/).`,
-    contentVal: `Institut bilingüe al carrer Sant Vicent Ferrer.`,
+    content: `Instituto bilingüe. ESO, Bachillerato y Formación Profesional Básica.`,
+    contentVal: `Institut bilingüe. ESO, Batxillerat i FPB.`,
   },
   {
     slug: "colegio-ies-fundacion-san-vicente",

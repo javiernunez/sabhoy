@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { JsonLdBreadcrumbList } from "@/components/JsonLdBreadcrumb";
 import { SharePlatformsRow } from "@/components/SharePlatformsRow";
 import { RelatedLinksSection } from "@/components/RelatedLinksSection";
@@ -9,6 +9,7 @@ import { localizedText } from "@/lib/localized";
 import { prisma } from "@/lib/prisma";
 import { renderMarkdown } from "@/lib/render-markdown";
 import { canonicalPath, metaFromEvergreenContent, truncateMetaDescription } from "@/lib/seo";
+import { getSchoolByEvergreenSlug } from "@/lib/schools";
 
 type Props = {
   params: { slug: string };
@@ -39,6 +40,15 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const school = getSchoolByEvergreenSlug(params.slug);
+  if (school) {
+    const pageUrl = canonicalPath(`/colegios/${school.slug}`);
+    return {
+      title: school.name,
+      alternates: { canonical: pageUrl },
+    };
+  }
+
   let page: Awaited<ReturnType<typeof prisma.evergreenPage.findUnique>> = null;
   try {
     page = await prisma.evergreenPage.findUnique({
@@ -77,6 +87,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function EvergreenDetailPage({ params }: Props) {
+  const school = getSchoolByEvergreenSlug(params.slug);
+  if (school) {
+    permanentRedirect(`/colegios/${school.slug}`);
+  }
+
   const locale = getLocaleFromCookie();
   const isVal = locale === "val";
   try {

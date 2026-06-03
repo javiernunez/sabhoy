@@ -74,6 +74,20 @@ export function getSchoolBySlug(slug: string): School | undefined {
   return SCHOOLS.find((s) => s.slug === slug);
 }
 
+export function getSchoolByEvergreenSlug(evergreenSlug: string): School | undefined {
+  return SCHOOLS.find((s) => s.evergreenSlug === evergreenSlug);
+}
+
+export function isSchoolEvergreenSlug(slug: string): boolean {
+  return SCHOOLS.some((s) => s.evergreenSlug === slug);
+}
+
+/** Ruta canónica: fichas de colegio en `/colegios/[slug]`, resto en `/[evergreenSlug]`. */
+export function hrefForEvergreenSlug(pageSlug: string): string {
+  const school = getSchoolByEvergreenSlug(pageSlug);
+  return school ? `/colegios/${school.slug}` : `/${pageSlug}`;
+}
+
 export function getSchoolsByType(type: SchoolType): School[] {
   return SCHOOLS.filter((s) => s.type === type);
 }
