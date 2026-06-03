@@ -13,6 +13,7 @@ import { canonicalPath } from "@/lib/seo";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
 import { getYouTubeEmbedUrl } from "@/lib/video";
 import { videoCategoryLabel } from "@/lib/video-categories";
+import { fetchSidebarVideos } from "@/lib/sidebar-videos";
 import {
   findVideoByPublicSlug,
   videoPlainTitle,
@@ -64,19 +65,7 @@ export default async function VideoDetailPage({ params }: Props) {
   const embedUrl = getYouTubeEmbedUrl(video.url);
   const pageUrl = `${SITE_URL}${videoPublicPath(video.slug)}`;
 
-  const sidebarVideos = await prisma.video.findMany({
-    where: { NOT: { id: video.id } },
-    orderBy: { createdAt: "desc" },
-    take: 2,
-    select: {
-      id: true,
-      slug: true,
-      url: true,
-      description: true,
-      descriptionVal: true,
-      createdAt: true,
-    },
-  });
+  const sidebarVideos = (await fetchSidebarVideos(3)).filter((v) => v.id !== video.id).slice(0, 2);
 
   return (
     <div className="container-page max-w-6xl">

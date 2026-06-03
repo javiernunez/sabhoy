@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { canonicalPath } from "@/lib/seo";
 import { renderMarkdown } from "@/lib/render-markdown";
 import { getYouTubeEmbedUrl } from "@/lib/video";
+import { fetchPublicVideos } from "@/lib/sidebar-videos";
 import { videoPlainTitle, videoPublicPath } from "@/lib/video-slug";
 import { SITE_NAME } from "@/lib/constants";
 import type { ArticleCategory } from "@prisma/client";
@@ -57,10 +58,7 @@ export default async function PoliticaPage() {
         href: true,
       },
     }),
-    prisma.video.findMany({
-      where: { category: "POLITICA" },
-      orderBy: { createdAt: "desc" },
-    }),
+    fetchPublicVideos("POLITICA"),
   ]);
 
   const localizedArticles = articles.map((article) => ({

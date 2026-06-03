@@ -27,6 +27,7 @@ import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { localizedText } from "@/lib/localized";
 import { uiMediaUrl } from "@/lib/media-url";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
+import { fetchSidebarVideos } from "@/lib/sidebar-videos";
 /** Siempre datos de la BD de producción (evita HTML cacheado en el build de CI). */
 export const dynamic = "force-dynamic";
 
@@ -83,7 +84,7 @@ export default async function HomePage() {
   const calendarEventsUntil = new Date();
   calendarEventsUntil.setMonth(calendarEventsUntil.getMonth() + 12);
 
-  const [latestArticles, highlightedPages, latestVideos, sidebarEvents, latestReports] = await Promise.all([
+  const [latestArticles, highlightedPages, sidebarEvents, latestReports, latestVideos] = await Promise.all([
     prisma.article.findMany({
       where: { status: "published" },
       orderBy: [{ portadaRank: "desc" }, { createdAt: "desc" }],
@@ -93,18 +94,6 @@ export default async function HomePage() {
       where: { isHighlighted: true },
       orderBy: { updatedAt: "desc" },
       take: 6,
-    }),
-    prisma.video.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 2,
-      select: {
-        id: true,
-        slug: true,
-        url: true,
-        description: true,
-        descriptionVal: true,
-        createdAt: true,
-      },
     }),
     prisma.event.findMany({
       where: {
@@ -136,6 +125,7 @@ export default async function HomePage() {
         imageUrl: true,
       },
     }),
+    fetchSidebarVideos(2),
   ]);
 
   const localizedArticles = latestArticles.map((article) => ({

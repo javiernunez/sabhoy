@@ -25,7 +25,8 @@ export async function resolveUniqueVideoSlug(base: string, excludeId?: number): 
 }
 
 export function videoPublicPath(slug: string): string {
-  return `/videos/${slug}`;
+  const trimmed = slug?.trim();
+  return `/videos/${trimmed || "video-0"}`;
 }
 
 export function videoPlainTitle(description: string, maxLen = 140): string {
@@ -38,7 +39,20 @@ export function videoPlainTitle(description: string, maxLen = 140): string {
 export async function findVideoByPublicSlug(slug: string) {
   const trimmed = slug.trim();
   if (!trimmed) return null;
-  return prisma.video.findUnique({ where: { slug: trimmed } });
+
+  const idMatch = /^video-(\d+)$/.exec(trimmed);
+  if (idMatch) {
+    const id = Number(idMatch[1]);
+    if (!Number.isNaN(id)) {
+      return prisma.video.findUnique({ where: { id } });
+    }
+  }
+
+  try {
+    return await prisma.video.findUnique({ where: { slug: trimmed } });
+  } catch {
+    return null;
+  }
 }
 
 export async function assignVideoSlug(videoId: number, description: string): Promise<string> {

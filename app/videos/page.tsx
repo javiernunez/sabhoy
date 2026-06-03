@@ -10,6 +10,7 @@ import { renderMarkdown } from "@/lib/render-markdown";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
 import { getYouTubeEmbedUrl } from "@/lib/video";
 import { VIDEO_CATEGORIES, videoCategoryLabel, isVideoCategory } from "@/lib/video-categories";
+import { fetchPublicVideos, fetchSidebarVideos } from "@/lib/sidebar-videos";
 import { videoPlainTitle, videoPublicPath } from "@/lib/video-slug";
 import type { VideoCategory } from "@prisma/client";
 
@@ -50,22 +51,8 @@ export default async function VideosPage({ searchParams }: PageProps) {
   const filterCategory: VideoCategory | undefined = isVideoCategory(raw) ? raw : undefined;
 
   const [videos, featuredVideos] = await Promise.all([
-    prisma.video.findMany({
-      where: filterCategory ? { category: filterCategory } : {},
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.video.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 2,
-      select: {
-        id: true,
-        slug: true,
-        url: true,
-        description: true,
-        descriptionVal: true,
-        createdAt: true,
-      },
-    }),
+    fetchPublicVideos(filterCategory),
+    fetchSidebarVideos(2),
   ]);
 
   return (
