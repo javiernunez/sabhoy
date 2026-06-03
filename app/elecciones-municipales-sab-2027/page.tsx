@@ -32,9 +32,6 @@ const descEsShort = truncateMetaDescription(descriptionEs, 160);
 const descValShort = truncateMetaDescription(descriptionVal, 160);
 
 const pageUrl = canonicalPath(PAGE_PATH);
-/** Banner ancho: hero junto al título (<h1>) y OG/Twitter. */
-const OG_BANNER = "/banner-elecciones-municipales-sab-2027-wide.png";
-const ogImage = canonicalPath(OG_BANNER);
 
 type UpcomingItem = { icon: string; title: string; body: string };
 
@@ -47,7 +44,7 @@ const COPY = {
     sectionUpcomingHint: "Estamos preparando contenido; conforme se acerque la campaña, iremos publicando.",
     moreContext: "Más contexto",
     breadcrumb: "Elecciones 2027",
-    bannerHeadingAlt: `Especial Elecciones Municipales 2027. ${SITE_NAME}.`,
+    pageHeading: "Elecciones municipales 2027",
     sectionNews: "Últimas noticias del especial",
     sectionNewsEmpty:
       "Aún no hay noticias en la categoría Elecciones 2027. Cuando publiquemos piezas sobre el proceso electoral municipal, aparecerán aquí.",
@@ -67,7 +64,7 @@ const COPY = {
     sectionUpcomingHint: "Estem preparant contingut; conforme s'acosti la campanya, anirem publicant.",
     moreContext: "Més context",
     breadcrumb: "Eleccions 2027",
-    bannerHeadingAlt: `Especial Eleccions Municipals 2027. ${SITE_NAME}.`,
+    pageHeading: "Eleccions municipals 2027",
     sectionNews: "Últimes notícies de l'especial",
     sectionNewsEmpty:
       "Encara no hi ha notícies en la categoria Eleccions 2027. Quan publiquem peces sobre el procés electoral municipal, apareixeran ací.",
@@ -103,13 +100,11 @@ export const metadata: Metadata = {
     url: pageUrl,
     locale: "es_ES",
     siteName: SITE_NAME,
-    images: [{ url: ogImage, width: 1024, height: 372, alt: "Especial Elecciones Municipales 2027 San Antonio de Benagéber" }],
   },
   twitter: {
     card: "summary_large_image",
     title: `Elecciones municipales San Antonio de Benagéber 2027 | ${SITE_NAME}`,
     description: descEsShort,
-    images: [ogImage],
   },
 };
 
@@ -195,18 +190,7 @@ export default async function EleccionesMunicipales2027Page() {
       />
 
       <header className="border-b border-slate-200 pb-8">
-        <h1 className="m-0 leading-none border-0 p-0 shadow-none outline-none">
-          {/* eslint-disable-next-line @next/next/no-img-element -- hero local */}
-          <img
-            src={OG_BANNER}
-            width={1024}
-            height={372}
-            alt={t.bannerHeadingAlt}
-            className="h-auto w-full rounded-2xl border border-slate-200/80 shadow-sm"
-            fetchPriority="high"
-            decoding="async"
-          />
-        </h1>
+        <h1 className="text-3xl font-bold text-slate-900 md:text-4xl">{t.pageHeading}</h1>
         <p className="mt-6 text-base text-slate-600">
           <LeadParagraph isVal={isVal} />
         </p>

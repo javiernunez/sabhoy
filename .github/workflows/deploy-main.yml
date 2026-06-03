@@ -57,7 +57,7 @@ jobs:
         run: |
           tar -czf deploy.tgz \
             --exclude='.next/cache' \
-            .next node_modules public package.json package-lock.json prisma \
+            .next node_modules public package.json package-lock.json prisma lib \
             scripts deploy docker-compose.yml
           chmod 644 deploy.tgz
       - name: Prepare bundle staging on server

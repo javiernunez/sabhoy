@@ -87,13 +87,13 @@ port_is_listening() {
 
 free_deploy_app_port() {
   systemctl_unit stop || true
+  pkill -f "${DEPLOY_PATH}.*next" 2>/dev/null || true
+  pkill -f "next start.*-p ${DEPLOY_APP_PORT}" 2>/dev/null || true
+  pkill -f "npm run start.*-p ${DEPLOY_APP_PORT}" 2>/dev/null || true
   if command -v fuser >/dev/null 2>&1; then
     fuser -k "${DEPLOY_APP_PORT}/tcp" 2>/dev/null \
       || sudo -n fuser -k "${DEPLOY_APP_PORT}/tcp" 2>/dev/null \
       || true
-  else
-    pkill -f "next start.*-p ${DEPLOY_APP_PORT}" 2>/dev/null || true
-    pkill -f "npm run start.*-p ${DEPLOY_APP_PORT}" 2>/dev/null || true
   fi
   sleep 2
 }
@@ -108,14 +108,14 @@ restart_app_service() {
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ restart ${SERVICE_NAME} (puerto ${DEPLOY_APP_PORT})"
   free_deploy_app_port
 
-  if systemctl_unit start && sleep 3 && systemctl_unit is-active && port_is_listening; then
+  if systemctl_unit restart && sleep 5 && systemctl_unit is-active && port_is_listening; then
     date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemd activo en ${DEPLOY_APP_PORT}"
     return 0
   fi
 
   echo "WARN: systemd no escucha en ${DEPLOY_APP_PORT}; reintento tras liberar puerto" >&2
   free_deploy_app_port
-  if systemctl_unit restart && sleep 3 && systemctl_unit is-active && port_is_listening; then
+  if systemctl_unit restart && sleep 5 && systemctl_unit is-active && port_is_listening; then
     date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemd activo tras restart en ${DEPLOY_APP_PORT}"
     return 0
   fi
@@ -156,6 +156,41 @@ verify_app_http() {
   exit 1
 }
 
+verify_app_html_matches_assets() {
+  local html html_chunk disk_path code build_id html_build_id
+  sleep 2
+  html=$(curl -sf --max-time 25 "http://127.0.0.1:${DEPLOY_APP_PORT}/" | head -c 900000) || {
+    echo "ERROR: no se pudo leer HTML desde la app" >&2
+    exit 1
+  }
+  html_chunk=$(echo "$html" | grep -oE 'app/page-[a-f0-9]+\.js' | head -1 | sed 's|^app/||')
+  if [ -z "$html_chunk" ]; then
+    echo "ERROR: el HTML de inicio no referencia app/page-*.js" >&2
+    exit 1
+  fi
+  disk_path=".next/static/chunks/app/${html_chunk}"
+  if [ ! -f "$disk_path" ]; then
+    echo "ERROR: HTML pide ${html_chunk} pero falta en disco (${disk_path})" >&2
+    ls -1 .next/static/chunks/app/page-*.js 2>/dev/null | xargs -n1 basename | tr "\n" " " >&2 || true
+    exit 1
+  fi
+  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
+    "http://127.0.0.1:${DEPLOY_APP_PORT}/_next/static/chunks/app/${html_chunk}")
+  if [ "$code" != "200" ]; then
+    echo "ERROR: /_next/static/chunks/app/${html_chunk} → HTTP ${code}" >&2
+    exit 1
+  fi
+  if [ -f .next/BUILD_ID ]; then
+    build_id=$(cat .next/BUILD_ID)
+    html_build_id=$(echo "$html" | grep -oE '"buildId":"[^"]+"' | head -1 | sed 's/.*:"//;s/"$//')
+    if [ -n "$html_build_id" ] && [ "$html_build_id" != "$build_id" ]; then
+      echo "ERROR: buildId incoherente (disco=${build_id}, HTML=${html_build_id})" >&2
+      exit 1
+    fi
+  fi
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ HTML y chunks OK (${html_chunk})"
+}
+
 if [ "$STOP_BEFORE_BUILD" = 1 ]; then
   if systemctl is-active --quiet "${SERVICE_NAME}.service" 2>/dev/null || sudo -n systemctl is-active --quiet "${SERVICE_NAME}.service" 2>/dev/null; then
     date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl stop (STOP_BEFORE_BUILD=1)"
@@ -192,10 +227,13 @@ fi
 
 date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ prisma migrate"
 npm run prisma:deploy
+npx prisma generate
 
-if [ -f scripts/backfill-video-slugs.ts ]; then
+if [ -f scripts/backfill-video-slugs.ts ] && [ -f lib/video-slug.ts ]; then
   date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ backfill video slugs"
   npx tsx scripts/backfill-video-slugs.ts || echo "WARN: backfill-video-slugs falló (revisar logs)" >&2
+elif [ -f scripts/backfill-video-slugs.ts ]; then
+  echo "WARN: omitiendo backfill-video-slugs (falta lib/ en el bundle; incluir lib en deploy.tgz)" >&2
 fi
 
 if [ "$SKIP_BUILD" = 1 ]; then
@@ -211,4 +249,5 @@ fi
 
 restart_app_service
 verify_app_http
+verify_app_html_matches_assets
 date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ done"
