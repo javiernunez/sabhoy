@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { canonicalPath } from "@/lib/seo";
 import { renderMarkdown } from "@/lib/render-markdown";
 import { getYouTubeEmbedUrl } from "@/lib/video";
+import { videoPlainTitle, videoPublicPath } from "@/lib/video-slug";
 import { SITE_NAME } from "@/lib/constants";
 import type { ArticleCategory } from "@prisma/client";
 
@@ -189,23 +190,31 @@ export default async function PoliticaPage() {
           <div className="max-w-4xl space-y-4">
             {politicaVideos.map((video) => {
               const embedUrl = getYouTubeEmbedUrl(video.url);
+              const localizedDescription =
+                localizedText(locale, video.description, video.descriptionVal) || "";
+              const title = videoPlainTitle(localizedDescription);
               return (
                 <article key={video.id} className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
                   <p className="text-xs uppercase tracking-wide text-slate-500">
-                    {new Intl.DateTimeFormat("es-ES", {
+                    {new Intl.DateTimeFormat(isVal ? "ca-ES" : "es-ES", {
                       day: "2-digit",
                       month: "long",
                       year: "numeric",
                     }).format(video.createdAt)}
                   </p>
+                  <h3 className="mt-2 font-serif text-lg font-semibold text-slate-900">
+                    <Link href={videoPublicPath(video.slug)} className="hover:text-sab-forest hover:underline">
+                      {title}
+                    </Link>
+                  </h3>
                   <div className="prose-article mt-1 max-w-2xl text-sm text-slate-700">
-                    {renderMarkdown(localizedText(locale, video.description, video.descriptionVal) || "")}
+                    {renderMarkdown(localizedDescription)}
                   </div>
                   {embedUrl ? (
                     <div className="relative mt-3 w-full overflow-hidden rounded-xl pt-[56.25%]">
                       <iframe
                         src={embedUrl}
-                        title={video.description}
+                        title={title}
                         className="absolute inset-0 h-full w-full"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
@@ -214,10 +223,8 @@ export default async function PoliticaPage() {
                     </div>
                   ) : null}
                   <Link
-                    href={video.url}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="mt-2 inline-block text-sm font-semibold text-sab-terracotta hover:text-sab-terracotta-dark hover:underline"
+                    href={videoPublicPath(video.slug)}
+                    className="mt-2 inline-block text-sm font-semibold text-sab-terracotta hover:text-sab-forest hover:underline"
                   >
                     {isVal ? "Veure vídeo →" : "Ver vídeo →"}
                   </Link>

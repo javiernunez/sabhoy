@@ -33,7 +33,7 @@ async function safeFindMany<T>(query: () => Promise<T>, fallbackLabel: string, f
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [articles, evergreenPages, commerces, associations, poblePages] = await Promise.all([
+  const [articles, evergreenPages, commerces, associations, poblePages, videos] = await Promise.all([
     safeFindMany(
       () => prisma.article.findMany({ where: { status: "published" }, select: { slug: true, updatedAt: true } }),
       "Article",
@@ -70,6 +70,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }),
       "NostrePoblePage",
       []
+    ),
+    safeFindMany(
+      () => prisma.video.findMany({ select: { slug: true, updatedAt: true } }),
+      "Video",
+      [],
     ),
   ]);
 
@@ -132,5 +137,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...newsRoutes, ...evergreenRoutes, ...commerceRoutes, ...associationRoutes, ...pobleRoutes];
+  const videoRoutes: MetadataRoute.Sitemap = videos.map((video) => ({
+    url: `${base}/videos/${video.slug}`,
+    lastModified: video.updatedAt,
+    changeFrequency: "monthly",
+    priority: 0.65,
+  }));
+
+  return [...staticRoutes, ...newsRoutes, ...evergreenRoutes, ...commerceRoutes, ...associationRoutes, ...pobleRoutes, ...videoRoutes];
 }

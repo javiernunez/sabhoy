@@ -155,9 +155,9 @@ export default async function NewsDetailPage({ params }: Props) {
           {localizedTitle}
         </h1>
         {localizedSummary ? (
-          <p className="mt-5 max-w-3xl border-l-[3px] border-slate-800 pl-4 font-serif text-lg font-medium leading-snug text-slate-700 md:text-xl">
-            {localizedSummary}
-          </p>
+          <div className="prose-article mt-5 max-w-3xl border-l-[3px] border-slate-800 pl-4 font-serif text-lg font-medium leading-snug text-slate-700 md:text-xl [&_p]:!mb-4 [&_p:last-child]:!mb-0">
+            {renderMarkdown(localizedSummary.trim())}
+          </div>
         ) : null}
         {mainImage ? (
           <div className="mt-8 max-w-4xl">

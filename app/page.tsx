@@ -5,6 +5,7 @@ import { CtaLink } from "@/components/CtaLink";
 import { HomeEventCalendar } from "@/components/HomeEventCalendar";
 import { ui } from "@/lib/ui-classes";
 import { HomeNewsletterCard } from "@/components/HomeNewsletterCard";
+import { FeaturedVideosAside } from "@/components/FeaturedVideosAside";
 import { NewsCard } from "@/components/NewsCard";
 import { SectionHeader } from "@/components/SectionHeader";
 import { getServerSession } from "next-auth";
@@ -82,7 +83,7 @@ export default async function HomePage() {
   const calendarEventsUntil = new Date();
   calendarEventsUntil.setMonth(calendarEventsUntil.getMonth() + 12);
 
-  const [latestArticles, highlightedPages, sidebarEvents, latestReports] = await Promise.all([
+  const [latestArticles, highlightedPages, latestVideos, sidebarEvents, latestReports] = await Promise.all([
     prisma.article.findMany({
       where: { status: "published" },
       orderBy: [{ portadaRank: "desc" }, { createdAt: "desc" }],
@@ -92,6 +93,18 @@ export default async function HomePage() {
       where: { isHighlighted: true },
       orderBy: { updatedAt: "desc" },
       take: 6,
+    }),
+    prisma.video.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 2,
+      select: {
+        id: true,
+        slug: true,
+        url: true,
+        description: true,
+        descriptionVal: true,
+        createdAt: true,
+      },
     }),
     prisma.event.findMany({
       where: {
@@ -380,6 +393,7 @@ export default async function HomePage() {
                 />
               </CtaLink>
             </div>
+            <FeaturedVideosAside videos={latestVideos} locale={locale} trackContext="home_videos" />
             <div className="rounded-2xl border-2 border-dashed border-blue-300/60 bg-blue-50/80 p-4 text-sm text-blue-900">
               <p className="font-bold">{isVal ? "Tens alguna cosa que contar o denunciar?" : "¿Algo que contar o denunciar?"}</p>
               <p className="mt-1 text-sab-ink/75">{isVal ? "Passa per denúncies: ho revisem abans de publicar." : "Pasa por denuncias: lo revisamos antes de publicar."}</p>

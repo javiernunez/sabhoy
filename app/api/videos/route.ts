@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminUser } from "@/lib/auth";
 import { isVideoCategory } from "@/lib/video-categories";
+import { resolveUniqueVideoSlug, videoSlugBaseFromDescription } from "@/lib/video-slug";
 
 function categoryFromRequest(searchParams: URLSearchParams) {
   const raw = searchParams.get("categoria");
@@ -37,8 +38,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  const slug = await resolveUniqueVideoSlug(videoSlugBaseFromDescription(description));
   const created = await prisma.video.create({
-    data: { url, description, descriptionVal, category },
+    data: { url, description, descriptionVal, category, slug },
   });
 
   return NextResponse.json(created, { status: 201 });

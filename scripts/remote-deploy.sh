@@ -79,25 +79,49 @@ systemctl_unit() {
 # VPS: 3000 lelianahoy | 3001 sermestre | 3002 beterahoy | 3003 sabhoy
 DEPLOY_APP_PORT="${DEPLOY_APP_PORT:-3003}"
 
-restart_app_service() {
-  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ restart ${SERVICE_NAME} (puerto ${DEPLOY_APP_PORT})"
-  if systemctl_unit reload-or-restart; then
-    if systemctl_unit is-active; then
-      return 0
-    fi
-    echo "WARN: systemctl reload-or-restart ok pero is-active falló; reinicio forzado en puerto ${DEPLOY_APP_PORT}" >&2
-  fi
-  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl sin permisos; reinicio directo npm (puerto ${DEPLOY_APP_PORT})"
+port_is_listening() {
+  ss -tln 2>/dev/null | grep -q ":${DEPLOY_APP_PORT} "
+}
+
+free_deploy_app_port() {
+  systemctl_unit stop || true
   if command -v fuser >/dev/null 2>&1; then
-    fuser -k "${DEPLOY_APP_PORT}/tcp" 2>/dev/null || true
+    fuser -k "${DEPLOY_APP_PORT}/tcp" 2>/dev/null \
+      || sudo -n fuser -k "${DEPLOY_APP_PORT}/tcp" 2>/dev/null \
+      || true
   else
     pkill -f "next start.*-p ${DEPLOY_APP_PORT}" 2>/dev/null || true
+    pkill -f "npm run start.*-p ${DEPLOY_APP_PORT}" 2>/dev/null || true
   fi
   sleep 2
+}
+
+start_app_via_nohup() {
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemctl indisponible; npm en segundo plano (puerto ${DEPLOY_APP_PORT})"
   nohup npm run start -- -H 127.0.0.1 -p "${DEPLOY_APP_PORT}" >> "${DEPLOY_PATH}/deploy-restart.log" 2>&1 &
   sleep 3
-  if ss -tln 2>/dev/null | grep -q ":${DEPLOY_APP_PORT} "; then
-    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ app listening on ${DEPLOY_APP_PORT}"
+}
+
+restart_app_service() {
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ restart ${SERVICE_NAME} (puerto ${DEPLOY_APP_PORT})"
+  free_deploy_app_port
+
+  if systemctl_unit start && sleep 3 && systemctl_unit is-active && port_is_listening; then
+    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemd activo en ${DEPLOY_APP_PORT}"
+    return 0
+  fi
+
+  echo "WARN: systemd no escucha en ${DEPLOY_APP_PORT}; reintento tras liberar puerto" >&2
+  free_deploy_app_port
+  if systemctl_unit restart && sleep 3 && systemctl_unit is-active && port_is_listening; then
+    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ systemd activo tras restart en ${DEPLOY_APP_PORT}"
+    return 0
+  fi
+
+  free_deploy_app_port
+  start_app_via_nohup
+  if port_is_listening; then
+    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ app listening on ${DEPLOY_APP_PORT} (nohup)"
     return 0
   fi
   echo "ERROR: no se pudo reiniciar en el puerto ${DEPLOY_APP_PORT}. Configura sudoers para systemctl o revisa deploy-restart.log" >&2
@@ -109,6 +133,19 @@ verify_app_http() {
     date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ HTTP OK en 127.0.0.1:${DEPLOY_APP_PORT}"
     return 0
   fi
+
+  echo "WARN: HTTP falló; liberar puerto ${DEPLOY_APP_PORT} y reinicio forzado" >&2
+  free_deploy_app_port
+  if systemctl_unit start; then
+    sleep 5
+  else
+    start_app_via_nohup
+  fi
+  if curl -sf -o /dev/null --max-time 15 "http://127.0.0.1:${DEPLOY_APP_PORT}/"; then
+    date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ HTTP OK tras reinicio forzado"
+    return 0
+  fi
+
   echo "ERROR: el puerto ${DEPLOY_APP_PORT} no responde HTTP (Caddy devolverá 502)." >&2
   tail -n 40 "${DEPLOY_PATH}/deploy-restart.log" 2>/dev/null || true
   journalctl -u "${SERVICE_NAME}.service" -n 40 --no-pager 2>/dev/null \

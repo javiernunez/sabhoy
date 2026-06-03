@@ -2,6 +2,7 @@ import { VideoCategory } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminUser } from "@/lib/auth";
+import { assignVideoSlug } from "@/lib/video-slug";
 
 type Params = {
   params: { id: string };
@@ -35,8 +36,10 @@ export async function PATCH(request: Request, { params }: Params) {
     where: { id },
     data: { url, description, descriptionVal, ...(category != null ? { category } : {}) },
   });
+  await assignVideoSlug(id, description);
+  const withSlug = await prisma.video.findUniqueOrThrow({ where: { id } });
 
-  return NextResponse.json(updated);
+  return NextResponse.json(withSlug);
 }
 
 export async function DELETE(_: Request, { params }: Params) {
