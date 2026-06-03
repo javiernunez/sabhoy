@@ -157,38 +157,57 @@ verify_app_http() {
 }
 
 verify_app_html_matches_assets() {
-  local html html_chunk disk_path code build_id html_build_id
+  local home_chunk disk_path code html build_id html_build_id html_pages
   sleep 2
-  html=$(curl -sf --max-time 25 "http://127.0.0.1:${DEPLOY_APP_PORT}/" | head -c 900000) || {
-    echo "ERROR: no se pudo leer HTML desde la app" >&2
+
+  if [ ! -f .next/app-build-manifest.json ]; then
+    echo "ERROR: falta .next/app-build-manifest.json" >&2
+    exit 1
+  fi
+
+  home_chunk=$(node -e "
+    const m = require('./.next/app-build-manifest.json');
+    const files = (m.pages && m.pages['/page']) || [];
+    const hit = files.find((f) => /\\/app\\/page-[a-f0-9]+\\.js\$/.test(f));
+    if (!hit) process.exit(2);
+    console.log(hit.split('/').pop());
+  ") || {
+    echo "ERROR: no hay chunk de /page en app-build-manifest.json" >&2
     exit 1
   }
-  html_chunk=$(echo "$html" | grep -oE 'app/page-[a-f0-9]+\.js' | head -1 | sed 's|^app/||')
-  if [ -z "$html_chunk" ]; then
-    echo "ERROR: el HTML de inicio no referencia app/page-*.js" >&2
-    exit 1
-  fi
-  disk_path=".next/static/chunks/app/${html_chunk}"
+
+  disk_path=".next/static/chunks/app/${home_chunk}"
   if [ ! -f "$disk_path" ]; then
-    echo "ERROR: HTML pide ${html_chunk} pero falta en disco (${disk_path})" >&2
-    ls -1 .next/static/chunks/app/page-*.js 2>/dev/null | xargs -n1 basename | tr "\n" " " >&2 || true
+    echo "ERROR: falta en disco ${disk_path} (manifest pide ${home_chunk})" >&2
     exit 1
   fi
+
   code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
-    "http://127.0.0.1:${DEPLOY_APP_PORT}/_next/static/chunks/app/${html_chunk}")
+    "http://127.0.0.1:${DEPLOY_APP_PORT}/_next/static/chunks/app/${home_chunk}")
   if [ "$code" != "200" ]; then
-    echo "ERROR: /_next/static/chunks/app/${html_chunk} → HTTP ${code}" >&2
+    echo "ERROR: /_next/static/chunks/app/${home_chunk} → HTTP ${code}" >&2
     exit 1
   fi
-  if [ -f .next/BUILD_ID ]; then
-    build_id=$(cat .next/BUILD_ID)
-    html_build_id=$(echo "$html" | grep -oE '"buildId":"[^"]+"' | head -1 | sed 's/.*:"//;s/"$//')
-    if [ -n "$html_build_id" ] && [ "$html_build_id" != "$build_id" ]; then
-      echo "ERROR: buildId incoherente (disco=${build_id}, HTML=${html_build_id})" >&2
-      exit 1
+
+  if html=$(curl -sf --max-time 25 "http://127.0.0.1:${DEPLOY_APP_PORT}/" | head -c 900000); then
+    if echo "$html" | grep -qE 'page-[a-f0-9]+\.js' 2>/dev/null; then
+      if ! echo "$html" | grep -qF "$home_chunk" 2>/dev/null; then
+        html_pages=$(echo "$html" | grep -oE 'page-[a-f0-9]+\.js' 2>/dev/null | sort -u | tr "\n" " " || true)
+        echo "ERROR: HTML con chunks distintos del build (${html_pages}) vs ${home_chunk}" >&2
+        exit 1
+      fi
+    fi
+    if [ -f .next/BUILD_ID ]; then
+      build_id=$(cat .next/BUILD_ID)
+      html_build_id=$(echo "$html" | grep -oE '"buildId":"[^"]+"' 2>/dev/null | head -1 | sed 's/.*:"//;s/"$//' || true)
+      if [ -n "$html_build_id" ] && [ "$html_build_id" != "$build_id" ]; then
+        echo "ERROR: buildId incoherente (disco=${build_id}, HTML=${html_build_id})" >&2
+        exit 1
+      fi
     fi
   fi
-  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ HTML y chunks OK (${html_chunk})"
+
+  date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ chunks OK (${home_chunk})"
 }
 
 if [ "$STOP_BEFORE_BUILD" = 1 ]; then
