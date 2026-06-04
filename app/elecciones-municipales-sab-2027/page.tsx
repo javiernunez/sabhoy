@@ -395,7 +395,7 @@ function LeadParagraph({ isVal }: { readonly isVal: boolean }) {
   );
 }
 
-type ElectionCopy = (typeof COPY)["es"];
+type ElectionCopy = (typeof COPY)["es"] | (typeof COPY)["val"];
 
 function ElectionContextSections({ t }: { readonly t: ElectionCopy }) {
   return (
