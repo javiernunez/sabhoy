@@ -63,7 +63,7 @@ body {
   }
 
   .sab-nav-link {
-    @apply flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2.5 text-base font-medium text-sab-ink/80 transition hover:bg-white hover:text-sab-forest;
+    @apply flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-sab-ink/80 transition hover:bg-white hover:text-sab-forest md:px-2.5 md:py-2;
   }
 
   .sab-nav-link-active {
