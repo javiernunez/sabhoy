@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/constants";
+import { INFO_CATEGORIES } from "@/lib/info-categories";
+import { SCHOOLS, isSchoolEvergreenSlug } from "@/lib/schools";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -78,12 +80,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
   ]);
 
+  const categoryHubSlugs = new Set(INFO_CATEGORIES.map((c) => c.evergreenSlug));
+  const evergreenBySlug = new Map(evergreenPages.map((p) => [p.slug, p.updatedAt]));
+
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${base}/`, changeFrequency: "daily", priority: 1 },
     { url: `${base}/noticias`, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/denuncias`, changeFrequency: "weekly", priority: 0.75 },
     { url: `${base}/eventos`, changeFrequency: "weekly", priority: 0.65 },
     { url: `${base}/informacion-util`, changeFrequency: "weekly", priority: 0.78 },
+    { url: `${base}/colegios`, changeFrequency: "weekly", priority: 0.74 },
     { url: `${base}/el-nostre-poble`, changeFrequency: "weekly", priority: 0.76 },
     { url: `${base}/comercios`, changeFrequency: "weekly", priority: 0.72 },
     { url: `${base}/comercios/restaurantes`, changeFrequency: "weekly", priority: 0.68 },
@@ -100,6 +106,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/videos`, changeFrequency: "weekly", priority: 0.72 },
   ];
 
+  const infoCategoryRoutes: MetadataRoute.Sitemap = INFO_CATEGORIES.map((cat) => ({
+    url: `${base}/informacion-util/${cat.slug}`,
+    lastModified: evergreenBySlug.get(cat.evergreenSlug),
+    changeFrequency: "monthly",
+    priority: 0.72,
+  }));
+
+  const schoolRoutes: MetadataRoute.Sitemap = SCHOOLS.map((school) => ({
+    url: `${base}/colegios/${school.slug}`,
+    lastModified: evergreenBySlug.get(school.evergreenSlug),
+    changeFrequency: "monthly",
+    priority: 0.66,
+  }));
+
   const newsRoutes: MetadataRoute.Sitemap = articles.map((article) => ({
     url: `${base}/noticias/${article.slug}`,
     lastModified: article.updatedAt,
@@ -108,7 +128,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const evergreenRoutes: MetadataRoute.Sitemap = evergreenPages
-    .filter((page) => page.slug !== "elecciones-municipales-sab-2027")
+    .filter(
+      (page) =>
+        page.slug !== "elecciones-municipales-sab-2027" &&
+        !isSchoolEvergreenSlug(page.slug) &&
+        !categoryHubSlugs.has(page.slug),
+    )
     .map((page) => ({
       url: `${base}/${page.slug}`,
       lastModified: page.updatedAt,
@@ -144,5 +169,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.65,
   }));
 
-  return [...staticRoutes, ...newsRoutes, ...evergreenRoutes, ...commerceRoutes, ...associationRoutes, ...pobleRoutes, ...videoRoutes];
+  return [
+    ...staticRoutes,
+    ...infoCategoryRoutes,
+    ...schoolRoutes,
+    ...newsRoutes,
+    ...evergreenRoutes,
+    ...commerceRoutes,
+    ...associationRoutes,
+    ...pobleRoutes,
+    ...videoRoutes,
+  ];
 }

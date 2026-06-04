@@ -30,3 +30,10 @@ test("sitemap has DB-unavailable fallback guard", () => {
     "app/sitemap.ts should use safeFindMany fallback to avoid CI/build failures without DB"
   );
 });
+
+test("sitemap lists canonical colegios URLs, not school evergreen slugs", () => {
+  const src = read("app/sitemap.ts");
+  assert.match(src, /isSchoolEvergreenSlug/, "sitemap should exclude school evergreen slugs from /{slug}");
+  assert.match(src, /\/colegios\/\$\{school\.slug\}/, "sitemap should include /colegios/{slug} routes");
+  assert.match(src, /informacion-util\/\$\{cat\.slug\}/, "sitemap should include info category routes");
+});

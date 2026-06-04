@@ -133,6 +133,11 @@ restart_app_service() {
 verify_app_http() {
   if curl -sf -o /dev/null --max-time 15 "http://127.0.0.1:${DEPLOY_APP_PORT}/"; then
     date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ HTTP OK en 127.0.0.1:${DEPLOY_APP_PORT}"
+    if curl -sf --max-time 15 "http://127.0.0.1:${DEPLOY_APP_PORT}/sitemap.xml" | head -c 800 | grep -q "<urlset"; then
+      date -u "+[deploy] %Y-%m-%dT%H:%M:%SZ sitemap.xml OK"
+    else
+      echo "WARN: /sitemap.xml no responde o está vacío" >&2
+    fi
     return 0
   fi
 
