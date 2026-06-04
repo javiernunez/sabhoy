@@ -12,13 +12,13 @@ export default async function AdminNoticiasPage({ searchParams }: Props) {
 
   const [articles, initialPortadaItems] = await Promise.all([
     prisma.article.findMany({
-      orderBy: { createdAt: "desc" },
+      orderBy: { publishedAt: "desc" },
       take: 100,
       select: { id: true, title: true, status: true },
     }),
     prisma.article.findMany({
       where: { status: "published" },
-      orderBy: [{ portadaRank: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ portadaRank: "desc" }, { publishedAt: "desc" }],
       take: 40,
       select: { id: true, title: true },
     }),

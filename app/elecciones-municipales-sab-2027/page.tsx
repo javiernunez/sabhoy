@@ -127,7 +127,7 @@ export default async function EleccionesMunicipales2027Page() {
   try {
     electionArticles = await prisma.article.findMany({
       where: { category: "ELECCIONES_2027", status: "published" },
-      orderBy: { createdAt: "desc" },
+      orderBy: { publishedAt: "desc" },
     });
   } catch (error) {
     if (!isDbUnavailable(error)) throw error;

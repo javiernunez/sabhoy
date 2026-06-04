@@ -50,7 +50,7 @@ export default async function NewsPage({ searchParams }: Readonly<Props>) {
 
   const articles = await prisma.article.findMany({
     where: { ...(filterCategory ? { category: filterCategory } : {}), status: "published" },
-    orderBy: { createdAt: "desc" },
+    orderBy: { publishedAt: "desc" },
   });
 
   const localizedArticles = articles.map((article) => ({

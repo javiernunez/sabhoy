@@ -40,7 +40,7 @@ export default async function PoliticaPage() {
   const [articles, parties, politicaVideos] = await Promise.all([
     prisma.article.findMany({
       where: { category: POLITICS_NEWS, status: "published" },
-      orderBy: { createdAt: "desc" },
+      orderBy: { publishedAt: "desc" },
       take: 30,
     }),
     prisma.localDirectoryEntry.findMany({

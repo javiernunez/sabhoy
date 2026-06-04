@@ -6,6 +6,7 @@ import { isNewsWriteAuthorized } from "@/lib/api-auth";
 import { clearHeroExcept } from "@/lib/article-hero";
 import { isArticleCategory } from "@/lib/article-categories";
 import { nextPortadaRankForPublished } from "@/lib/article-portada-rank";
+import { parsePublishedAtInput } from "@/lib/article-dates";
 import { slugify } from "@/lib/slug";
 
 function coerceArticleStatus(raw: unknown): "draft" | "published" {
@@ -16,7 +17,7 @@ function coerceArticleStatus(raw: unknown): "draft" | "published" {
 export async function GET() {
   const articles = await prisma.article.findMany({
     where: { status: "published" },
-    orderBy: { createdAt: "desc" },
+    orderBy: { publishedAt: "desc" },
   });
   return NextResponse.json(articles);
 }
@@ -39,6 +40,7 @@ export async function POST(request: Request) {
   const category: ArticleCategory = isArticleCategory(categoryRaw) ? categoryRaw : "GENERAL";
   const status = coerceArticleStatus(body.status);
   const isHero = Boolean(body.isHero);
+  const publishedAt = parsePublishedAtInput(body.publishedAt);
 
   if (!title || !content) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -66,6 +68,7 @@ export async function POST(request: Request) {
       status,
       portadaRank,
       isHero,
+      ...(publishedAt ? { publishedAt } : {}),
     },
   });
 

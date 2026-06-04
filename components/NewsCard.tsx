@@ -5,9 +5,12 @@ import { UiImage } from "@/components/UiImage";
 import { ui } from "@/lib/ui-classes";
 import { uiMediaUrl } from "@/lib/media-url";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
+import { getArticlePublishedAt } from "@/lib/article-dates";
 
 type Props = {
-  article: Pick<Article, "slug" | "title" | "content" | "summary" | "category" | "createdAt" | "imageUrl">;
+  article: Pick<Article, "slug" | "title" | "content" | "summary" | "category" | "publishedAt" | "imageUrl"> & {
+    createdAt?: Date;
+  };
   compact?: boolean;
   /** Primera noticia del listado: titular grande y entradilla clara (estilo cabecera de sección). */
   lead?: boolean;
@@ -26,6 +29,7 @@ function standfirst(article: Props["article"]) {
 export function NewsCard({ article, compact = false, lead = false }: Props) {
   const img = uiMediaUrl(article.imageUrl, { displayWidth: lead ? 600 : 160 });
   const deck = standfirst(article);
+  const publishedAt = getArticlePublishedAt(article);
 
   if (lead) {
     return (
@@ -47,7 +51,7 @@ export function NewsCard({ article, compact = false, lead = false }: Props) {
         <div className="p-5 md:p-6">
           <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-sab-ink/55">
             <CategoryChip category={article.category} />
-            <time dateTime={article.createdAt.toISOString()}>{formatDate(article.createdAt)}</time>
+            <time dateTime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time>
           </div>
           <h2 className="font-serif text-2xl font-bold leading-tight text-sab-ink md:text-3xl lg:text-[2rem]">
             <Link href={`/noticias/${article.slug}`} className="transition hover:text-sab-terracotta">
@@ -88,7 +92,7 @@ export function NewsCard({ article, compact = false, lead = false }: Props) {
       <div className="min-w-0 flex-1">
         <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs text-sab-ink/55">
           <CategoryChip category={article.category} />
-          <time dateTime={article.createdAt.toISOString()}>{formatDate(article.createdAt)}</time>
+          <time dateTime={publishedAt.toISOString()}>{formatDate(publishedAt)}</time>
         </div>
         <h3 className="font-serif text-lg font-semibold leading-snug text-sab-ink md:text-xl">
           <Link href={`/noticias/${article.slug}`} className="transition hover:text-sab-terracotta">

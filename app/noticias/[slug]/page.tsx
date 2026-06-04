@@ -17,6 +17,7 @@ import { canonicalPath, truncateMetaDescription } from "@/lib/seo";
 import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { localizedText } from "@/lib/localized";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
+import { getArticlePublishedAt } from "@/lib/article-dates";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const desc = truncateMetaDescription(stripMarkdownToPlain(rawDesc), 160);
   const og = absoluteMediaUrl(article.imageUrl);
   const pageUrl = canonicalPath(`/noticias/${article.slug}`);
+  const publishedAt = getArticlePublishedAt(article);
 
   return {
     title: article.title,
@@ -56,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: pageUrl,
       locale: "es_ES",
       siteName: SITE_NAME,
-      publishedTime: article.createdAt.toISOString(),
+      publishedTime: publishedAt.toISOString(),
       modifiedTime: article.updatedAt.toISOString(),
       images: og ? [{ url: og, width: 1200, height: 630, alt: article.title }] : undefined,
     },
@@ -89,6 +91,7 @@ export default async function NewsDetailPage({ params }: Props) {
   const mainImage = uiMediaUrl(article.imageUrl, { displayWidth: CSS_ARTICLE_HERO_WIDTH }) || "";
   const isRemoteImage = /^https?:\/\//i.test(mainImage);
   const sectionLabel = articleCategoryLabel[article.category];
+  const publishedAt = getArticlePublishedAt(article);
   const [relatedArticles, articleComments] = await Promise.all([
     prisma.article.findMany({
       where: {
@@ -96,7 +99,7 @@ export default async function NewsDetailPage({ params }: Props) {
         NOT: { id: article.id },
         OR: [{ category: article.category }, { isHero: true }],
       },
-      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ updatedAt: "desc" }, { publishedAt: "desc" }],
       take: 3,
       select: {
         slug: true,
@@ -137,7 +140,7 @@ export default async function NewsDetailPage({ params }: Props) {
       <JsonLdNewsArticle
         title={localizedTitle}
         description={description}
-        datePublished={article.createdAt.toISOString()}
+        datePublished={publishedAt.toISOString()}
         dateModified={article.updatedAt.toISOString()}
         url={url}
         imageUrl={article.imageUrl}
@@ -147,8 +150,8 @@ export default async function NewsDetailPage({ params }: Props) {
         <header className="flex flex-col gap-2 border-b border-slate-100 pb-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-x-6">
           <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
             <CategoryChip category={article.category} />
-            <time dateTime={article.createdAt.toISOString()} className="tabular-nums">
-              {formatDate(article.createdAt, locale)}
+            <time dateTime={publishedAt.toISOString()} className="tabular-nums">
+              {formatDate(publishedAt, locale)}
             </time>
           </div>
           <SharePlatformsRow url={url} title={localizedTitle} isVal={isVal} className="min-w-0 shrink-0 sm:max-w-[min(28rem,100%)]" />

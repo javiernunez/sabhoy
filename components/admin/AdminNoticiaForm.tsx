@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { AdminImageUpload } from "@/components/admin/AdminImageUpload";
 import { AdminMdxField } from "@/components/admin/AdminMdxField";
+import { getArticlePublishedAt, toDatetimeLocalValue } from "@/lib/article-dates";
 
 type AdminArticle = {
   id: number;
@@ -19,6 +20,8 @@ type AdminArticle = {
   category: string;
   status: string;
   isHero: boolean;
+  publishedAt: Date;
+  createdAt?: Date;
 };
 
 const CATEGORY_OPTIONS = [
@@ -57,6 +60,7 @@ export function AdminNoticiaForm({ article }: Props) {
       category: form.get("category") || "GENERAL",
       status: form.get("status") || "published",
       isHero: form.get("isHero") === "on",
+      publishedAt: form.get("publishedAt") || undefined,
     };
     const url = isEdit ? `/api/news/${article!.id}` : "/api/news";
     const method = isEdit ? "PATCH" : "POST";
@@ -105,6 +109,17 @@ export function AdminNoticiaForm({ article }: Props) {
               <option value="draft">Borrador</option>
               <option value="published">Publicado</option>
             </select>
+          </label>
+          <label className="text-sm text-slate-600">
+            <span>Fecha de publicación</span>
+            <input
+              type="datetime-local"
+              name="publishedAt"
+              defaultValue={toDatetimeLocalValue(
+                article ? getArticlePublishedAt(article) : new Date(),
+              )}
+              className="mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm"
+            />
           </label>
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input type="checkbox" name="isHero" defaultChecked={article?.isHero ?? false} className="rounded border-slate-300" />

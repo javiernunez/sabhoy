@@ -87,7 +87,7 @@ export default async function HomePage() {
   const [latestArticles, highlightedPages, sidebarEvents, latestReports, latestVideos] = await Promise.all([
     prisma.article.findMany({
       where: { status: "published" },
-      orderBy: [{ portadaRank: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ portadaRank: "desc" }, { publishedAt: "desc" }],
       take: 4,
     }),
     prisma.evergreenPage.findMany({

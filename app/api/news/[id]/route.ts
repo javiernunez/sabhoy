@@ -6,6 +6,7 @@ import { isNewsWriteAuthorized } from "@/lib/api-auth";
 import { clearHeroExcept } from "@/lib/article-hero";
 import { nextPortadaRankForPublished } from "@/lib/article-portada-rank";
 import { isArticleCategory } from "@/lib/article-categories";
+import { parsePublishedAtInput } from "@/lib/article-dates";
 
 type Params = {
   params: { id: string };
@@ -66,6 +67,7 @@ export async function PATCH(request: Request, { params }: Params) {
     : undefined;
   const status = coerceArticleStatus(body.status);
   const isHero = body.isHero !== undefined ? Boolean(body.isHero) : undefined;
+  const publishedAt = parsePublishedAtInput(body.publishedAt);
 
   if (!title || !content) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -101,6 +103,7 @@ export async function PATCH(request: Request, { params }: Params) {
       ...(category !== undefined ? { category } : {}),
       ...(status !== undefined ? { status } : {}),
       ...(isHero !== undefined ? { isHero } : {}),
+      ...(publishedAt !== undefined ? { publishedAt } : {}),
       ...portadaRankPatch,
     },
   });

@@ -3,9 +3,12 @@ import type { Article } from "@prisma/client";
 import { CategoryChip } from "@/components/CategoryChip";
 import { uiMediaUrl } from "@/lib/media-url";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
+import { getArticlePublishedAt } from "@/lib/article-dates";
 
 type Props = {
-  article: Pick<Article, "slug" | "title" | "content" | "summary" | "imageUrl" | "category" | "createdAt">;
+  article: Pick<Article, "slug" | "title" | "content" | "summary" | "imageUrl" | "category" | "publishedAt"> & {
+    createdAt?: Date;
+  };
 };
 
 function formatDate(date: Date) {
@@ -53,12 +56,13 @@ function ArticleBlock({
   deck: string;
   formatDate: (d: Date) => string;
 }) {
+  const publishedAt = getArticlePublishedAt(article);
   return (
     <>
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <CategoryChip category={article.category} />
-        <time className="text-xs text-slate-500" dateTime={article.createdAt.toISOString()}>
-          {formatDate(article.createdAt)}
+        <time className="text-xs text-slate-500" dateTime={publishedAt.toISOString()}>
+          {formatDate(publishedAt)}
         </time>
       </div>
       <h2 className="text-2xl font-bold leading-tight tracking-tight text-slate-900 md:text-3xl">
