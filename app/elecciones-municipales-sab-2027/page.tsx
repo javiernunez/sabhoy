@@ -24,9 +24,9 @@ const SLUG = "elecciones-municipales-sab-2027";
 const PAGE_PATH = `/${SLUG}`;
 
 const descriptionEs =
-  "Cobertura de las elecciones municipales 2027 en San Antonio de Benagéber (Valencia, Camp de Túria): partidos, programas, candidatos, entrevistas y resultados. Jornada electoral: domingo 23 de mayo de 2027.";
+  "Contexto, memoria electoral y claves de las elecciones 2027 en San Antonio de Benagéber: dos alcaldías en un mandato, moción de 2025 y escenarios abiertos. Jornada: 23 de mayo de 2027.";
 const descriptionVal =
-  "Cobertura de les eleccions municipals 2027 a Sant Antoni de Benaixeve (València, Camp de Túria): partits, programes, candidats, entrevistes i resultats. Jornada electoral: diumenge 23 de maig de 2027.";
+  "Context, memòria electoral i claus de les eleccions 2027 a Sant Antoni de Benaixeve: dues alcaldies en un mandat, moció de 2025 i escenaris oberts. Jornada: 23 de maig de 2027.";
 
 const descEsShort = truncateMetaDescription(descriptionEs, 160);
 const descValShort = truncateMetaDescription(descriptionVal, 160);
@@ -37,12 +37,67 @@ const OG_BANNER = "/banner-elecciones-municipales-sab-2027-wide.png";
 const ogImage = canonicalPath(OG_BANNER);
 
 type UpcomingItem = { icon: string; title: string; body: string };
+type HistoryItem = { year: string; text: string };
+type WatchItem = { title: string; body: string };
 
 const COPY = {
   es: {
     webPageName: "Elecciones municipales San Antonio de Benagéber 2027",
     eventName: "Elecciones municipales en San Antonio de Benagéber 2027",
     shareTitle: "Elecciones municipales San Antonio de Benagéber 2027",
+    sectionContext: "Contexto de estas elecciones",
+    contextBody:
+      "San Antonio de Benagéber elige 13 concejales. Las municipales de 2023 dejaron a AISAB como lista más votada (5 escaños, 34,5 %), pero la alcaldía recayó en Eva Tejedor (UCIN, 1 concejal) con apoyo de PP, Vox y Guanyem SAB. En septiembre de 2025 una moción de censura (7–6) devolvió la alcaldía a Enrique Santafosta. La legislatura llega al 2027 con dos cambios de alcaldía y un debate público sobre estabilidad y pactos. Participación 2023: 74,2 %.",
+    sectionHistory: "Perspectiva histórica",
+    history: [
+      {
+        year: "1995–2015",
+        text: "Eugenio Cañizares (PP) encadenó alcaldías tras la segregación de Pobla de Vallbona (1997). Referencia del municipio «tradicionalmente» gobernado desde la derecha hasta el giro municipalista.",
+      },
+      {
+        year: "2015–2023",
+        text: "Enrique Santafosta y AISAB gobernaron dos mandatos con narrativa de continuidad municipalista frente al PP provincial.",
+      },
+      {
+        year: "2023",
+        text: "AISAB 5 · PP 3 · Guanyem SAB 2 · Vox 2 · UCIN 1. Investidura atípica: alcaldesa de la lista menos representada, con PP y Vox en el acuerdo y Guanyem apoyando sin entrar en el ejecutivo.",
+      },
+      {
+        year: "2025",
+        text: "Moción de censura aprobada con apoyos de ex-AISAB, no adscritos y un voto de ex-Vox; Tejedor, PP, Vox y Guanyem votaron en contra. Santafosta vuelve a la alcaldía a mitad de mandato.",
+      },
+      {
+        year: "2027",
+        text: "Comicio previsto el 23-M; candidaturas y alianzas aún por oficializar (junio 2026).",
+      },
+    ] satisfies HistoryItem[],
+    sectionWatch: "Qué tener en cuenta en 2027",
+    watchIntro:
+      "Hipótesis de trabajo para seguir el proceso — no predicciones. Contrastaremos cada punto con candidaturas y declaraciones públicas.",
+    watch: [
+      {
+        title: "AISAB, Santafosta y el PP",
+        body: "Posible reorganización de la candidatura municipalista frente a Santafosta (hoy alcalde, vinculado al PP en hemeroteca) y al bloque que apoyó la censura.",
+      },
+      {
+        title: "Bloque progresista (Guanyem / Compromís local)",
+        body: "En 2023 no hubo unidad de izquierdas; conviene vigilar si buscan confluencia o listas paralelas. PSPV, Compromís estatal o Sumar no tuvieron representación en el pleno actual.",
+      },
+      {
+        title: "Vox y UCIN",
+        body: "Vox tras la expulsión de Esteve y su voto en la moción; UCIN sin Tejedor (se desvinculó en 2025) o con nueva cabeza de lista.",
+      },
+      {
+        title: "Narrativa estabilidad vs. transfuguismo",
+        body: "El episodio de 2023–2025 (alcaldesa con un solo concejal, cambio de sillones) puede marcar campañas; los medios lo han enmarcado así — son marcos periodísticos, no conclusiones jurídicas.",
+      },
+      {
+        title: "Agenda municipal",
+        body: "Consultorio de Nieva, movilidad (CV-35), urbanizaciones y servicios: ejes donde comparar programas cuando se publiquen.",
+      },
+    ] satisfies WatchItem[],
+    disclaimer:
+      "No publicamos encuestas ni pactos no anunciados. Actualizaremos listas y programas con fuentes verificables.",
     sectionUpcoming: "Próximamente en esta sección",
     sectionUpcomingHint: "Estamos preparando contenido; conforme se acerque la campaña, iremos publicando.",
     moreContext: "Más contexto",
@@ -64,6 +119,59 @@ const COPY = {
     webPageName: "Eleccions municipals Sant Antoni de Benaixeve 2027",
     eventName: "Eleccions municipals a Sant Antoni de Benaixeve 2027",
     shareTitle: "Eleccions municipals SAB 2027",
+    sectionContext: "Context d'estes eleccions",
+    contextBody:
+      "Sant Antoni de Benaixeve elegeix 13 regidors. Les municipals de 2023 van deixar AISAB com a llista més votada (5 escons, 34,5 %), però l'alcaldia va recaure en Eva Tejedor (UCIN, 1 regidor) amb suport del PP, Vox i Guanyem SAB. El setembre de 2025 una moció de censura (7–6) va tornar l'alcaldia a Enrique Santafosta. La legislatura arriba al 2027 amb dos canvis d'alcaldia i un debat públic sobre estabilitat i pactes. Participació 2023: 74,2 %.",
+    sectionHistory: "Perspectiva històrica",
+    history: [
+      {
+        year: "1995–2015",
+        text: "Eugenio Cañizares (PP) va encadenar alcaldies després de la segregació de Pobla de Vallbona (1997). Referència del municipi governat des de la dreta fins al gir municipalista.",
+      },
+      {
+        year: "2015–2023",
+        text: "Enrique Santafosta i AISAB van governar dos mandats amb narrativa de continuïtat municipalista davant del PP provincial.",
+      },
+      {
+        year: "2023",
+        text: "AISAB 5 · PP 3 · Guanyem SAB 2 · Vox 2 · UCIN 1. Investidura atípica: alcaldessa de la llista menys representada, amb PP i Vox en l'acord i Guanyem donant suport sense entrar en l'executiu.",
+      },
+      {
+        year: "2025",
+        text: "Moció de censura aprovada amb suports d'ex-AISAB, no adscrits i un vot d'ex-Vox; Tejedor, PP, Vox i Guanyem van votar en contra. Santafosta torna a l'alcaldia a mitjan mandat.",
+      },
+      {
+        year: "2027",
+        text: "Comici previst el 23-M; candidatures i aliances encara per oficialitzar (juny 2026).",
+      },
+    ] satisfies HistoryItem[],
+    sectionWatch: "Què tenir en compte el 2027",
+    watchIntro:
+      "Hipòtesis de treball per a seguir el procés — no prediccions. Contrastarem cada punt amb candidatures i declaracions públiques.",
+    watch: [
+      {
+        title: "AISAB, Santafosta i el PP",
+        body: "Possible reorganització de la candidatura municipalista davant de Santafosta (avui alcalde, vinculat al PP en hemeroteca) i del bloc que va donar suport a la censura.",
+      },
+      {
+        title: "Bloc progressista (Guanyem / Compromís local)",
+        body: "El 2023 no hi hagué unitat d'esquerres; cal vigilar si busquen confluència o llistes paral·leles. PSPV, Compromís estatal o Sumar no van tenir representació al ple actual.",
+      },
+      {
+        title: "Vox i UCIN",
+        body: "Vox després de l'expulsió d'Esteve i el seu vot en la moció; UCIN sense Tejedor (es va desvincular el 2025) o amb nova cap de llista.",
+      },
+      {
+        title: "Narrativa estabilitat vs. transfuguisme",
+        body: "L'episodi 2023–2025 (alcaldessa amb un sol regidor, canvi de cadires) pot marcar campanyes; els mitjans ho han emmarcat així — són marcs periodístics, no conclusions jurídiques.",
+      },
+      {
+        title: "Agenda municipal",
+        body: "Consultori de Nieva, mobilitat (CV-35), urbanitzacions i serveis: eixos on comparar programes quan es publiquen.",
+      },
+    ] satisfies WatchItem[],
+    disclaimer:
+      "No publiquem enquestes ni pactes no anunciats. Actualitzarem llistes i programes amb fonts verificables.",
     sectionUpcoming: "Pròximament en aquesta secció",
     sectionUpcomingHint: "Estem preparant contingut; conforme s'acosti la campanya, anirem publicant.",
     moreContext: "Més context",
@@ -119,7 +227,6 @@ export default async function EleccionesMunicipales2027Page() {
   const locale = getLocaleFromCookie();
   const isVal = locale === "val";
   const t = COPY[isVal ? "val" : "es"];
-  const description = isVal ? descriptionVal : descriptionEs;
   const descPlain = isVal ? descValShort : descEsShort;
   const fullUrl = `${SITE_URL}${PAGE_PATH}`;
 
@@ -212,9 +319,10 @@ export default async function EleccionesMunicipales2027Page() {
         <p className="mt-6 text-base text-slate-600">
           <LeadParagraph isVal={isVal} />
         </p>
-        <p className="mt-3 text-base leading-relaxed text-slate-700">{description}</p>
         <SharePlatformsRow url={fullUrl} title={t.shareTitle} isVal={isVal} className="mt-4" />
       </header>
+
+      <ElectionContextSections t={t} />
 
       <section className="mt-10" aria-labelledby="elecciones-noticias-heading">
         <div className="flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 pb-3">
@@ -272,17 +380,69 @@ function LeadParagraph({ isVal }: { readonly isVal: boolean }) {
   if (isVal) {
     return (
       <>
-        Les <strong>eleccions municipals</strong> estan convocades per al{" "}
-        <time dateTime="2027-05-23">diumenge 23 de maig de 2027</time>. Esta pàgina servix de punt de partida: ací
-        centralitzarem tot el seguiment de <strong>{SITE_NAME}</strong>.
+        Les <strong>eleccions municipals</strong> estan previstes per al{" "}
+        <time dateTime="2027-05-23">diumenge 23 de maig de 2027</time> (calendari electoral estatal). Ací reunim
+        context, memòria del cicle 2023–2027 i el seguiment editorial de <strong>{SITE_NAME}</strong>.
       </>
     );
   }
   return (
     <>
-      Las <strong>elecciones municipales</strong> están convocadas para el{" "}
-      <time dateTime="2027-05-23">domingo 23 de mayo de 2027</time>. Esta página sirve como punto de partida: aquí
-      centralizaremos todo el seguimiento de <strong>{SITE_NAME}</strong>.
+      Las <strong>elecciones municipales</strong> están previstas para el{" "}
+      <time dateTime="2027-05-23">domingo 23 de mayo de 2027</time> (calendario electoral estatal). Aquí reunimos
+      contexto, memoria del ciclo 2023–2027 y el seguimiento editorial de <strong>{SITE_NAME}</strong>.
+    </>
+  );
+}
+
+type ElectionCopy = (typeof COPY)["es"];
+
+function ElectionContextSections({ t }: { readonly t: ElectionCopy }) {
+  return (
+    <>
+      <section className="mt-8" aria-labelledby="elecciones-contexto-heading">
+        <h2 id="elecciones-contexto-heading" className="text-xl font-bold text-slate-900">
+          {t.sectionContext}
+        </h2>
+        <p className="mt-3 text-base leading-relaxed text-slate-700">{t.contextBody}</p>
+      </section>
+
+      <section className="mt-10" aria-labelledby="elecciones-historia-heading">
+        <h2 id="elecciones-historia-heading" className="text-xl font-bold text-slate-900">
+          {t.sectionHistory}
+        </h2>
+        <ol className="mt-4 space-y-3 border-l-2 border-sab-terracotta/40 pl-4">
+          {t.history.map((item) => (
+            <li key={item.year} className="relative">
+              <span
+                className="absolute -left-[calc(1rem+5px)] top-1.5 h-2 w-2 rounded-full bg-sab-terracotta"
+                aria-hidden
+              />
+              <p className="text-sm font-semibold text-slate-900">{item.year}</p>
+              <p className="mt-0.5 text-sm leading-relaxed text-slate-700">{item.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="mt-10" aria-labelledby="elecciones-claves-heading">
+        <h2 id="elecciones-claves-heading" className="text-xl font-bold text-slate-900">
+          {t.sectionWatch}
+        </h2>
+        <p className="mt-2 text-sm text-slate-600">{t.watchIntro}</p>
+        <ul className="mt-4 space-y-3">
+          {t.watch.map((item) => (
+            <li
+              key={item.title}
+              className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm"
+            >
+              <h3 className="font-semibold text-slate-900">{item.title}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-slate-700">{item.body}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-xs leading-relaxed text-slate-500">{t.disclaimer}</p>
+      </section>
     </>
   );
 }
