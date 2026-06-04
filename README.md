@@ -105,12 +105,19 @@ curl -sS -X POST "https://www.sabhoy.es/api/news" \
     "content": "Cuerpo del articulo...",
     "summary": "Resumen opcional para cards y SEO",
     "category": "GENERAL",
+    "status": "draft",
     "isHero": false,
     "imageUrl": "https://..."
   }'
 ```
 
-Categorias: `GENERAL`, `POLITICA_LOCAL`, `SUCESOS`, `CULTURA`, `DEPORTE`.
+Categorias: `GENERAL`, `POLITICA_LOCAL`, `SUCESOS`, `CULTURA`, `DEPORTE`, `ELECCIONES_2027`.
+
+**Borrador desde el monorepo** (lee `NEWS_API_TOKEN` de este `.env`):
+
+```bash
+node ../scripts/publish-news-draft.mjs sabhoy.es /ruta/payload.json
+```
 
 **Listado (GET /api/news)**: ahora es público; si quisieras ocultarlo, se puede añadir el mismo token en otra iteración.
 

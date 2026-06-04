@@ -213,7 +213,7 @@ export const metadata: Metadata = {
     url: pageUrl,
     locale: "es_ES",
     siteName: SITE_NAME,
-    images: [{ url: ogImage, width: 1024, height: 372, alt: "Especial Elecciones Municipales 2027 San Antonio de Benagéber" }],
+    images: [{ url: ogImage, width: 1024, height: 338, alt: "Especial Elecciones Municipales 2027 San Antonio de Benagéber" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -309,7 +309,7 @@ export default async function EleccionesMunicipales2027Page() {
           <img
             src={OG_BANNER}
             width={1024}
-            height={372}
+            height={338}
             alt={t.bannerHeadingAlt}
             className="h-auto w-full rounded-2xl border border-slate-200/80 shadow-sm"
             fetchPriority="high"

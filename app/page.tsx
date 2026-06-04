@@ -357,6 +357,32 @@ export default async function HomePage() {
               }))}
             />
             <HomeNewsletterCard locale={locale} defaultEmail={session?.user?.email} />
+            <div className={`${ui.card} !p-3`}>
+              <CtaLink
+                href="/elecciones-municipales-sab-2027"
+                trackParams={{
+                  cta_name: "home_elecciones_2027_sidebar",
+                  cta_context: "home_sidebar",
+                  destination: "/elecciones-municipales-sab-2027",
+                }}
+                className="block overflow-hidden rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-sab-terracotta focus-visible:ring-offset-2"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- recurso estático local */}
+                <img
+                  src="/banner-elecciones-municipales-sab-2027.png"
+                  width={1024}
+                  height={767}
+                  alt={
+                    isVal
+                      ? "Especial Eleccions Municipals 2027 a Sant Antoni de Benaixeve – anar a la informació"
+                      : "Especial Elecciones Municipales 2027 en San Antonio de Benagéber – ir a la información"
+                  }
+                  className="h-auto w-full"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </CtaLink>
+            </div>
             <FeaturedVideosAside videos={latestVideos} locale={locale} trackContext="home_videos" />
             <div className="rounded-2xl border-2 border-dashed border-blue-300/60 bg-blue-50/80 p-4 text-sm text-blue-900">
               <p className="font-bold">{isVal ? "Tens alguna cosa que contar o denunciar?" : "¿Algo que contar o denunciar?"}</p>
