@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { Prisma } from "@prisma/client";
 import { authOptions } from "@/lib/auth-options";
+import { notifyNewsletterSubscription } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
@@ -64,6 +65,8 @@ export async function POST(request: Request) {
     }
     throw e;
   }
+
+  notifyNewsletterSubscription(email, Boolean(userId));
 
   return NextResponse.json({ ok: true, message: "Inscripcion recibida" });
 }

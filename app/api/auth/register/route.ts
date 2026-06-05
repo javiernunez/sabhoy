@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { notifyNewUserRegistration } from "@/lib/mail";
 import { initialRoleForEmail } from "@/lib/roles";
 
 const MIN_PASSWORD = 8;
@@ -49,6 +50,8 @@ export async function POST(request: Request) {
       role,
     },
   });
+
+  notifyNewUserRegistration(email, name);
 
   return NextResponse.json({ ok: true }, { status: 201 });
 }
