@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { InlineReplaceImageButton } from "@/components/admin/InlineReplaceImageButton";
+import { DirectoryEntryLinksSection } from "@/components/local-directory/DirectoryEntryLinksSection";
 import { DirectoryEntryReviewsSection } from "@/components/local-directory/DirectoryEntryReviewsSection";
 import { RelatedLinksSection } from "@/components/RelatedLinksSection";
 import { getSessionOrNull, isAdminUser } from "@/lib/auth";
@@ -18,46 +19,6 @@ import { stripMarkdownToPlain } from "@/lib/strip-markdown";
 import { findActiveDirectoryEntryByPublicSlug } from "@/lib/local-directory-slug";
 
 type Params = { params: { slug: string } };
-
-function FacebookIcon() {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-current">
-      <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.6 1.7-1.6h1.5V3.8c-.3 0-1.1-.1-2.2-.1-2.2 0-3.8 1.3-3.8 3.8V10H8v3h2.7v8h2.8z" />
-    </svg>
-  );
-}
-
-function InstagramIcon() {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-current">
-      <path d="M7.5 3h9A4.5 4.5 0 0 1 21 7.5v9a4.5 4.5 0 0 1-4.5 4.5h-9A4.5 4.5 0 0 1 3 16.5v-9A4.5 4.5 0 0 1 7.5 3zm0 1.8a2.7 2.7 0 0 0-2.7 2.7v9a2.7 2.7 0 0 0 2.7 2.7h9a2.7 2.7 0 0 0 2.7-2.7v-9a2.7 2.7 0 0 0-2.7-2.7h-9zm9.45 1.35a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 1.8A2.2 2.2 0 1 0 12 14.2 2.2 2.2 0 0 0 12 9.8z" />
-    </svg>
-  );
-}
-
-function WebIcon() {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-current">
-      <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.9 9h-3.1a15.3 15.3 0 0 0-1.4-5 8.1 8.1 0 0 1 4.5 5zM12 4.2c.9 1.2 2.1 3.4 2.7 6.8H9.3c.6-3.4 1.8-5.6 2.7-6.8zM8.6 6a15.3 15.3 0 0 0-1.4 5H4.1a8.1 8.1 0 0 1 4.5-5zM4.1 13h3.1a15.3 15.3 0 0 0 1.4 5 8.1 8.1 0 0 1-4.5-5zm7.9 6.8c-.9-1.2-2.1-3.4-2.7-6.8h5.4c-.6 3.4-1.8 5.6-2.7 6.8zm3.4-1.8a15.3 15.3 0 0 0 1.4-5h3.1a8.1 8.1 0 0 1-4.5 5z" />
-    </svg>
-  );
-}
-
-function LocationIcon() {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-current">
-      <path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
-    </svg>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4 fill-current">
-      <path d="M6.6 10.8a15.8 15.8 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1.2.4 2.4.6 3.7.6.7 0 1.2.5 1.2 1.2V21c0 .7-.5 1.2-1.2 1.2C10.8 22.2 1.8 13.2 1.8 2.7 1.8 2 2.3 1.5 3 1.5h4.5c.7 0 1.2.5 1.2 1.2 0 1.3.2 2.5.6 3.7.1.4 0 .9-.3 1.2l-2.4 2.2z" />
-    </svg>
-  );
-}
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const resolved = await findActiveDirectoryEntryByPublicSlug(params.slug);
@@ -171,9 +132,6 @@ export default async function ComercioDetailPage({ params }: Params) {
   });
   const filteredRelated = relatedCommerces.slice(0, 3);
 
-  const mapsUrl = item.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.address)}` : null;
-  const phoneHref = item.phone ? `tel:${item.phone.replaceAll(/\s+/g, "")}` : null;
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -214,72 +172,16 @@ export default async function ComercioDetailPage({ params }: Params) {
             <p className="mt-1 text-xs font-medium text-slate-500">{localizedCategories.join(" · ")}</p>
             <h1 className="mt-1 text-2xl font-bold text-slate-900">{localizedName}</h1>
             <div className="prose-article mt-3 max-w-2xl text-slate-700 [&_.mb-6]:mb-3">{renderMarkdown(localizedDescription)}</div>
-            {item.websiteUrl ? (
-              <a href={item.websiteUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-sab-terracotta hover:underline">
-                {isVal ? "Web oficial →" : "Web oficial →"}
-              </a>
-            ) : item.href ? (
-              <a href={item.href} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-sab-terracotta hover:underline">
-                {isVal ? "Enllaç extern →" : "Enlace externo →"}
-              </a>
-            ) : null}
-            {item.websiteUrl || item.instagramUrl || item.facebookUrl || mapsUrl || phoneHref ? (
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                {mapsUrl ? (
-                  <a
-                    href={mapsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    <LocationIcon />
-                    <span>{isVal ? "Adreça" : "Dirección"}</span>
-                  </a>
-                ) : null}
-                {phoneHref ? (
-                  <a
-                    href={phoneHref}
-                    className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    <PhoneIcon />
-                    <span>{isVal ? "Telèfon" : "Teléfono"}</span>
-                  </a>
-                ) : null}
-                {item.websiteUrl ? (
-                  <a
-                    href={item.websiteUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    <WebIcon />
-                    <span>Web</span>
-                  </a>
-                ) : null}
-                {item.facebookUrl ? (
-                  <a
-                    href={item.facebookUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    <FacebookIcon />
-                    <span>Facebook</span>
-                  </a>
-                ) : null}
-                {item.instagramUrl ? (
-                  <a
-                    href={item.instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full border border-slate-300 px-3 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                  >
-                    <InstagramIcon />
-                    <span>Instagram</span>
-                  </a>
-                ) : null}
-              </div>
-            ) : null}
+            <DirectoryEntryLinksSection
+              isVal={isVal}
+              websiteUrl={item.websiteUrl}
+              href={item.href}
+              phone={item.phone}
+              address={item.address}
+              facebookUrl={item.facebookUrl}
+              instagramUrl={item.instagramUrl}
+              tiktokUrl={item.tiktokUrl}
+            />
           </div>
         </div>
       </section>
