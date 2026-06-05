@@ -47,8 +47,12 @@ export default async function AdminMarketingPage() {
     eventsCurrent,
     eventsPrevious,
   ] = await Promise.all([
-    prisma.newsletterSubscription.count({ where: { createdAt: { gte: since30 } } }),
-    prisma.newsletterSubscription.count({ where: { createdAt: { gte: since60, lt: since30 } } }),
+    prisma.newsletterSubscription.count({
+      where: { confirmedAt: { not: null }, createdAt: { gte: since30 } },
+    }),
+    prisma.newsletterSubscription.count({
+      where: { confirmedAt: { not: null }, createdAt: { gte: since60, lt: since30 } },
+    }),
     prisma.report.count({ where: { createdAt: { gte: since30 } } }),
     prisma.report.count({ where: { createdAt: { gte: since60, lt: since30 } } }),
     prisma.report.aggregate({ _sum: { likeCount: true }, where: { createdAt: { gte: since30 } } }),

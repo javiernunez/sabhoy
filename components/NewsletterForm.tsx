@@ -43,20 +43,22 @@ export function NewsletterForm({
       credentials: "include",
     });
     setLoading(false);
-    const j = (await res.json().catch(() => ({}))) as { ok?: boolean; message?: string; error?: string };
+    const j = (await res.json().catch(() => ({}))) as {
+      ok?: boolean;
+      status?: "pending" | "already_confirmed";
+      error?: string;
+    };
     if (!res.ok) {
       setMessage(j.error || t("newsletter.error"));
       return;
     }
 
-    if (typeof globalThis.window !== "undefined" && typeof globalThis.window.gtag === "function") {
-      globalThis.window.gtag("event", "newsletter_subscribe", {
-        source,
-        page_path: globalThis.window.location.pathname,
-      });
+    if (j.status === "already_confirmed") {
+      setMessage(t("newsletter.alreadyConfirmed"));
+      return;
     }
 
-    setMessage(j.message || t("newsletter.success"));
+    setMessage(t("newsletter.pending"));
   }
 
   const inputClass =
@@ -67,28 +69,30 @@ export function NewsletterForm({
     appearance === "light" ? "w-full text-xs text-sab-ink/65 sm:ml-0" : "w-full text-xs text-sab-cream/75 sm:ml-0";
 
   return (
-    <form onSubmit={onSubmit} className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end">
-      <div className="min-w-0 flex-1">
-        <label className="sr-only" htmlFor={inputId}>
-          {t("newsletter.emailLabel")}
-        </label>
-        <input
-          id={inputId}
-          type="email"
-          required
-          placeholder="tu@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={inputClass}
-        />
+    <form onSubmit={onSubmit} className="mt-2 flex flex-col gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+        <div className="min-w-0 flex-1">
+          <label className="sr-only" htmlFor={inputId}>
+            {t("newsletter.emailLabel")}
+          </label>
+          <input
+            id={inputId}
+            type="email"
+            required
+            placeholder="tu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputClass}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="sab-btn-primary shrink-0 disabled:opacity-60"
+        >
+          {loading ? "…" : t("newsletter.subscribe")}
+        </button>
       </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="sab-btn-primary shrink-0 disabled:opacity-60"
-      >
-        {loading ? "…" : t("newsletter.subscribe")}
-      </button>
       {message ? <p className={messageClass}>{message}</p> : null}
     </form>
   );

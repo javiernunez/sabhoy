@@ -40,7 +40,15 @@ const es: Dictionary = {
   "newsletter.emailLabel": "Email para la newsletter",
   "newsletter.subscribe": "Suscribirse",
   "newsletter.error": "No se pudo inscribir.",
-  "newsletter.success": "Inscripción recibida.",
+  "newsletter.pending": "Te hemos enviado un correo. Confirma la suscripción desde el enlace que te enviamos.",
+  "newsletter.alreadyConfirmed": "Ya estabas inscrito.",
+  "newsletter.confirm.titleOk": "Suscripción confirmada",
+  "newsletter.confirm.bodyOk": "Gracias. Ya recibirás la newsletter cuando la enviemos.",
+  "newsletter.confirm.titleAlready": "Ya estabas inscrito",
+  "newsletter.confirm.bodyAlready": "Este correo ya estaba confirmado en la newsletter.",
+  "newsletter.confirm.titleInvalid": "Enlace no válido",
+  "newsletter.confirm.bodyInvalid": "El enlace ha caducado o no es correcto. Vuelve a suscribirte desde el pie de la web.",
+  "newsletter.confirm.backHome": "Volver al inicio",
 };
 
 const val: Dictionary = {
@@ -77,7 +85,15 @@ const val: Dictionary = {
   "newsletter.emailLabel": "Correu per al butlletí",
   "newsletter.subscribe": "Subscriure'm",
   "newsletter.error": "No s'ha pogut subscriure.",
-  "newsletter.success": "Subscripció rebuda.",
+  "newsletter.pending": "T'hem enviat un correu. Confirma la subscripció des de l'enllaç que t'hem enviat.",
+  "newsletter.alreadyConfirmed": "Ja estaves subscrit.",
+  "newsletter.confirm.titleOk": "Subscripció confirmada",
+  "newsletter.confirm.bodyOk": "Gràcies. Ja rebràs el butlletí quan l'enviem.",
+  "newsletter.confirm.titleAlready": "Ja estaves subscrit",
+  "newsletter.confirm.bodyAlready": "Aquest correu ja estava confirmat al butlletí.",
+  "newsletter.confirm.titleInvalid": "Enllaç no vàlid",
+  "newsletter.confirm.bodyInvalid": "L'enllaç ha caducat o no és correcte. Torna a subscriure't des del peu de la web.",
+  "newsletter.confirm.backHome": "Tornar a l'inici",
 };
 
 const dictionaries: Record<Locale, Dictionary> = { es, val };

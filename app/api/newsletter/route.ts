@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { Prisma } from "@prisma/client";
 import { authOptions } from "@/lib/auth-options";
-import { notifyNewsletterSubscription } from "@/lib/mail";
+import { sendNewsletterConfirmationEmail } from "@/lib/mail";
+import { isNewsletterConfirmed, newConfirmToken, queueNewsletterConfirmation } from "@/lib/newsletter";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
@@ -38,35 +39,48 @@ export async function POST(request: Request) {
         }
       }
     }
-    return NextResponse.json({ ok: true, message: "Ya estabas inscrito" });
+
+    if (isNewsletterConfirmed(byEmail)) {
+      return NextResponse.json({ ok: true, status: "already_confirmed" });
+    }
+
+    await queueNewsletterConfirmation(byEmail.id, email, byEmail.userId ?? userId);
+    return NextResponse.json({ ok: true, status: "pending" });
   }
 
   if (userId) {
     const byUser = await prisma.newsletterSubscription.findUnique({ where: { userId } });
     if (byUser) {
+      if (byUser.email === email && isNewsletterConfirmed(byUser)) {
+        return NextResponse.json({ ok: true, status: "already_confirmed" });
+      }
+
+      const confirmToken = newConfirmToken();
       await prisma.newsletterSubscription.update({
         where: { userId },
-        data: { email },
+        data: { email, confirmToken, confirmedAt: null },
       });
-      return NextResponse.json({ ok: true, message: "Preferencias actualizadas" });
+      sendNewsletterConfirmationEmail(email, confirmToken, true);
+      return NextResponse.json({ ok: true, status: "pending" });
     }
   }
 
   try {
+    const confirmToken = newConfirmToken();
     await prisma.newsletterSubscription.create({
       data: {
         email,
         userId,
+        confirmToken,
       },
     });
+    sendNewsletterConfirmationEmail(email, confirmToken, Boolean(userId));
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
-      return NextResponse.json({ ok: true, message: "Ya estabas inscrito" });
+      return NextResponse.json({ ok: true, status: "already_confirmed" });
     }
     throw e;
   }
 
-  notifyNewsletterSubscription(email, Boolean(userId));
-
-  return NextResponse.json({ ok: true, message: "Inscripcion recibida" });
+  return NextResponse.json({ ok: true, status: "pending" });
 }
