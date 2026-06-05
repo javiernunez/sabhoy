@@ -121,6 +121,20 @@ node ../scripts/publish-news-draft.mjs sabhoy.es /ruta/payload.json
 
 **Listado (GET /api/news)**: ahora es público; si quisieras ocultarlo, se puede añadir el mismo token en otra iteración.
 
+### Comercios (directorio local)
+
+Generador editorial: `/generators/commerce-generator.md`. API: `POST/PATCH /api/comercios` (mismo token que noticias).
+
+```bash
+# Una ficha (isActive=false por defecto; revisar en /admin/directorio/{id})
+TURIAHOY_ENV_FILE=/tmp/prod.env node ../scripts/publish-commerce.mjs sabhoy.es /tmp/comercio.json
+
+# Lote (p. ej. sabhoy.es/scripts/data/comercios-sab-batch.json)
+TURIAHOY_ENV_FILE=/tmp/prod.env node ../scripts/publish-commerce-batch.mjs sabhoy.es sabhoy.es/scripts/data/comercios-sab-batch.json
+```
+
+Mismo token `NEWS_API_TOKEN` / `SABHOY_NEWS_API_TOKEN`. Imagen: `node ../scripts/upload-news-image.mjs sabhoy.es /ruta/foto.jpg`.
+
 ## Arranque local
 
 Con PostgreSQL ya levantado (`make db-up`):

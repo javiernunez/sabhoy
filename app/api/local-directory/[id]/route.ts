@@ -2,6 +2,7 @@ import { DirectoryKind } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminUser } from "@/lib/auth";
+import { isNewsWriteAuthorized } from "@/lib/api-auth";
 import { slugify } from "@/lib/slug";
 
 type Params = {
@@ -28,7 +29,8 @@ async function resolvePrimaryCategoryFields(kind: DirectoryKind, categoryIds: nu
 }
 
 export async function PATCH(request: Request, { params }: Params) {
-  if (!(await isAdminUser())) {
+  const allowed = (await isAdminUser()) || isNewsWriteAuthorized(request);
+  if (!allowed) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

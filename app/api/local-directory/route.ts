@@ -2,6 +2,7 @@ import { DirectoryKind } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminUser } from "@/lib/auth";
+import { isNewsWriteAuthorized } from "@/lib/api-auth";
 import { slugify } from "@/lib/slug";
 
 function isDirectoryKind(value: string): value is DirectoryKind {
@@ -27,11 +28,13 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const kindParam = searchParams.get("kind");
   const kind = kindParam && Object.values(DirectoryKind).includes(kindParam as DirectoryKind) ? (kindParam as DirectoryKind) : undefined;
+  const includeAll = searchParams.get("all") === "1";
+  const privileged = includeAll && ((await isAdminUser()) || isNewsWriteAuthorized(request));
 
   const entries = await prisma.localDirectoryEntry.findMany({
     where: {
       ...(kind ? { kind } : {}),
-      isActive: true,
+      ...(privileged ? {} : { isActive: true }),
     },
     include: {
       categoryLinks: {
@@ -46,7 +49,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!(await isAdminUser())) {
+  const allowed = (await isAdminUser()) || isNewsWriteAuthorized(request);
+  if (!allowed) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

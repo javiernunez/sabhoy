@@ -1,0 +1,81 @@
+[
+  {
+    "upsert": true,
+    "name": "Bar Restaurante Nieva",
+    "nameVal": "Bar Restaurant Nieva",
+    "description": "Restaurante de barrio en el casco de San Antonio de Benagéber, en la zona de la calle Nieva. Referente local para comer o tomar algo cerca del centro cívico, con cocina casera y ambiente de terraza.",
+    "descriptionVal": "Restaurant de barri al nucli de Sant Antoni de Benàgeber, a la zona del carrer Nieva. Referent local per a dinar o prendre alguna cosa a prop del centre cívic, amb cuina casolana i ambient de terrassa.",
+    "category": "Bar",
+    "address": "C/ Nieva, San Antonio de Benagéber",
+    "isActive": true,
+    "sortOrder": 50
+  },
+  {
+    "upsert": true,
+    "name": "Pizzería San Vicente",
+    "nameVal": "Pizzeria Sant Vicent",
+    "description": "Pizzería en la urbanización San Vicente de San Antonio de Benagéber. Opción habitual de restauración italiana en la zona residencial, con servicio de comida para llevar y terraza.",
+    "descriptionVal": "Pizzeria a la urbanització Sant Vicent de Sant Antoni de Benàgeber. Opció habitual de restauració italiana a la zona residencial, amb servei per a emportar i terrassa.",
+    "category": "Italiana",
+    "address": "Urbanización San Vicente, San Antonio de Benagéber",
+    "isActive": true,
+    "sortOrder": 60
+  },
+  {
+    "upsert": true,
+    "name": "Cafetería Plaza Ayuntamiento",
+    "nameVal": "Cafeteria Plaça Ajuntament",
+    "description": "Cafetería junto a la plaza del Ayuntamiento de San Antonio de Benagéber. Bar de referencia en el centro del municipio para desayunos, bocadillos y tertulia de barrio.",
+    "descriptionVal": "Cafeteria al costat de la plaça de l'Ajuntament de Sant Antoni de Benàgeber. Bar de referència al centre del municipi per a esmorzars, entrepans i tertúlia de barri.",
+    "category": "Bar",
+    "address": "Plaza del Ayuntamiento, San Antonio de Benagéber",
+    "isActive": true,
+    "sortOrder": 70
+  },
+  {
+    "upsert": true,
+    "name": "Farmacia Montesano",
+    "nameVal": "Farmàcia Montesano",
+    "description": "Farmacia de la urbanización Montesano, una de las zonas más pobladas de San Antonio de Benagéber. Atención farmacéutica de proximidad para vecinos de Montesano y alrededores.",
+    "descriptionVal": "Farmàcia de la urbanització Montesano, una de les zones més poblades de Sant Antoni de Benàgeber. Atenció farmacèutica de proximitat per a veïns de Montesano i voltants.",
+    "category": "Clinica",
+    "address": "Urbanización Montesano, San Antonio de Benagéber",
+    "isActive": true,
+    "sortOrder": 40
+  },
+  {
+    "upsert": true,
+    "name": "Mercadona San Antonio de Benagéber",
+    "nameVal": "Mercadona Sant Antoni de Benàgeber",
+    "description": "Supermercado Mercadona en San Antonio de Benagéber para la compra diaria de alimentación y productos de hogar. Una de las opciones de gran superficie más usadas en el municipio.",
+    "descriptionVal": "Supermercat Mercadona a Sant Antoni de Benàgeber per a la compra diària d'alimentació i productes de la llar. Una de les opcions de gran superfície més usades al municipi.",
+    "category": "Supermercado",
+    "address": "San Antonio de Benagéber",
+    "websiteUrl": "https://www.mercadona.es",
+    "isActive": true,
+    "sortOrder": 20
+  },
+  {
+    "upsert": true,
+    "name": "Consum Colinas",
+    "nameVal": "Consum Colinas",
+    "description": "Cooperativa de consumo Consum en la urbanización Colinas de San Antonio de Benagéber. Supermercado de proximidad para la compra habitual de las familias de la zona.",
+    "descriptionVal": "Cooperativa de consum Consum a la urbanització Colinas de Sant Antoni de Benàgeber. Supermercat de proximitat per a la compra habitual de les famílies de la zona.",
+    "category": "Supermercado",
+    "address": "Urbanización Colinas, San Antonio de Benagéber",
+    "websiteUrl": "https://www.consum.es",
+    "isActive": true,
+    "sortOrder": 30
+  },
+  {
+    "upsert": true,
+    "name": "Centro Comercial El Osito",
+    "nameVal": "Centre Comercial El Osito",
+    "description": "Zona comercial de referencia en San Antonio de Benagéber con restauración, tiendas y servicios. Punto de encuentro habitual para vecinos de distintas urbanizaciones del municipio.",
+    "descriptionVal": "Zona comercial de referència a Sant Antoni de Benàgeber amb restauració, botigues i serveis. Punt de trobada habitual per a veïns de diferents urbanitzacions del municipi.",
+    "category": "Supermercado",
+    "address": "San Antonio de Benagéber",
+    "isActive": true,
+    "sortOrder": 10
+  }
+]

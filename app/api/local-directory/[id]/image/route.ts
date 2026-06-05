@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminUser } from "@/lib/auth";
+import { isNewsWriteAuthorized } from "@/lib/api-auth";
 
 type Params = {
   params: { id: string };
 };
 
 export async function PATCH(request: Request, { params }: Params) {
-  if (!(await isAdminUser())) {
+  const allowed = (await isAdminUser()) || isNewsWriteAuthorized(request);
+  if (!allowed) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
