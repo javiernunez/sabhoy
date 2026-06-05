@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminUser } from "@/lib/auth";
+import { isNewsWriteAuthorized } from "@/lib/api-auth";
 import { generateUploadVariants, isAllowedImageMime, MAX_UPLOAD_BYTES } from "@/lib/image-optimize";
 import { storeUploadVariantSet } from "@/lib/media-storage";
 
@@ -14,7 +15,8 @@ function originFromRequest(request: Request) {
 }
 
 export async function POST(request: Request) {
-  if (!(await isAdminUser())) {
+  const allowed = (await isAdminUser()) || isNewsWriteAuthorized(request);
+  if (!allowed) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
