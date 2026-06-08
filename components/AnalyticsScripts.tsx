@@ -1,6 +1,6 @@
 import Script from "next/script";
 
-const GA_ID = "G-MNCY9C1RYD";
+const GA_ID = "G-1MDPM1F6WC";
 
 /** Google Analytics: carga diferida para no competir con LCP ni el main thread. */
 export function AnalyticsScripts() {

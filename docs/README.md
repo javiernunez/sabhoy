@@ -8,6 +8,13 @@ Documentación **no pública** de contexto local para redactores de SAB Hoy. Obj
 - Cada ficha incluye sección **Fuentes** y, cuando procede, **Límites de esta ficha**.
 - Enlaces internos con **rutas relativas** desde el documento que enlaza.
 - Fechas en formato ISO (`YYYY-MM-DD`) cuando ayuden a ordenar versiones.
+- **Enlaces desde noticias publicadas:** consultar [Rutas internas (web pública)](rutas-internas.md) antes de redactar.
+
+## Rutas web (enlazar desde noticias)
+
+| Documento | Uso |
+|-----------|-----|
+| [rutas-internas.md](rutas-internas.md) | Mapa de `/eventos`, `/comercios`, `/politica`, etc. |
 
 ## Índice de documentos
 
@@ -71,5 +78,5 @@ Documentación **no pública** de contexto local para redactores de SAB Hoy. Obj
 ## Otros contenidos en `/docs`
 
 - `marketing/` — calendario editorial y KPIs (no contexto local).
-- `generators/` — plantillas de generación de noticias.
+- `generators/` — [noticias](generators/news-generator.md) y [comercios](generators/commerce-generator.md).
 - `archive/politica-leliana/` — archivo heredado de l’Eliana; **no aplica a SAB** salvo referencias comparativas de comarca.
