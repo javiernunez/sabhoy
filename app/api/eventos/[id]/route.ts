@@ -18,6 +18,14 @@ function toDate(raw: unknown) {
   return parsed;
 }
 
+function coerceEventStatus(raw: unknown): "active" | "draft" | undefined {
+  if (raw == null) return undefined;
+  const value = String(raw).trim().toLowerCase();
+  if (value === "draft") return "draft";
+  if (value === "active") return "active";
+  return undefined;
+}
+
 export async function PATCH(request: Request, { params }: Params) {
   const tokenWrite = isEventsWriteAuthorized(request);
   const adminWrite = await isAdminUser();
@@ -31,6 +39,22 @@ export async function PATCH(request: Request, { params }: Params) {
   }
 
   const body = await request.json();
+
+  if (body?.intent === "status") {
+    const statusIn = coerceEventStatus(body.status);
+    if (!statusIn) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
+    const existing = await prisma.event.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    const updated = await prisma.event.update({
+      where: { id },
+      data: { status: statusIn },
+    });
+    return NextResponse.json(updated);
+  }
   const title = String(body.title || "").trim();
   const titleVal = body.titleVal != null ? String(body.titleVal).trim() || null : null;
   const description = String(body.description || "").trim();
