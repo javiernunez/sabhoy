@@ -39,7 +39,13 @@ export async function POST(request: Request) {
   const linkUrl = body.linkUrl != null ? String(body.linkUrl).trim() || null : null;
   const source = body.source != null ? String(body.source).trim() || null : null;
   const sourceUrl = body.sourceUrl != null ? String(body.sourceUrl).trim() || null : null;
-  const status = tokenWrite ? "draft" : body.status != null ? String(body.status).trim() || "active" : "active";
+  const status = tokenWrite
+    ? String(body.status ?? "active").trim() === "draft"
+      ? "draft"
+      : "active"
+    : body.status != null
+      ? String(body.status).trim() || "active"
+      : "active";
 
   if (!title || !description || !eventDate) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
