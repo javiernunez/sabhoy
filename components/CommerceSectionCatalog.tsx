@@ -3,11 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CommerceFilterList, type CommerceFilterItem } from "@/components/CommerceFilterList";
+import { CommerceSectionNav } from "@/components/CommerceSectionNav";
 import { SectionHeader } from "@/components/SectionHeader";
 import { InlineDeleteEntryButton } from "@/components/admin/InlineDeleteEntryButton";
 import { InlineReplaceImageButton } from "@/components/admin/InlineReplaceImageButton";
 import { isAdminUser } from "@/lib/auth";
-import { getCommerceSectionConfig, matchesCommerceSection, type CommerceSectionConfig } from "@/lib/comercios-sections";
+import {
+  categoryMatchesSection,
+  getCommerceSectionConfig,
+  type CommerceSectionSlug,
+} from "@/lib/comercios-sections";
 import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { localizedText } from "@/lib/localized";
 import { uiMediaUrl } from "@/lib/media-url";
@@ -37,7 +42,7 @@ function truncateWords(text: string, maxWords: number): string {
 }
 
 function buildHref(
-  sectionSlug: CommerceSectionConfig["slug"],
+  sectionSlug: CommerceSectionSlug,
   sp: { q: string; categoria: string; page: number },
   patch: Partial<{ q: string; categoria: string | null; page: number }>,
 ): string {
@@ -53,17 +58,30 @@ function buildHref(
   return s ? `${base}?${s}` : base;
 }
 
-function getSectionParent(categories: LocalDirectoryCategory[], sectionSlug: CommerceSectionConfig["slug"]) {
+function getSectionRoots(
+  rootCategories: LocalDirectoryCategory[],
+  sectionSlug: CommerceSectionSlug,
+) {
   const section = getCommerceSectionConfig(sectionSlug);
-  if (!section) return null;
-  return categories.find((c) => matchesCommerceSection(c.name, section));
+  if (!section) return [];
+  return rootCategories.filter((c) => categoryMatchesSection(c.name, section));
+}
+
+function categoryInSection(
+  category: { id: number; parentId: number | null; name: string },
+  sectionRootIds: Set<number>,
+  section: NonNullable<ReturnType<typeof getCommerceSectionConfig>>,
+): boolean {
+  if (sectionRootIds.has(category.id)) return true;
+  if (category.parentId != null && sectionRootIds.has(category.parentId)) return true;
+  return categoryMatchesSection(category.name, section);
 }
 
 export async function CommerceSectionCatalog({
   sectionSlug,
   searchParams,
 }: Readonly<{
-  sectionSlug: CommerceSectionConfig["slug"];
+  sectionSlug: CommerceSectionSlug;
   searchParams?: SearchParams;
 }>) {
   const locale = getLocaleFromCookie();
@@ -81,19 +99,21 @@ export async function CommerceSectionCatalog({
     where: { kind: "COMMERCE", parentId: null },
     orderBy: { name: "asc" },
   });
-  const sectionParent = getSectionParent(parentCategories, sectionSlug);
-  if (!sectionParent) {
+  const sectionRoots = getSectionRoots(parentCategories, sectionSlug);
+  const sectionRootIds = new Set(sectionRoots.map((c) => c.id));
+
+  if (sectionRoots.length === 0) {
     return (
       <div className="container-page max-w-6xl space-y-6 py-8 md:py-10">
         <SectionHeader
           title={isVal ? sectionConfig.labelVal : sectionConfig.labelEs}
-          subtitle={isVal ? "Subsecció de comerços amb filtres propis." : "Subsección de comercios con filtros propios."}
+          subtitle={isVal ? sectionConfig.descriptionVal : sectionConfig.descriptionEs}
         />
-        <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
           <p>
             {isVal
-              ? "No s'ha trobat cap categoria arrel al directori que encaixe amb esta secció (es comparen paraules clau del nom de la categoria). El llistat pot estar buit en esta instal·lació; la URL segueix sent vàlida."
-              : "No hay ninguna categoría raíz en el directorio que encaje con esta sección (se comparan palabras clave del nombre). El listado puede estar vacío en este entorno; la URL sigue siendo válida."}
+              ? "Encara no hi ha categories al directori per a esta secció."
+              : "Aún no hay categorías en el directorio para esta sección."}
           </p>
           <Link href="/comercios" className="mt-3 inline-block font-semibold text-sab-terracotta-dark hover:underline">
             {isVal ? "← Tornar a comerços" : "← Volver a comercios"}
@@ -103,15 +123,20 @@ export async function CommerceSectionCatalog({
     );
   }
 
+  const categoryFilter = {
+    OR: [
+      { id: { in: [...sectionRootIds] } },
+      { parentId: { in: [...sectionRootIds] } },
+    ],
+  };
+
   const businesses = await prisma.localDirectoryEntry.findMany({
     where: {
       kind: "COMMERCE",
       isActive: true,
       categoryLinks: {
         some: {
-          category: {
-            OR: [{ id: sectionParent.id }, { parentId: sectionParent.id }],
-          },
+          category: categoryFilter,
         },
       },
     },
@@ -141,10 +166,10 @@ export async function CommerceSectionCatalog({
     name: localizedText(locale, business.name, business.nameVal),
     description: localizedText(locale, business.description, business.descriptionVal),
     categoryLabels: business.categoryLinks
-      .filter((link) => link.category.parentId === sectionParent.id || link.category.id === sectionParent.id)
+      .filter((link) => categoryInSection(link.category, sectionRootIds, sectionConfig))
       .map((link) => localizedText(locale, link.category.name, link.category.nameVal)),
     categoryIds: business.categoryLinks
-      .filter((link) => link.category.parentId === sectionParent.id || link.category.id === sectionParent.id)
+      .filter((link) => categoryInSection(link.category, sectionRootIds, sectionConfig))
       .map((link) => link.category.id),
   }));
 
@@ -159,7 +184,7 @@ export async function CommerceSectionCatalog({
   for (const business of afterSearch) {
     const seen = new Set<string>();
     for (const link of business.categoryLinks) {
-      if (!(link.category.parentId === sectionParent.id || link.category.id === sectionParent.id)) continue;
+      if (!categoryInSection(link.category, sectionRootIds, sectionConfig)) continue;
       const key = `${link.category.id}`;
       if (seen.has(key)) continue;
       const label = localizedText(locale, link.category.name, link.category.nameVal);
@@ -193,8 +218,12 @@ export async function CommerceSectionCatalog({
     <div className="container-page max-w-6xl space-y-8 py-8 md:py-10">
       <SectionHeader
         title={isVal ? sectionConfig.labelVal : sectionConfig.labelEs}
-        subtitle={isVal ? "Subsecció de comerços amb filtres propis." : "Subsección de comercios con filtros propios."}
+        subtitle={isVal ? sectionConfig.descriptionVal : sectionConfig.descriptionEs}
       />
+
+      <section className="border-t border-b border-slate-200 bg-white py-3">
+        <CommerceSectionNav isVal={isVal} activeSlug={sectionSlug} />
+      </section>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:items-start">
         <aside className="min-w-0 lg:sticky lg:top-24">

@@ -5,7 +5,7 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { InlineDeleteEntryButton } from "@/components/admin/InlineDeleteEntryButton";
 import { InlineReplaceImageButton } from "@/components/admin/InlineReplaceImageButton";
 import { isAdminUser } from "@/lib/auth";
-import { COMMERCE_SECTIONS } from "@/lib/comercios-sections";
+import { CommerceSectionNav } from "@/components/CommerceSectionNav";
 import { getLocaleFromCookie } from "@/lib/i18n-server";
 import { localizedText } from "@/lib/localized";
 import { prisma } from "@/lib/prisma";
@@ -77,20 +77,7 @@ export default async function ComerciosPage() {
       </section>
 
       <section className="border-t border-b border-slate-200 bg-white py-3">
-        <nav className="flex flex-wrap items-center gap-2" aria-label={isVal ? "Submenú de comerços" : "Submenú de comercios"}>
-          {COMMERCE_SECTIONS.map((section) => (
-            <Link
-              key={section.slug}
-              href={`/comercios/${section.slug}`}
-              className="group flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-blue-400 hover:bg-white hover:text-sab-terracotta-dark hover:shadow-sm"
-            >
-              <span className="shrink-0" aria-hidden>
-                {section.icon}
-              </span>
-              {isVal ? section.labelVal : section.labelEs}
-            </Link>
-          ))}
-        </nav>
+        <CommerceSectionNav isVal={isVal} />
       </section>
 
       <section>

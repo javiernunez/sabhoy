@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
+import { CommerceSectionCatalog } from "@/components/CommerceSectionCatalog";
 import { InlineReplaceImageButton } from "@/components/admin/InlineReplaceImageButton";
 import { DirectoryEntryLinksSection } from "@/components/local-directory/DirectoryEntryLinksSection";
 import { DirectoryEntryReviewsSection } from "@/components/local-directory/DirectoryEntryReviewsSection";
@@ -17,10 +18,23 @@ import { localizedText } from "@/lib/localized";
 import { renderMarkdown } from "@/lib/render-markdown";
 import { stripMarkdownToPlain } from "@/lib/strip-markdown";
 import { findActiveDirectoryEntryByPublicSlug } from "@/lib/local-directory-slug";
+import { getCommerceSectionConfig, isCommerceSectionSlug } from "@/lib/comercios-sections";
 
 type Params = { params: { slug: string } };
+type SearchParams = Record<string, string | string[] | undefined>;
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  if (isCommerceSectionSlug(params.slug)) {
+    const section = getCommerceSectionConfig(params.slug)!;
+    const locale = getLocaleFromCookie();
+    const isVal = locale === "val";
+    return {
+      title: isVal ? `${section.labelVal} · Comerços` : `${section.labelEs} · Comercios`,
+      description: isVal ? section.descriptionVal : section.descriptionEs,
+      alternates: { canonical: canonicalPath(`/comercios/${section.slug}`) },
+    };
+  }
+
   const resolved = await findActiveDirectoryEntryByPublicSlug(params.slug);
   if (!resolved) return { title: "Comercio no encontrado" };
 
@@ -77,7 +91,17 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-export default async function ComercioDetailPage({ params }: Params) {
+export default async function ComercioDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Params["params"];
+  searchParams?: SearchParams;
+}) {
+  if (isCommerceSectionSlug(params.slug)) {
+    return <CommerceSectionCatalog sectionSlug={params.slug} searchParams={searchParams} />;
+  }
+
   const locale = getLocaleFromCookie();
   const isVal = locale === "val";
   const [admin, session] = await Promise.all([isAdminUser(), getSessionOrNull()]);

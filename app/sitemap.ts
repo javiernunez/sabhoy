@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/constants";
 import { INFO_CATEGORIES } from "@/lib/info-categories";
 import { SCHOOLS, isSchoolEvergreenSlug } from "@/lib/schools";
+import { COMMERCE_SECTIONS } from "@/lib/comercios-sections";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -92,9 +93,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/colegios`, changeFrequency: "weekly", priority: 0.74 },
     { url: `${base}/el-nostre-poble`, changeFrequency: "weekly", priority: 0.76 },
     { url: `${base}/comercios`, changeFrequency: "weekly", priority: 0.72 },
-    { url: `${base}/comercios/restaurantes`, changeFrequency: "weekly", priority: 0.68 },
-    { url: `${base}/comercios/tiendas`, changeFrequency: "weekly", priority: 0.68 },
-    { url: `${base}/comercios/gimnasios`, changeFrequency: "weekly", priority: 0.68 },
+    ...COMMERCE_SECTIONS.map((section) => ({
+      url: `${base}/comercios/${section.slug}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.68,
+    })),
     { url: `${base}/asociaciones`, changeFrequency: "weekly", priority: 0.72 },
     { url: `${base}/asociaciones/casales`, changeFrequency: "weekly", priority: 0.68 },
     { url: `${base}/asociaciones/clubes-deportivos`, changeFrequency: "weekly", priority: 0.68 },
