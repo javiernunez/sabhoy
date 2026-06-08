@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminUser } from "@/lib/auth";
+import { isEventsWriteAuthorized } from "@/lib/api-auth";
 import { slugify } from "@/lib/slug";
 import { coerceEventCategory, normalizeDetailsPayload } from "@/lib/event-category";
 
@@ -21,7 +22,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!(await isAdminUser())) {
+  const tokenWrite = isEventsWriteAuthorized(request);
+  const adminWrite = await isAdminUser();
+  if (!adminWrite && !tokenWrite) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -36,6 +39,7 @@ export async function POST(request: Request) {
   const linkUrl = body.linkUrl != null ? String(body.linkUrl).trim() || null : null;
   const source = body.source != null ? String(body.source).trim() || null : null;
   const sourceUrl = body.sourceUrl != null ? String(body.sourceUrl).trim() || null : null;
+  const status = tokenWrite ? "draft" : body.status != null ? String(body.status).trim() || "active" : "active";
 
   if (!title || !description || !eventDate) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -64,6 +68,7 @@ export async function POST(request: Request) {
       slug,
       source,
       sourceUrl,
+      status,
     },
   });
 

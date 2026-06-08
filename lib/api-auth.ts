@@ -18,8 +18,8 @@ export function isNewsWriteAuthorized(request: Request): boolean {
  * - `X-API-Key: <token>`
  */
 export function isEventsWriteAuthorized(request: Request): boolean {
-  const expected = process.env.EVENTS_API_TOKEN;
-  return isRequestAuthorizedByToken(request, expected);
+  if (isRequestAuthorizedByToken(request, process.env.EVENTS_API_TOKEN)) return true;
+  return isRequestAuthorizedByToken(request, process.env.NEWS_API_TOKEN);
 }
 
 function isRequestAuthorizedByToken(request: Request, expected: string | undefined): boolean {

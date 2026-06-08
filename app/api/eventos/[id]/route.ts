@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminUser } from "@/lib/auth";
+import { isEventsWriteAuthorized } from "@/lib/api-auth";
 import { slugify } from "@/lib/slug";
 import { coerceEventCategory, normalizeDetailsPayload } from "@/lib/event-category";
 
@@ -18,7 +19,9 @@ function toDate(raw: unknown) {
 }
 
 export async function PATCH(request: Request, { params }: Params) {
-  if (!(await isAdminUser())) {
+  const tokenWrite = isEventsWriteAuthorized(request);
+  const adminWrite = await isAdminUser();
+  if (!adminWrite && !tokenWrite) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -74,7 +77,9 @@ export async function PATCH(request: Request, { params }: Params) {
 }
 
 export async function DELETE(_: Request, { params }: Params) {
-  if (!(await isAdminUser())) {
+  const tokenWrite = isEventsWriteAuthorized(_);
+  const adminWrite = await isAdminUser();
+  if (!adminWrite && !tokenWrite) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
